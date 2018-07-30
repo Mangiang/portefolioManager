@@ -261,4 +261,5 @@ __pycache__/
 *.pyc
 
 # Documentation
-doc/
+[Dd]oc/
+[Dd]ocumentation/

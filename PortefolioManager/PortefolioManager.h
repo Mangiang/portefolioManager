@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ui_PortefolioManager.h"
+#include "LoginDialog.h"
 
 /*!	\class PortefolioManager
  * 	\brief The QMainWindow holding the tool together.
@@ -31,12 +32,28 @@ private:
 	/*!	The UI. */
 	Ui::PortefolioManagerClass ui;
 
+	/*! The login Dialog*/
+	LoginDialog* loginDialog;
+
+	/*! Is the user logged in ?*/
+	bool loggedIn;
+
 	/*!	A timer needed to delay the execution of the javascript description check.
 	 *	\sa http://doc.qt.io/qt-5/qtimer.html
 	 */
 	QTimer *updateTimer;
+	
 
 private slots:
+	/*!	Triggered when the showLogin action has been triggered.  */
+	void onLoginDialogShow(bool checked = false);
+	
+	/*!	Triggered when the loginDialog accepted signal has been triggered.  */
+	void onLoginDialogAccepted();
+
+	/*!	Triggered when the loginDialog rejected signal has been triggered.  */
+	void onLoginDialogRejected();
+
 	/*!	Triggered when the action actionTogglePreview has been triggered.
 	 *	\param checked Not used. Checks if the trigger is active.
 	 */
@@ -46,6 +63,7 @@ private slots:
 	 *	\param checked Not used. Checks if the trigger is active.
 	 */
 	void onToggleLog(bool checked = false) const;
+	
 
 	/*!	Triggered when the action actionRefresh has been triggered.
 	 *	\param checked Not used. Checks if the trigger is active.

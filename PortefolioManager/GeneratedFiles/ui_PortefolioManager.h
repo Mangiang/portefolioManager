@@ -35,6 +35,7 @@ public:
     QAction *actionUnderline;
     QAction *actionTogglePreview;
     QAction *actionToggleLog;
+    QAction *actionShowLogin;
     QWidget *centralWidget;
     QGridLayout *gridLayout;
     QPlainTextEdit *contentPlainTextEdit;
@@ -58,7 +59,7 @@ public:
     {
         if (PortefolioManagerClass->objectName().isEmpty())
             PortefolioManagerClass->setObjectName(QStringLiteral("PortefolioManagerClass"));
-        PortefolioManagerClass->resize(1280, 1024);
+        PortefolioManagerClass->resize(1339, 1024);
         QIcon icon;
         icon.addFile(QStringLiteral(":/PortefolioManager/Resources/images/icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         PortefolioManagerClass->setWindowIcon(icon);
@@ -85,6 +86,8 @@ public:
         actionTogglePreview->setObjectName(QStringLiteral("actionTogglePreview"));
         actionToggleLog = new QAction(PortefolioManagerClass);
         actionToggleLog->setObjectName(QStringLiteral("actionToggleLog"));
+        actionShowLogin = new QAction(PortefolioManagerClass);
+        actionShowLogin->setObjectName(QStringLiteral("actionShowLogin"));
         centralWidget = new QWidget(PortefolioManagerClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
@@ -93,15 +96,13 @@ public:
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
         contentPlainTextEdit = new QPlainTextEdit(centralWidget);
         contentPlainTextEdit->setObjectName(QStringLiteral("contentPlainTextEdit"));
-        contentPlainTextEdit->setLineWrapMode(QPlainTextEdit::NoWrap);
-        contentPlainTextEdit->setReadOnly(true);
 
         gridLayout->addWidget(contentPlainTextEdit, 0, 0, 1, 1);
 
         PortefolioManagerClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(PortefolioManagerClass);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1280, 18));
+        menuBar->setGeometry(QRect(0, 0, 1339, 18));
         menuPreview = new QMenu(menuBar);
         menuPreview->setObjectName(QStringLiteral("menuPreview"));
         menuWindows = new QMenu(menuBar);
@@ -149,7 +150,6 @@ public:
         gridLayout_5->setObjectName(QStringLiteral("gridLayout_5"));
         logPlainTextEdit = new QPlainTextEdit(logDockSubWidget);
         logPlainTextEdit->setObjectName(QStringLiteral("logPlainTextEdit"));
-        logPlainTextEdit->setLineWrapMode(QPlainTextEdit::NoWrap);
         logPlainTextEdit->setReadOnly(true);
 
         gridLayout_5->addWidget(logPlainTextEdit, 0, 0, 1, 1);
@@ -165,6 +165,8 @@ public:
         menuPreview->addAction(actionRefresh);
         menuWindows->addAction(actionTogglePreview);
         menuWindows->addAction(actionToggleLog);
+        menuWindows->addSeparator();
+        menuWindows->addAction(actionShowLogin);
         mainToolBar->addAction(actionBold);
         mainToolBar->addAction(actionItalic);
         mainToolBar->addAction(actionUnderline);
@@ -198,6 +200,7 @@ public:
         actionTogglePreview->setToolTip(QApplication::translate("PortefolioManagerClass", "Toggle Preview", nullptr));
 #endif // QT_NO_TOOLTIP
         actionToggleLog->setText(QApplication::translate("PortefolioManagerClass", "Toggle Log", nullptr));
+        actionShowLogin->setText(QApplication::translate("PortefolioManagerClass", "Show login", nullptr));
         menuPreview->setTitle(QApplication::translate("PortefolioManagerClass", "Preview", nullptr));
         menuWindows->setTitle(QApplication::translate("PortefolioManagerClass", "Windows", nullptr));
         previewDockWidget->setWindowTitle(QApplication::translate("PortefolioManagerClass", "Preview", nullptr));

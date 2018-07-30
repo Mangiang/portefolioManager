@@ -12,12 +12,15 @@ bool PortefolioManager::logAutoScroll = true;
 
 PortefolioManager::PortefolioManager(QWidget *parent)
 	: QMainWindow(parent),
-	updateTimer(new QTimer(this))
+	updateTimer(new QTimer(this)),
+	loggedIn(false),
+	loginDialog(nullptr)
 {
+
 	ui.setupUi(this);
 	logTextEdit = ui.logPlainTextEdit;
 	qInstallMessageHandler(customMessageHandler);
-
+	
 	// Setup Preview Dock Widget
 	ui.previewDockWidget->setWindowFlags(Qt::CustomizeWindowHint | Qt::Window | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
 	ui.previewDockWidget->setFloating(false);
@@ -30,6 +33,7 @@ PortefolioManager::PortefolioManager(QWidget *parent)
 	connect(ui.actionRefresh, SIGNAL(triggered(bool)), SLOT(onRefreshPreview(bool)));
 	connect(ui.actionTogglePreview, SIGNAL(triggered(bool)), SLOT(onTogglePreview(bool)));
 	connect(ui.actionToggleLog, SIGNAL(triggered(bool)), SLOT(onToggleLog(bool)));
+	connect(ui.actionShowLogin, SIGNAL(triggered(bool)), SLOT(onLoginDialogShow(bool)));
 
 	// ToolBar actions
 	connect(ui.actionBold, SIGNAL(triggered(bool)), SLOT(onBoldTriggered(bool)));
@@ -40,9 +44,27 @@ PortefolioManager::PortefolioManager(QWidget *parent)
 	connect(ui.webEngineView, SIGNAL(loadFinished(bool)), SLOT(onPageLoadFinished(bool)));
 	connect(ui.webEngineView, SIGNAL(urlChanged(const QUrl&)), SLOT(onUrlChanged(const QUrl&)));
 	connect(updateTimer, SIGNAL(timeout()), this, SLOT(onUpdateTimeout()));
+	
+	loginDialog = new LoginDialog(this);
+	connect(loginDialog, SIGNAL(accepted()), SLOT(onLoginDialogAccepted()));
+	connect(loginDialog, SIGNAL(rejected()), SLOT(onLoginDialogRejected()));
+	onLoginDialogShow();
+}
 
-
+void PortefolioManager::onLoginDialogAccepted()
+{
+	loggedIn = true;
 	ui.webEngineView->setUrl(QUrl("https://arthur-joly.fr"));
+}
+
+void PortefolioManager::onLoginDialogRejected()
+{
+	loggedIn = false;
+}
+
+void PortefolioManager::onLoginDialogShow(bool)
+{
+	loginDialog->exec();
 }
 
 void PortefolioManager::onTogglePreview(bool) const

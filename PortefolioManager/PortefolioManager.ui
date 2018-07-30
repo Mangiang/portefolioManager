@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1280</width>
+    <width>1339</width>
     <height>1024</height>
    </rect>
   </property>
@@ -29,14 +29,7 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <widget class="QPlainTextEdit" name="contentPlainTextEdit">
-      <property name="lineWrapMode">
-       <enum>QPlainTextEdit::NoWrap</enum>
-      </property>
-      <property name="readOnly">
-       <bool>true</bool>
-      </property>
-     </widget>
+     <widget class="QPlainTextEdit" name="contentPlainTextEdit"/>
     </item>
    </layout>
   </widget>
@@ -45,7 +38,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1280</width>
+     <width>1339</width>
      <height>18</height>
     </rect>
    </property>
@@ -61,6 +54,8 @@
     </property>
     <addaction name="actionTogglePreview"/>
     <addaction name="actionToggleLog"/>
+    <addaction name="separator"/>
+    <addaction name="actionShowLogin"/>
    </widget>
    <addaction name="menuWindows"/>
    <addaction name="menuPreview"/>
@@ -121,9 +116,6 @@
       <layout class="QGridLayout" name="gridLayout_5">
        <item row="0" column="0">
         <widget class="QPlainTextEdit" name="logPlainTextEdit">
-         <property name="lineWrapMode">
-          <enum>QPlainTextEdit::NoWrap</enum>
-         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>
@@ -189,6 +181,11 @@
   <action name="actionToggleLog">
    <property name="text">
     <string>Toggle Log</string>
+   </property>
+  </action>
+  <action name="actionShowLogin">
+   <property name="text">
+    <string>Show login</string>
    </property>
   </action>
  </widget>
