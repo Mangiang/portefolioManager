@@ -77,18 +77,18 @@ void PortefolioManager::onUpdateTimeout() const
 
 void PortefolioManager::onBoldTriggered(bool checked /*= false*/) const
 {
-	QTextCursor cursor = ui.contentPlainTextEdit->textCursor();
+	QTextCursor* cursor = &ui.contentPlainTextEdit->textCursor();
 	PortefolioManagerUtilities::wrapText(cursor, "b");
 }
 
 void PortefolioManager::onItalicTriggered(bool checked /*= false*/) const
 {
-	QTextCursor cursor = ui.contentPlainTextEdit->textCursor();
+	QTextCursor* cursor = &ui.contentPlainTextEdit->textCursor();
 	PortefolioManagerUtilities::wrapText(cursor, "i");
 }
 
 void PortefolioManager::onUnderlineTriggered(bool checked /*= false*/) const
 {
-	QTextCursor cursor = ui.contentPlainTextEdit->textCursor();
+	QTextCursor* cursor = &ui.contentPlainTextEdit->textCursor();
 	PortefolioManagerUtilities::wrapText(cursor, "u");
 }

@@ -1,16 +1,22 @@
 #include "PortefolioManagerUtilities.h"
 
-
-QString PortefolioManagerUtilities::wrapText(QTextCursor& cursor, const QString wrapTag)
+QTextCursor* PortefolioManagerUtilities::wrapText(QTextCursor* cursor, const QString wrapTag)
 {
-	const int cursorStart = cursor.selectionStart();
-	const int cursorEnd = cursor.selectionEnd();
+	if (!cursor->hasSelection())
+		return new QTextCursor();
+	
+	const int cursorStart = cursor->selectionStart();
+	const int cursorEnd = cursor->selectionEnd();
+	const int newCursorStart = cursorStart + 2 + wrapTag.length();
+	const int newCursorEnd = newCursorStart + (cursorEnd - cursorStart);
 
-	cursor.clearSelection();
-	cursor.setPosition(cursorEnd, QTextCursor::MoveAnchor);
-	cursor.insertText(QString("</%1>").arg(wrapTag));
-	cursor.setPosition(cursorStart, QTextCursor::MoveAnchor);
-	cursor.insertText(QString("<%1>").arg(wrapTag));
+	cursor->setPosition(cursorEnd);
+	cursor->insertText(QString("</%1>").arg(wrapTag));
+	cursor->setPosition(cursorStart);
+	cursor->insertText(QString("<%1>").arg(wrapTag));
 
-	return cursor.selectedText();
+	cursor->setPosition(newCursorStart);
+	cursor->setPosition(newCursorEnd, QTextCursor::KeepAnchor);
+
+	return cursor;
 }

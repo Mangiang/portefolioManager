@@ -52,7 +52,4 @@
       <Filter>Resource Files</Filter>
     </QtRcc>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="portefolioManager.qdocconf" />
-  </ItemGroup>
 </Project>

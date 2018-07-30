@@ -5,5 +5,5 @@
 #include <QtGui/QTextCursor>
 
 namespace PortefolioManagerUtilities {
-	PORTEFOLIOMANAGERUTILITIES_EXPORT QString wrapText(QTextCursor&, const QString);
+	PORTEFOLIOMANAGERUTILITIES_EXPORT QTextCursor* wrapText(QTextCursor*, const QString);
 }
