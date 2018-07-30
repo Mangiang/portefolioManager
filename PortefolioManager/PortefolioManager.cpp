@@ -1,5 +1,6 @@
 #include "PortefolioManager.h"
 
+#include <QFileInfo>
 #include <QTimer>
 #include <QtWidgets/QMainWindow>
 #include <QMessageLogger>
@@ -76,11 +77,20 @@ void PortefolioManager::customMessageHandler(QtMsgType type, const QMessageLogCo
 	}
 
 #ifdef QT_DEBUG
-	const QString& fileFullPath = QString(context.file);
-	const QString& fileShortName = fileFullPath.mid(fileFullPath.lastIndexOf("\\"));
-	const QString& logString = QString("<span style=\"background-color: %1\">[%2]\t%3\t(%4:%5) %6</span><br/>\n").arg(backgroundColor).arg(typeStr).arg(context.function).arg(fileShortName).arg(context.line).arg(msg.toHtmlEscaped());
+	const QString& fileShortName = QFileInfo(context.file).fileName();
+
+	QRegExp funcRegExp("\\s([^\\s]*)\\(");
+	funcRegExp.indexIn(context.function);
+	QStringList& list = funcRegExp.capturedTexts();
+	QString functionShortName;
+	if (list.length() > 0)
+	{
+		functionShortName = list[0].mid(1, list[0].length() - 2);
+	}
+
+	const QString& logString = QString("<span style=\"background-color: %1\">[%2] [%3] (%4:%5) %6</span><br/>\n").arg(backgroundColor).arg(typeStr).arg(functionShortName).arg(fileShortName).arg(context.line).arg(msg.toHtmlEscaped());
 #else
-	const QString& logString = QString("<span style=\"background-color: %1\">[%2]\t%3</span><br/>\n").arg(backgroundColor).arg(typeStr).arg(msg.toHtmlEscaped());
+	const QString& logString = QString("<span style=\"background-color: %1\">[%2] %3</span><br/>\n").arg(backgroundColor).arg(typeStr).arg(msg.toHtmlEscaped());
 #endif
 	if (logTextEdit)
 	{
@@ -119,10 +129,6 @@ void PortefolioManager::onPageLoadFinished(bool status) const
 {
 	if (status)
 	{
-		qInfo() << "Finished";
-		qDebug() << "Finished";
-		qWarning() << "Finished";
-		qCritical() << "Finished";
 		// Add a timer because PageLoadFinished is not always perfectly finished
 		updateTimer->start(500);
 	}
