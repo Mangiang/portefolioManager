@@ -130,6 +130,9 @@
       <Project>{c9135e0e-ee0e-461d-b66f-b2966578e819}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="portefolioManager.qdocconf" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
     <Import Project="$(QtMsBuild)\qt.targets" />

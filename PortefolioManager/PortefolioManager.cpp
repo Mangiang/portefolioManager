@@ -31,7 +31,7 @@ PortefolioManager::PortefolioManager(QWidget *parent)
 	ui.webEngineView->setUrl(QUrl("https://arthur-joly.fr"));
 }
 
-void PortefolioManager::onTogglePreview(bool checked /*= false*/) const
+void PortefolioManager::onTogglePreview(bool) const
 {
 	ui.previewDockWidget->setVisible(!ui.previewDockWidget->isVisible());
 	ui.previewDockWidget->setFloating(true);
