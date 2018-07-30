@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="PortefolioManager">
+    <file>Resources/images/bold.png</file>
+    <file>Resources/images/icon.png</file>
+    <file>Resources/images/italic.png</file>
+    <file>Resources/images/underline.png</file>
+  </qresource>
+</RCC>
