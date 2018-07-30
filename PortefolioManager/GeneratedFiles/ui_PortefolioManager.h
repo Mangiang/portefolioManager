@@ -33,7 +33,8 @@ public:
     QAction *actionBold;
     QAction *actionItalic;
     QAction *actionUnderline;
-    QAction *actionToggle_Preview;
+    QAction *actionTogglePreview;
+    QAction *actionToggleLog;
     QWidget *centralWidget;
     QGridLayout *gridLayout;
     QPlainTextEdit *contentPlainTextEdit;
@@ -47,15 +48,21 @@ public:
     QGridLayout *gridLayout_2;
     QWebEngineView *webEngineView;
     QStatusBar *statusBar;
+    QDockWidget *logDockWidget;
+    QWidget *logDockSubWidget;
+    QGridLayout *gridLayout_6;
+    QGridLayout *gridLayout_5;
+    QPlainTextEdit *logPlainTextEdit;
 
     void setupUi(QMainWindow *PortefolioManagerClass)
     {
         if (PortefolioManagerClass->objectName().isEmpty())
             PortefolioManagerClass->setObjectName(QStringLiteral("PortefolioManagerClass"));
-        PortefolioManagerClass->resize(973, 477);
+        PortefolioManagerClass->resize(1280, 1024);
         QIcon icon;
         icon.addFile(QStringLiteral(":/PortefolioManager/Resources/images/icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         PortefolioManagerClass->setWindowIcon(icon);
+        PortefolioManagerClass->setIconSize(QSize(16, 16));
         PortefolioManagerClass->setDockOptions(QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::GroupedDragging);
         actionRefresh = new QAction(PortefolioManagerClass);
         actionRefresh->setObjectName(QStringLiteral("actionRefresh"));
@@ -74,8 +81,10 @@ public:
         QIcon icon3;
         icon3.addFile(QStringLiteral(":/PortefolioManager/Resources/images/underline.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionUnderline->setIcon(icon3);
-        actionToggle_Preview = new QAction(PortefolioManagerClass);
-        actionToggle_Preview->setObjectName(QStringLiteral("actionToggle_Preview"));
+        actionTogglePreview = new QAction(PortefolioManagerClass);
+        actionTogglePreview->setObjectName(QStringLiteral("actionTogglePreview"));
+        actionToggleLog = new QAction(PortefolioManagerClass);
+        actionToggleLog->setObjectName(QStringLiteral("actionToggleLog"));
         centralWidget = new QWidget(PortefolioManagerClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
@@ -84,13 +93,15 @@ public:
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
         contentPlainTextEdit = new QPlainTextEdit(centralWidget);
         contentPlainTextEdit->setObjectName(QStringLiteral("contentPlainTextEdit"));
+        contentPlainTextEdit->setLineWrapMode(QPlainTextEdit::NoWrap);
+        contentPlainTextEdit->setReadOnly(true);
 
         gridLayout->addWidget(contentPlainTextEdit, 0, 0, 1, 1);
 
         PortefolioManagerClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(PortefolioManagerClass);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 973, 18));
+        menuBar->setGeometry(QRect(0, 0, 1280, 18));
         menuPreview = new QMenu(menuBar);
         menuPreview->setObjectName(QStringLiteral("menuPreview"));
         menuWindows = new QMenu(menuBar);
@@ -125,11 +136,35 @@ public:
         statusBar = new QStatusBar(PortefolioManagerClass);
         statusBar->setObjectName(QStringLiteral("statusBar"));
         PortefolioManagerClass->setStatusBar(statusBar);
+        logDockWidget = new QDockWidget(PortefolioManagerClass);
+        logDockWidget->setObjectName(QStringLiteral("logDockWidget"));
+        logDockSubWidget = new QWidget();
+        logDockSubWidget->setObjectName(QStringLiteral("logDockSubWidget"));
+        gridLayout_6 = new QGridLayout(logDockSubWidget);
+        gridLayout_6->setSpacing(6);
+        gridLayout_6->setContentsMargins(11, 11, 11, 11);
+        gridLayout_6->setObjectName(QStringLiteral("gridLayout_6"));
+        gridLayout_5 = new QGridLayout();
+        gridLayout_5->setSpacing(6);
+        gridLayout_5->setObjectName(QStringLiteral("gridLayout_5"));
+        logPlainTextEdit = new QPlainTextEdit(logDockSubWidget);
+        logPlainTextEdit->setObjectName(QStringLiteral("logPlainTextEdit"));
+        logPlainTextEdit->setLineWrapMode(QPlainTextEdit::NoWrap);
+        logPlainTextEdit->setReadOnly(true);
+
+        gridLayout_5->addWidget(logPlainTextEdit, 0, 0, 1, 1);
+
+
+        gridLayout_6->addLayout(gridLayout_5, 2, 0, 1, 1);
+
+        logDockWidget->setWidget(logDockSubWidget);
+        PortefolioManagerClass->addDockWidget(static_cast<Qt::DockWidgetArea>(8), logDockWidget);
 
         menuBar->addAction(menuWindows->menuAction());
         menuBar->addAction(menuPreview->menuAction());
         menuPreview->addAction(actionRefresh);
-        menuWindows->addAction(actionToggle_Preview);
+        menuWindows->addAction(actionTogglePreview);
+        menuWindows->addAction(actionToggleLog);
         mainToolBar->addAction(actionBold);
         mainToolBar->addAction(actionItalic);
         mainToolBar->addAction(actionUnderline);
@@ -158,13 +193,15 @@ public:
 #ifndef QT_NO_SHORTCUT
         actionUnderline->setShortcut(QApplication::translate("PortefolioManagerClass", "Ctrl+U", nullptr));
 #endif // QT_NO_SHORTCUT
-        actionToggle_Preview->setText(QApplication::translate("PortefolioManagerClass", "Toggle Preview", nullptr));
+        actionTogglePreview->setText(QApplication::translate("PortefolioManagerClass", "Toggle Preview", nullptr));
 #ifndef QT_NO_TOOLTIP
-        actionToggle_Preview->setToolTip(QApplication::translate("PortefolioManagerClass", "Toggle Preview", nullptr));
+        actionTogglePreview->setToolTip(QApplication::translate("PortefolioManagerClass", "Toggle Preview", nullptr));
 #endif // QT_NO_TOOLTIP
+        actionToggleLog->setText(QApplication::translate("PortefolioManagerClass", "Toggle Log", nullptr));
         menuPreview->setTitle(QApplication::translate("PortefolioManagerClass", "Preview", nullptr));
         menuWindows->setTitle(QApplication::translate("PortefolioManagerClass", "Windows", nullptr));
         previewDockWidget->setWindowTitle(QApplication::translate("PortefolioManagerClass", "Preview", nullptr));
+        logDockWidget->setWindowTitle(QApplication::translate("PortefolioManagerClass", "Log", nullptr));
     } // retranslateUi
 
 };

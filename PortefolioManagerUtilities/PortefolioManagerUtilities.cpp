@@ -20,3 +20,8 @@ QTextCursor* PortefolioManagerUtilities::wrapText(QTextCursor* cursor, const QSt
 
 	return cursor;
 }
+
+PORTEFOLIOMANAGERUTILITIES_EXPORT void PortefolioManagerUtilities::formatHtml(QString& text)
+{
+	text.replace('\n', "");
+}

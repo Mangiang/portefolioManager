@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>973</width>
-    <height>477</height>
+    <width>1280</width>
+    <height>1024</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,13 +17,26 @@
    <iconset resource="PortefolioManager.qrc">
     <normaloff>:/PortefolioManager/Resources/images/icon.png</normaloff>:/PortefolioManager/Resources/images/icon.png</iconset>
   </property>
+  <property name="iconSize">
+   <size>
+    <width>16</width>
+    <height>16</height>
+   </size>
+  </property>
   <property name="dockOptions">
    <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::GroupedDragging</set>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <widget class="QPlainTextEdit" name="contentPlainTextEdit"/>
+     <widget class="QPlainTextEdit" name="contentPlainTextEdit">
+      <property name="lineWrapMode">
+       <enum>QPlainTextEdit::NoWrap</enum>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -32,7 +45,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>973</width>
+     <width>1280</width>
      <height>18</height>
     </rect>
    </property>
@@ -46,7 +59,8 @@
     <property name="title">
      <string>Windows</string>
     </property>
-    <addaction name="actionToggle_Preview"/>
+    <addaction name="actionTogglePreview"/>
+    <addaction name="actionToggleLog"/>
    </widget>
    <addaction name="menuWindows"/>
    <addaction name="menuPreview"/>
@@ -94,6 +108,32 @@
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QDockWidget" name="logDockWidget">
+   <property name="windowTitle">
+    <string>Log</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="logDockSubWidget">
+    <layout class="QGridLayout" name="gridLayout_6">
+     <item row="2" column="0">
+      <layout class="QGridLayout" name="gridLayout_5">
+       <item row="0" column="0">
+        <widget class="QPlainTextEdit" name="logPlainTextEdit">
+         <property name="lineWrapMode">
+          <enum>QPlainTextEdit::NoWrap</enum>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="actionRefresh">
    <property name="text">
     <string>Refresh</string>
@@ -138,12 +178,17 @@
     <string>Ctrl+U</string>
    </property>
   </action>
-  <action name="actionToggle_Preview">
+  <action name="actionTogglePreview">
    <property name="text">
     <string>Toggle Preview</string>
    </property>
    <property name="toolTip">
     <string>Toggle Preview</string>
+   </property>
+  </action>
+  <action name="actionToggleLog">
+   <property name="text">
+    <string>Toggle Log</string>
    </property>
   </action>
  </widget>
