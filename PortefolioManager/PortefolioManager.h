@@ -46,9 +46,6 @@ private:
 	
 
 private slots:
-	/*!	Triggered when the showLogin action has been triggered.  */
-	void onLoginDialogShow(bool checked = false);
-	
 	/*!	Triggered when the loginDialog accepted signal has been triggered.  */
 	void onLoginDialogAccepted();
 

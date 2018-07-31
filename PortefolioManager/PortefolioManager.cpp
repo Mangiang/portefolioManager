@@ -49,7 +49,7 @@ PortefolioManager::PortefolioManager(QWidget *parent)
 	loginDialog = QSharedPointer<LoginDialog>(new LoginDialog(this));
 	connect(loginDialog.data(), SIGNAL(accepted()), SLOT(onLoginDialogAccepted()));
 	connect(loginDialog.data(), SIGNAL(rejected()), SLOT(onLoginDialogRejected()));
-	onLoginDialogShow();
+	loginDialog->exec();
 }
 
 void PortefolioManager::onLoginDialogAccepted()
@@ -61,11 +61,7 @@ void PortefolioManager::onLoginDialogAccepted()
 void PortefolioManager::onLoginDialogRejected()
 {
 	loggedIn = false;
-}
-
-void PortefolioManager::onLoginDialogShow(bool)
-{
-	loginDialog->exec();
+	close();
 }
 
 void PortefolioManager::onTogglePreview(bool) const

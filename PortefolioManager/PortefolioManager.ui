@@ -54,8 +54,6 @@
     </property>
     <addaction name="actionTogglePreview"/>
     <addaction name="actionToggleLog"/>
-    <addaction name="separator"/>
-    <addaction name="actionShowLogin"/>
    </widget>
    <addaction name="menuWindows"/>
    <addaction name="menuPreview"/>
@@ -181,11 +179,6 @@
   <action name="actionToggleLog">
    <property name="text">
     <string>Toggle Log</string>
-   </property>
-  </action>
-  <action name="actionShowLogin">
-   <property name="text">
-    <string>Show login</string>
    </property>
   </action>
  </widget>
