@@ -3,6 +3,8 @@
 #include <QDialog>
 #include "ui_LoginDialog.h"
 
+class LoginManager;
+
 class LoginDialog : public QDialog
 {
 	Q_OBJECT
@@ -12,8 +14,10 @@ public:
 
 private:
 	Ui::LoginDialog ui;
+	LoginManager* loginManager;
 
 private slots:
 	void onCancelClicked(bool checked = false);
 	void onLoginClicked(bool checked = false);
+	void onLoginAnswer();
 };
