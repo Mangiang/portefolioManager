@@ -9,8 +9,8 @@ LoginManager::LoginManager(QObject *parent)
 void LoginManager::login(const QString& username, const QString& password)
 {
 	QHash<QString, QString> body;
-	body.insert("username", username);
+	body.insert("login", username);
 	body.insert("password", password);
 	
-	NetworkManager::postUrlEncoded(QString("%1%2").arg(this->baseUrl).arg("/api/login"), body);
+	NetworkManager::postUrlEncoded(QString("%1%2").arg(this->baseUrl).arg("/api/user/login"), body);
 }
