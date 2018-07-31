@@ -15,7 +15,7 @@ NetworkManager::NetworkManager(QObject *parent)
 	baseUrl("https://arthur-joly.fr")
 
 {
-	connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onRequestFinish(QNetworkReply*)));
+	connect(manager.data(), SIGNAL(finished(QNetworkReply*)), this, SLOT(onRequestFinish(QNetworkReply*)));
 }
 
 void NetworkManager::postUrlEncoded(const QString& url, const QHash<QString, QString>& body)
@@ -51,8 +51,8 @@ QString NetworkManager::getLastReplayMessage() const
 	return lastReply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toString();
 }
 
-void NetworkManager::onRequestFinish(QNetworkReply *rep)
+void NetworkManager::onRequestFinish(QNetworkReply* rep)
 {
-	lastReply = rep;
+	lastReply = QSharedPointer<QNetworkReply>(rep);
 	emit finished();
 }

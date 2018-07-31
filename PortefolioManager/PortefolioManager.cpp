@@ -28,6 +28,7 @@ PortefolioManager::PortefolioManager(QWidget *parent)
 	// Setup Log Dock Widget
 	ui.logDockWidget->setWindowFlags(Qt::CustomizeWindowHint | Qt::Window | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
 	ui.logDockWidget->setFloating(false);
+	ui.logDockWidget->setVisible(false);
 
 	// MenuBar actions
 	connect(ui.actionRefresh, SIGNAL(triggered(bool)), SLOT(onRefreshPreview(bool)));
@@ -43,11 +44,11 @@ PortefolioManager::PortefolioManager(QWidget *parent)
 	// Other actions
 	connect(ui.webEngineView, SIGNAL(loadFinished(bool)), SLOT(onPageLoadFinished(bool)));
 	connect(ui.webEngineView, SIGNAL(urlChanged(const QUrl&)), SLOT(onUrlChanged(const QUrl&)));
-	connect(updateTimer, SIGNAL(timeout()), this, SLOT(onUpdateTimeout()));
+	connect(updateTimer.data(), SIGNAL(timeout()), this, SLOT(onUpdateTimeout()));
 	
-	loginDialog = new LoginDialog(this);
-	connect(loginDialog, SIGNAL(accepted()), SLOT(onLoginDialogAccepted()));
-	connect(loginDialog, SIGNAL(rejected()), SLOT(onLoginDialogRejected()));
+	loginDialog = QSharedPointer<LoginDialog>(new LoginDialog(this));
+	connect(loginDialog.data(), SIGNAL(accepted()), SLOT(onLoginDialogAccepted()));
+	connect(loginDialog.data(), SIGNAL(rejected()), SLOT(onLoginDialogRejected()));
 	onLoginDialogShow();
 }
 
@@ -70,7 +71,7 @@ void PortefolioManager::onLoginDialogShow(bool)
 void PortefolioManager::onTogglePreview(bool) const
 {
 	ui.previewDockWidget->setVisible(!ui.previewDockWidget->isVisible());
-	ui.previewDockWidget->setFloating(true);
+	ui.previewDockWidget->setFloating(false);
 }
 
 void PortefolioManager::customMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
@@ -132,7 +133,7 @@ void PortefolioManager::customMessageHandler(QtMsgType type, const QMessageLogCo
 void PortefolioManager::onToggleLog(bool) const
 {
 	ui.logDockWidget->setVisible(!ui.logDockWidget->isVisible());
-	ui.logDockWidget->setFloating(true);
+	ui.logDockWidget->setFloating(false);
 }
 
 void PortefolioManager::onRefreshPreview(bool checked /*= false*/) const

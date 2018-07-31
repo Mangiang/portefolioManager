@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-
+#include <QSharedPointer>
 #include "portefoliomanagerutilities_global.h"
 
 class QNetworkAccessManager;
@@ -16,14 +16,14 @@ public:
 	const int getLastReplyStatusCode() const;
 	QString getLastReplayMessage() const;
 private:
-	QNetworkAccessManager* manager;
-	QNetworkReply* lastReply;
+	QSharedPointer<QNetworkAccessManager> manager;
+	QSharedPointer<QNetworkReply> lastReply;
 protected:
 	const QString baseUrl;
 	void postUrlEncoded(const QString& url, const QHash<QString, QString>& body);
 
 private slots:
-	void onRequestFinish(QNetworkReply *rep);
+	void onRequestFinish(QNetworkReply* rep);
 
 signals:
 	void finished();

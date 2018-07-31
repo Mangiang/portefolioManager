@@ -1,5 +1,7 @@
 #pragma once
 
+#include <QSharedPointer>
+
 #include "ui_PortefolioManager.h"
 #include "LoginDialog.h"
 
@@ -12,7 +14,6 @@ class PortefolioManager : public QMainWindow
 	Q_OBJECT
 
 public:
-
 	/*!	The Constructor. */
 	PortefolioManager(QWidget *parent = Q_NULLPTR);
 
@@ -33,7 +34,7 @@ private:
 	Ui::PortefolioManagerClass ui;
 
 	/*! The login Dialog*/
-	LoginDialog* loginDialog;
+	QSharedPointer<LoginDialog> loginDialog;
 
 	/*! Is the user logged in ?*/
 	bool loggedIn;
@@ -41,7 +42,7 @@ private:
 	/*!	A timer needed to delay the execution of the javascript description check.
 	 *	\sa http://doc.qt.io/qt-5/qtimer.html
 	 */
-	QTimer *updateTimer;
+	QSharedPointer<QTimer> updateTimer;
 	
 
 private slots:

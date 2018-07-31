@@ -10,10 +10,11 @@ LoginDialog::LoginDialog(QWidget *parent)
 {
 	ui.setupUi(this);
 	ui.errorLabel->setVisible(false);
+	setWindowFlags(Qt::Window | Qt::WindowTitleHint);
 
 	connect(ui.cancelPushButton, SIGNAL(clicked(bool)), SLOT(onCancelClicked(bool)));
 	connect(ui.loginPushButton, SIGNAL(clicked(bool)), SLOT(onLoginClicked(bool)));
-	connect(loginManager, SIGNAL(finished()), SLOT(onLoginAnswer()));
+	connect(loginManager.data(), SIGNAL(finished()), SLOT(onLoginAnswer()));
 }
 
 void LoginDialog::onCancelClicked(bool checked /*= false*/)

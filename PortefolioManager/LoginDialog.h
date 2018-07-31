@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QDialog>
+#include <QSharedPointer>
 #include "ui_LoginDialog.h"
 
 class LoginManager;
@@ -14,7 +15,7 @@ public:
 
 private:
 	Ui::LoginDialog ui;
-	LoginManager* loginManager;
+	QSharedPointer<LoginManager> loginManager;
 
 private slots:
 	void onCancelClicked(bool checked = false);
