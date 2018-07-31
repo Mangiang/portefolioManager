@@ -35,13 +35,15 @@ public:
     QAction *actionUnderline;
     QAction *actionTogglePreview;
     QAction *actionToggleLog;
-    QAction *actionShowLogin;
+    QAction *actionNewProject;
+    QAction *actionProjectSettings;
     QWidget *centralWidget;
     QGridLayout *gridLayout;
     QPlainTextEdit *contentPlainTextEdit;
     QMenuBar *menuBar;
     QMenu *menuPreview;
     QMenu *menuWindows;
+    QMenu *menuProject;
     QToolBar *mainToolBar;
     QDockWidget *previewDockWidget;
     QWidget *previewDockSubWidget;
@@ -86,8 +88,10 @@ public:
         actionTogglePreview->setObjectName(QStringLiteral("actionTogglePreview"));
         actionToggleLog = new QAction(PortefolioManagerClass);
         actionToggleLog->setObjectName(QStringLiteral("actionToggleLog"));
-        actionShowLogin = new QAction(PortefolioManagerClass);
-        actionShowLogin->setObjectName(QStringLiteral("actionShowLogin"));
+        actionNewProject = new QAction(PortefolioManagerClass);
+        actionNewProject->setObjectName(QStringLiteral("actionNewProject"));
+        actionProjectSettings = new QAction(PortefolioManagerClass);
+        actionProjectSettings->setObjectName(QStringLiteral("actionProjectSettings"));
         centralWidget = new QWidget(PortefolioManagerClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
@@ -102,11 +106,13 @@ public:
         PortefolioManagerClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(PortefolioManagerClass);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1339, 18));
+        menuBar->setGeometry(QRect(0, 0, 1339, 17));
         menuPreview = new QMenu(menuBar);
         menuPreview->setObjectName(QStringLiteral("menuPreview"));
         menuWindows = new QMenu(menuBar);
         menuWindows->setObjectName(QStringLiteral("menuWindows"));
+        menuProject = new QMenu(menuBar);
+        menuProject->setObjectName(QStringLiteral("menuProject"));
         PortefolioManagerClass->setMenuBar(menuBar);
         mainToolBar = new QToolBar(PortefolioManagerClass);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -125,7 +131,7 @@ public:
         gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
         webEngineView = new QWebEngineView(previewDockSubWidget);
         webEngineView->setObjectName(QStringLiteral("webEngineView"));
-        webEngineView->setUrl(QUrl(QStringLiteral("about:blank")));
+        webEngineView->setProperty("url", QVariant(QUrl(QStringLiteral("about:blank"))));
 
         gridLayout_2->addWidget(webEngineView, 0, 0, 1, 1);
 
@@ -162,11 +168,12 @@ public:
 
         menuBar->addAction(menuWindows->menuAction());
         menuBar->addAction(menuPreview->menuAction());
+        menuBar->addAction(menuProject->menuAction());
         menuPreview->addAction(actionRefresh);
         menuWindows->addAction(actionTogglePreview);
         menuWindows->addAction(actionToggleLog);
-        menuWindows->addSeparator();
-        menuWindows->addAction(actionShowLogin);
+        menuProject->addAction(actionNewProject);
+        menuProject->addAction(actionProjectSettings);
         mainToolBar->addAction(actionBold);
         mainToolBar->addAction(actionItalic);
         mainToolBar->addAction(actionUnderline);
@@ -200,9 +207,11 @@ public:
         actionTogglePreview->setToolTip(QApplication::translate("PortefolioManagerClass", "Toggle Preview", nullptr));
 #endif // QT_NO_TOOLTIP
         actionToggleLog->setText(QApplication::translate("PortefolioManagerClass", "Toggle Log", nullptr));
-        actionShowLogin->setText(QApplication::translate("PortefolioManagerClass", "Show login", nullptr));
+        actionNewProject->setText(QApplication::translate("PortefolioManagerClass", "New Project", nullptr));
+        actionProjectSettings->setText(QApplication::translate("PortefolioManagerClass", "Project settings", nullptr));
         menuPreview->setTitle(QApplication::translate("PortefolioManagerClass", "Preview", nullptr));
         menuWindows->setTitle(QApplication::translate("PortefolioManagerClass", "Windows", nullptr));
+        menuProject->setTitle(QApplication::translate("PortefolioManagerClass", "Project", nullptr));
         previewDockWidget->setWindowTitle(QApplication::translate("PortefolioManagerClass", "Preview", nullptr));
         logDockWidget->setWindowTitle(QApplication::translate("PortefolioManagerClass", "Log", nullptr));
     } // retranslateUi

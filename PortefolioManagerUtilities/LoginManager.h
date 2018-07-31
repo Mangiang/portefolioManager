@@ -1,8 +1,5 @@
 #pragma once
 
-#include <QObject>
-
-#include "portefoliomanagerutilities_global.h"
 #include "NetworkManager.h"
 
 class NetworkManager;

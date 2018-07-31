@@ -34,7 +34,8 @@ PortefolioManager::PortefolioManager(QWidget *parent)
 	connect(ui.actionRefresh, SIGNAL(triggered(bool)), SLOT(onRefreshPreview(bool)));
 	connect(ui.actionTogglePreview, SIGNAL(triggered(bool)), SLOT(onTogglePreview(bool)));
 	connect(ui.actionToggleLog, SIGNAL(triggered(bool)), SLOT(onToggleLog(bool)));
-	connect(ui.actionShowLogin, SIGNAL(triggered(bool)), SLOT(onLoginDialogShow(bool)));
+	connect(ui.actionNewProject, SIGNAL(triggered(bool)), SLOT(onNewProjectTriggered(bool)));
+	connect(ui.actionProjectSettings, SIGNAL(triggered(bool)), SLOT(onProjectSettingsTriggered(bool)));
 
 	// ToolBar actions
 	connect(ui.actionBold, SIGNAL(triggered(bool)), SLOT(onBoldTriggered(bool)));
@@ -50,6 +51,9 @@ PortefolioManager::PortefolioManager(QWidget *parent)
 	connect(loginDialog.data(), SIGNAL(accepted()), SLOT(onLoginDialogAccepted()));
 	connect(loginDialog.data(), SIGNAL(rejected()), SLOT(onLoginDialogRejected()));
 	loginDialog->exec();
+	
+	projectSettingsDialog = QSharedPointer<ProjectSettingsDialog>(new ProjectSettingsDialog(this));
+	connect(projectSettingsDialog.data(), SIGNAL(accepted()), SLOT(onLoginDialogAccepted()));
 }
 
 void PortefolioManager::onLoginDialogAccepted()
@@ -187,4 +191,24 @@ void PortefolioManager::onUnderlineTriggered(bool checked /*= false*/) const
 {
 	QTextCursor* cursor = &ui.contentPlainTextEdit->textCursor();
 	PortefolioManagerUtilities::wrapText(cursor, "u");
+}
+
+void PortefolioManager::onNewProjectTriggered(bool checked /*= false*/) const
+{
+
+}
+
+void PortefolioManager::onNewProjectSettingsDialogAccepted()
+{
+
+}
+
+void PortefolioManager::onProjectSettingsTriggered(bool checked /*= false*/) const
+{
+
+}
+
+void PortefolioManager::onProjectSettingsDialogAccepted()
+{
+
 }

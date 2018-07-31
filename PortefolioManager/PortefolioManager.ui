@@ -39,7 +39,7 @@
      <x>0</x>
      <y>0</y>
      <width>1339</width>
-     <height>18</height>
+     <height>17</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuPreview">
@@ -55,8 +55,16 @@
     <addaction name="actionTogglePreview"/>
     <addaction name="actionToggleLog"/>
    </widget>
+   <widget class="QMenu" name="menuProject">
+    <property name="title">
+     <string>Project</string>
+    </property>
+    <addaction name="actionNewProject"/>
+    <addaction name="actionProjectSettings"/>
+   </widget>
    <addaction name="menuWindows"/>
    <addaction name="menuPreview"/>
+   <addaction name="menuProject"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <property name="iconSize">
@@ -87,8 +95,8 @@
      <item row="0" column="0">
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0">
-        <widget class="QWebEngineView" name="webEngineView">
-         <property name="url">
+        <widget class="QWebEngineView" name="webEngineView" native="true">
+         <property name="url" stdset="0">
           <url>
            <string>about:blank</string>
           </url>
@@ -179,6 +187,16 @@
   <action name="actionToggleLog">
    <property name="text">
     <string>Toggle Log</string>
+   </property>
+  </action>
+  <action name="actionNewProject">
+   <property name="text">
+    <string>New Project</string>
+   </property>
+  </action>
+  <action name="actionProjectSettings">
+   <property name="text">
+    <string>Project settings</string>
    </property>
   </action>
  </widget>

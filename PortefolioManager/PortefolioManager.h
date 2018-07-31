@@ -4,6 +4,7 @@
 
 #include "ui_PortefolioManager.h"
 #include "LoginDialog.h"
+#include "ProjectSettingsDialog.h"
 
 /*!	\class PortefolioManager
  * 	\brief The QMainWindow holding the tool together.
@@ -36,6 +37,9 @@ private:
 	/*! The login Dialog*/
 	QSharedPointer<LoginDialog> loginDialog;
 
+	/*! The project settings Dialog*/
+	QSharedPointer<ProjectSettingsDialog> projectSettingsDialog;
+
 	/*! Is the user logged in ?*/
 	bool loggedIn;
 
@@ -62,7 +66,6 @@ private slots:
 	 */
 	void onToggleLog(bool checked = false) const;
 	
-
 	/*!	Triggered when the action actionRefresh has been triggered.
 	 *	\param checked Not used. Checks if the trigger is active.
 	 */
@@ -98,4 +101,20 @@ private slots:
 	 *	\param checked Not used. Checks if the trigger is active.
 	 */
 	void onUnderlineTriggered(bool checked = false) const;
+	
+	/*!	Triggered when the action actionNewProject has been triggered.
+	 *	\param checked Not used. Checks if the trigger is active.
+	 */
+	void onNewProjectTriggered(bool checked = false) const;
+
+	/*!	Triggered when creating a new project and the projectSettingsDialog accepted signal has been triggered.  */
+	void onNewProjectSettingsDialogAccepted();
+	
+	/*!	Triggered when the action actionProjectSettings has been triggered.
+	 *	\param checked Not used. Checks if the trigger is active.
+	 */
+	void onProjectSettingsTriggered(bool checked = false) const;
+
+	/*!	Triggered when in project settings and the projectSettingsDialog accepted signal has been triggered.  */
+	void onProjectSettingsDialogAccepted();
 };

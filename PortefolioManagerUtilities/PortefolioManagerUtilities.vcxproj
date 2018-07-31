@@ -100,8 +100,15 @@
     <ClCompile Include="LoginManager.cpp" />
     <ClCompile Include="NetworkManager.cpp" />
     <ClCompile Include="PortefolioManagerUtilities.cpp" />
+    <ClCompile Include="ProjectManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="ProjectManager.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName)\.;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_CORE_LIB;PORTEFOLIOMANAGERUTILITIES_LIB;QT_GUI_LIB;QT_NETWORK_LIB;_WINDLL</Define>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName)\.;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Release|x64'">UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;PORTEFOLIOMANAGERUTILITIES_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_NO_DEBUG_OUTPUT;_WINDLL</Define>
+    </QtMoc>
     <QtMoc Include="NetworkManager.h" />
     <QtMoc Include="LoginManager.h">
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName)\.;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork</IncludePath>
