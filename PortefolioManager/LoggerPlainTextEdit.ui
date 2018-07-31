@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ProjectSettingsDialog</class>
- <widget class="QDialog" name="ProjectSettingsDialog">
+ <class>LoggerPlainTextEdit</class>
+ <widget class="QPlainTextEdit" name="LoggerPlainTextEdit">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,10 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>ProjectSettingsDialog</string>
+   <string>LoggerPlainTextEdit</string>
+  </property>
+  <property name="readOnly">
+   <bool>true</bool>
   </property>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

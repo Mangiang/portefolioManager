@@ -51,6 +51,9 @@
     <ClCompile Include="Project.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
+    <ClCompile Include="LoggerPlainTextEdit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="PortefolioManager.h">
@@ -62,6 +65,9 @@
     <QtMoc Include="ProjectSettingsDialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="LoggerPlainTextEdit.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="PortefolioManager.ui">
@@ -71,6 +77,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="ProjectSettingsDialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="LoggerPlainTextEdit.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

@@ -23,6 +23,7 @@
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QWidget>
+#include "LoggerPlainTextEdit.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -55,7 +56,7 @@ public:
     QWidget *logDockSubWidget;
     QGridLayout *gridLayout_6;
     QGridLayout *gridLayout_5;
-    QPlainTextEdit *logPlainTextEdit;
+    LoggerPlainTextEdit *logPlainTextEdit;
 
     void setupUi(QMainWindow *PortefolioManagerClass)
     {
@@ -154,7 +155,7 @@ public:
         gridLayout_5 = new QGridLayout();
         gridLayout_5->setSpacing(6);
         gridLayout_5->setObjectName(QStringLiteral("gridLayout_5"));
-        logPlainTextEdit = new QPlainTextEdit(logDockSubWidget);
+        logPlainTextEdit = new LoggerPlainTextEdit(logDockSubWidget);
         logPlainTextEdit->setObjectName(QStringLiteral("logPlainTextEdit"));
         logPlainTextEdit->setReadOnly(true);
 

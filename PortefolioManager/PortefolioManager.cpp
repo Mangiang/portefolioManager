@@ -1,14 +1,9 @@
 #include "PortefolioManager.h"
 
-#include <QFileInfo>
 #include <QTimer>
 #include <QtWidgets/QMainWindow>
-#include <QMessageLogger>
 
 #include "PortefolioManagerUtilities.h"
-
-QPlainTextEdit* PortefolioManager::logTextEdit = 0;
-bool PortefolioManager::logAutoScroll = true;
 
 PortefolioManager::PortefolioManager(QWidget *parent)
 	: QMainWindow(parent),
@@ -18,8 +13,6 @@ PortefolioManager::PortefolioManager(QWidget *parent)
 {
 
 	ui.setupUi(this);
-	logTextEdit = ui.logPlainTextEdit;
-	qInstallMessageHandler(customMessageHandler);
 	
 	// Setup Preview Dock Widget
 	ui.previewDockWidget->setWindowFlags(Qt::CustomizeWindowHint | Qt::Window | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
@@ -74,61 +67,6 @@ void PortefolioManager::onTogglePreview(bool) const
 	ui.previewDockWidget->setFloating(false);
 }
 
-void PortefolioManager::customMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
-{
-	QString typeStr;
-	QString backgroundColor = "#FFFFFF";
-	switch (type) {
-	case QtDebugMsg:
-		typeStr = "DEBUG";
-		break;
-	case QtInfoMsg:
-		typeStr = "INFO";
-		break;
-	case QtWarningMsg:
-		typeStr = "WARNING";
-		backgroundColor = "#FF8100";
-		break;
-	case QtCriticalMsg:
-		typeStr = "CRITICAL";
-		backgroundColor = "#FF0000";
-		break;
-	case QtFatalMsg:
-		typeStr = "FATAL";
-		backgroundColor = "#FF0000";
-		abort();
-	}
-
-#ifdef QT_DEBUG
-	const QString& fileShortName = QFileInfo(context.file).fileName();
-
-	QRegExp funcRegExp("\\s([^\\s]*)\\(");
-	funcRegExp.indexIn(context.function);
-	QStringList& list = funcRegExp.capturedTexts();
-	QString functionShortName;
-	if (list.length() > 0)
-	{
-		functionShortName = list[0].mid(1, list[0].length() - 2);
-	}
-
-	const QString& logString = QString("<span style=\"background-color: %1\">[%2] [%3] (%4:%5) %6</span><br/>\n").arg(backgroundColor).arg(typeStr).arg(functionShortName).arg(fileShortName).arg(context.line).arg(msg.toHtmlEscaped());
-#else
-	const QString& logString = QString("<span style=\"background-color: %1\">[%2] %3</span><br/>\n").arg(backgroundColor).arg(typeStr).arg(msg.toHtmlEscaped());
-#endif
-	if (logTextEdit)
-	{
-		const int previousPosition = logTextEdit->textCursor().position();
-
-		logTextEdit->moveCursor(QTextCursor::End);
-		logTextEdit->textCursor().insertHtml(logString);
-
-		if (logAutoScroll)
-			logTextEdit->moveCursor(QTextCursor::End);
-		else
-			logTextEdit->textCursor().setPosition(previousPosition);
-
-	}
-}
 
 void PortefolioManager::onToggleLog(bool) const
 {

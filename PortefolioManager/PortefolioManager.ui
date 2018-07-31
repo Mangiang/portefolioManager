@@ -121,7 +121,7 @@
      <item row="2" column="0">
       <layout class="QGridLayout" name="gridLayout_5">
        <item row="0" column="0">
-        <widget class="QPlainTextEdit" name="logPlainTextEdit">
+        <widget class="LoggerPlainTextEdit" name="logPlainTextEdit">
          <property name="readOnly">
           <bool>true</bool>
          </property>
@@ -206,6 +206,11 @@
    <class>QWebEngineView</class>
    <extends>QWidget</extends>
    <header location="global">QtWebEngineWidgets/QWebEngineView</header>
+  </customwidget>
+  <customwidget>
+   <class>LoggerPlainTextEdit</class>
+   <extends>QPlainTextEdit</extends>
+   <header>LoggerPlainTextEdit.h</header>
   </customwidget>
  </customwidgets>
  <resources>

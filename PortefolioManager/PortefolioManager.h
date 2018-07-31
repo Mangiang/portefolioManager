@@ -21,15 +21,6 @@ public:
 	/*!	The inner HTML of the projectDescription. */
 	QString descriptionHtml;
 
-	/*! The logTextEdit*/
-	static QPlainTextEdit* logTextEdit;
-
-	/*! Does the log window autoscroll ?*/
-	static bool logAutoScroll;
-
-	/*! The method used to override the message handler*/
-	static void customMessageHandler(QtMsgType, const QMessageLogContext&, const QString&);
-
 private:
 	/*!	The UI. */
 	Ui::PortefolioManagerClass ui;
