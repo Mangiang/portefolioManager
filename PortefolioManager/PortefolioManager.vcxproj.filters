@@ -54,6 +54,9 @@
     <ClCompile Include="LoggerPlainTextEdit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PreviewWebEngineView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="PortefolioManager.h">
@@ -68,6 +71,9 @@
     <QtMoc Include="LoggerPlainTextEdit.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="PreviewWebEngineView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="PortefolioManager.ui">
@@ -80,6 +86,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="LoggerPlainTextEdit.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="PreviewWebEngineView.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

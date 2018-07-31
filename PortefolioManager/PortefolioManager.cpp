@@ -7,11 +7,9 @@
 
 PortefolioManager::PortefolioManager(QWidget *parent)
 	: QMainWindow(parent),
-	updateTimer(new QTimer(this)),
 	loggedIn(false),
 	loginDialog(nullptr)
 {
-
 	ui.setupUi(this);
 	
 	// Setup Preview Dock Widget
@@ -36,10 +34,8 @@ PortefolioManager::PortefolioManager(QWidget *parent)
 	connect(ui.actionUnderline, SIGNAL(triggered(bool)), SLOT(onUnderlineTriggered(bool)));
 
 	// Other actions
-	connect(ui.webEngineView, SIGNAL(loadFinished(bool)), SLOT(onPageLoadFinished(bool)));
-	connect(ui.webEngineView, SIGNAL(urlChanged(const QUrl&)), SLOT(onUrlChanged(const QUrl&)));
-	connect(updateTimer.data(), SIGNAL(timeout()), this, SLOT(onUpdateTimeout()));
-	
+	connect(ui.webEngineView, SIGNAL(isReady()), SLOT(onPageReady()));
+
 	loginDialog = QSharedPointer<LoginDialog>(new LoginDialog(this));
 	connect(loginDialog.data(), SIGNAL(accepted()), SLOT(onLoginDialogAccepted()));
 	connect(loginDialog.data(), SIGNAL(rejected()), SLOT(onLoginDialogRejected()));
@@ -52,7 +48,7 @@ PortefolioManager::PortefolioManager(QWidget *parent)
 void PortefolioManager::onLoginDialogAccepted()
 {
 	loggedIn = true;
-	ui.webEngineView->setUrl(QUrl("https://arthur-joly.fr"));
+	ui.webEngineView->init();
 }
 
 void PortefolioManager::onLoginDialogRejected()
@@ -79,38 +75,17 @@ void PortefolioManager::onRefreshPreview(bool checked /*= false*/) const
 	//ui.webEngineView->setHtml(ui.contentPlainTextEdit->toPlainText());
 	QString& text = ui.contentPlainTextEdit->toPlainText();
 	PortefolioManagerUtilities::formatHtml(text);
-	ui.webEngineView->page()->runJavaScript(
-		QString("var desc = document.getElementById('projectDescription'); "
-			"if (desc) "
-			"	desc.innerHTML = '%1'; ").arg(text));
 
+	ui.webEngineView->setContent("#projectDescription", text);
 }
 
-void PortefolioManager::onPageLoadFinished(bool status) const
+void PortefolioManager::onPageReady() const
 {
-	if (status)
-	{
-		// Add a timer because PageLoadFinished is not always perfectly finished
-		updateTimer->start(500);
-	}
-}
-
-void PortefolioManager::onUrlChanged(const QUrl& newUrl) const
-{
-	ui.webEngineView->setUrl(newUrl);
-}
-
-void PortefolioManager::onUpdateTimeout() const
-{
-	ui.webEngineView->page()->runJavaScript(
-		"var desc = document.getElementById('projectDescription');"
-		"(desc ? desc.innerHTML :'')",
+	ui.webEngineView->getContent("#projectDescription",
 		[this](const QVariant &v) {
 		ui.contentPlainTextEdit->clear();
 		ui.contentPlainTextEdit->appendPlainText(v.toString());
-		ui.contentPlainTextEdit->setReadOnly(false);
-	});
-	updateTimer->stop();
+		ui.contentPlainTextEdit->setReadOnly(false);});
 }
 
 void PortefolioManager::onBoldTriggered(bool checked /*= false*/) const

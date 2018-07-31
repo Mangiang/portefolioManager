@@ -95,7 +95,7 @@
      <item row="0" column="0">
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0">
-        <widget class="QWebEngineView" name="webEngineView" native="true">
+        <widget class="PreviewWebEngineView" name="webEngineView" native="true">
          <property name="url" stdset="0">
           <url>
            <string>about:blank</string>
@@ -203,14 +203,15 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>QWebEngineView</class>
-   <extends>QWidget</extends>
-   <header location="global">QtWebEngineWidgets/QWebEngineView</header>
-  </customwidget>
-  <customwidget>
    <class>LoggerPlainTextEdit</class>
    <extends>QPlainTextEdit</extends>
    <header>LoggerPlainTextEdit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>PreviewWebEngineView</class>
+   <extends>QWidget</extends>
+   <header>PreviewWebEngineView.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

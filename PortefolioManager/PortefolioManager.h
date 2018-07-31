@@ -33,11 +33,6 @@ private:
 
 	/*! Is the user logged in ?*/
 	bool loggedIn;
-
-	/*!	A timer needed to delay the execution of the javascript description check.
-	 *	\sa http://doc.qt.io/qt-5/qtimer.html
-	 */
-	QSharedPointer<QTimer> updateTimer;
 	
 
 private slots:
@@ -62,21 +57,10 @@ private slots:
 	 */
 	void onRefreshPreview(bool checked = false) const;
 
-	/*!	Triggered when the loadFinished page signal has been triggered.
-	 *	\param status Has the page finished to load ?
-	 */
-	void onPageLoadFinished(bool status) const;
-
-	/*!	Triggered when the urlChanged page signal has been triggered.
-	 *	\param newUrl The new QUrl.
-	 *	\sa http://doc.qt.io/qt-5/qurl.html
-	 */
-	void onUrlChanged(const QUrl& newUrl) const;
-
-	/*!	Triggered when the timer signal timeout has been triggered.
+	/*!	Triggered when the previewWebEngine isReady signal has been triggered.
 	 *	Used to replace the HTML editor by the content of the web page projectDescription tag.
 	 */
-	void onUpdateTimeout() const;
+	void onPageReady() const;
 
 	/*!	Triggered when the action bold has been triggered.
 	 *	\param checked Not used. Checks if the trigger is active.

@@ -11,7 +11,6 @@
 
 #include <QtCore/QVariant>
 #include <QtGui/QIcon>
-#include <QtWebEngineWidgets/QWebEngineView>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDockWidget>
@@ -24,6 +23,7 @@
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QWidget>
 #include "LoggerPlainTextEdit.h"
+#include "PreviewWebEngineView.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -50,7 +50,7 @@ public:
     QWidget *previewDockSubWidget;
     QGridLayout *gridLayout_3;
     QGridLayout *gridLayout_2;
-    QWebEngineView *webEngineView;
+    PreviewWebEngineView *webEngineView;
     QStatusBar *statusBar;
     QDockWidget *logDockWidget;
     QWidget *logDockSubWidget;
@@ -130,7 +130,7 @@ public:
         gridLayout_2 = new QGridLayout();
         gridLayout_2->setSpacing(6);
         gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
-        webEngineView = new QWebEngineView(previewDockSubWidget);
+        webEngineView = new PreviewWebEngineView(previewDockSubWidget);
         webEngineView->setObjectName(QStringLiteral("webEngineView"));
         webEngineView->setProperty("url", QVariant(QUrl(QStringLiteral("about:blank"))));
 
