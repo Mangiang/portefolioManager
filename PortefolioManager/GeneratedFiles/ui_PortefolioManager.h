@@ -107,7 +107,7 @@ public:
         PortefolioManagerClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(PortefolioManagerClass);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1339, 17));
+        menuBar->setGeometry(QRect(0, 0, 1339, 18));
         menuPreview = new QMenu(menuBar);
         menuPreview->setObjectName(QStringLiteral("menuPreview"));
         menuWindows = new QMenu(menuBar);

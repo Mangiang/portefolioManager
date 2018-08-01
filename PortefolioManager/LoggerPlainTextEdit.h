@@ -13,7 +13,7 @@ public:
 	~LoggerPlainTextEdit();
 
 	/*! The method used to override the message handler*/
-	static void customMessageHandler(QtMsgType, const QMessageLogContext&, const QString&);
+	static void customMessageHandler(QtMsgType type, const QMessageLogContext& context, const QString& msg);
 	
 	/*! The loggerTextEdit*/
 	static LoggerPlainTextEdit* loggerTextEdit;

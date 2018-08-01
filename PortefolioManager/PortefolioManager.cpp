@@ -4,11 +4,15 @@
 #include <QtWidgets/QMainWindow>
 
 #include "PortefolioManagerUtilities.h"
+#include "LoginDialog.h"
+#include "ProjectSettingsDialog.h"
+#include "ProjectManager.h"
 
 PortefolioManager::PortefolioManager(QWidget *parent)
 	: QMainWindow(parent),
-	loggedIn(false),
-	loginDialog(nullptr)
+	loginDialog(nullptr),
+	projectManager(new PortefolioManagerUtilities::ProjectManager(this)),
+	loggedIn(false)
 {
 	ui.setupUi(this);
 	
@@ -35,14 +39,14 @@ PortefolioManager::PortefolioManager(QWidget *parent)
 
 	// Other actions
 	connect(ui.webEngineView, SIGNAL(isReady()), SLOT(onPageReady()));
+	connect(ui.webEngineView, SIGNAL(isNotReady()), SLOT(onPageNotReady()));
 
-	loginDialog = QSharedPointer<LoginDialog>(new LoginDialog(this));
-	connect(loginDialog.data(), SIGNAL(accepted()), SLOT(onLoginDialogAccepted()));
-	connect(loginDialog.data(), SIGNAL(rejected()), SLOT(onLoginDialogRejected()));
+	loginDialog = new LoginDialog(this);
+	connect(loginDialog, SIGNAL(accepted()), SLOT(onLoginDialogAccepted()));
+	connect(loginDialog, SIGNAL(rejected()), SLOT(onLoginDialogRejected()));
 	loginDialog->exec();
 	
-	projectSettingsDialog = QSharedPointer<ProjectSettingsDialog>(new ProjectSettingsDialog(this));
-	connect(projectSettingsDialog.data(), SIGNAL(accepted()), SLOT(onLoginDialogAccepted()));
+	projectSettingsDialog = new ProjectSettingsDialog(this, projectManager);
 }
 
 void PortefolioManager::onLoginDialogAccepted()
@@ -70,22 +74,30 @@ void PortefolioManager::onToggleLog(bool) const
 	ui.logDockWidget->setFloating(false);
 }
 
-void PortefolioManager::onRefreshPreview(bool checked /*= false*/) const
+void PortefolioManager::onRefreshPreview(bool) const
 {
-	//ui.webEngineView->setHtml(ui.contentPlainTextEdit->toPlainText());
 	QString& text = ui.contentPlainTextEdit->toPlainText();
 	PortefolioManagerUtilities::formatHtml(text);
 
-	ui.webEngineView->setContent("#projectDescription", text);
+	ui.webEngineView->setHtmlTagContent("#projectDescription", text);
 }
 
 void PortefolioManager::onPageReady() const
 {
-	ui.webEngineView->getContent("#projectDescription",
+	ui.webEngineView->getHtmlTagContent("#projectDescription",
 		[this](const QVariant &v) {
 		ui.contentPlainTextEdit->clear();
 		ui.contentPlainTextEdit->appendPlainText(v.toString());
-		ui.contentPlainTextEdit->setReadOnly(false);});
+
+		ui.contentPlainTextEdit->setReadOnly(false);
+		ui.actionProjectSettings->setEnabled(true);
+	});
+}
+
+void PortefolioManager::onPageNotReady() const
+{
+	ui.contentPlainTextEdit->setReadOnly(true);
+	ui.actionProjectSettings->setEnabled(false);
 }
 
 void PortefolioManager::onBoldTriggered(bool checked /*= false*/) const
@@ -108,20 +120,15 @@ void PortefolioManager::onUnderlineTriggered(bool checked /*= false*/) const
 
 void PortefolioManager::onNewProjectTriggered(bool checked /*= false*/) const
 {
-
-}
-
-void PortefolioManager::onNewProjectSettingsDialogAccepted()
-{
-
+	projectSettingsDialog->init();
+	projectSettingsDialog->exec();
 }
 
 void PortefolioManager::onProjectSettingsTriggered(bool checked /*= false*/) const
 {
-
-}
-
-void PortefolioManager::onProjectSettingsDialogAccepted()
-{
-
+	const QString& path = ui.webEngineView->getPath();
+	const QStringList& pathList = path.split('/');
+	const QString& projectId = pathList.last();
+	projectSettingsDialog->setProjectId(projectId);
+	projectSettingsDialog->exec();
 }

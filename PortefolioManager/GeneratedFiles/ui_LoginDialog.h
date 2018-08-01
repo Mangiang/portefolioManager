@@ -40,6 +40,7 @@ public:
         if (LoginDialog->objectName().isEmpty())
             LoginDialog->setObjectName(QStringLiteral("LoginDialog"));
         LoginDialog->resize(613, 527);
+        LoginDialog->setMinimumSize(QSize(613, 527));
         gridLayout_2 = new QGridLayout(LoginDialog);
         gridLayout_2->setSpacing(6);
         gridLayout_2->setContentsMargins(11, 11, 11, 11);

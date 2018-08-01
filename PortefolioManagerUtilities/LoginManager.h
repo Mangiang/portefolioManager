@@ -4,11 +4,13 @@
 
 class NetworkManager;
 
-class PORTEFOLIOMANAGERUTILITIES_EXPORT LoginManager : public NetworkManager
-{
-	Q_OBJECT
+namespace PortefolioManagerUtilities {
+	class PORTEFOLIOMANAGERUTILITIES_EXPORT LoginManager : public NetworkManager
+	{
+		Q_OBJECT
 
-public:
-	LoginManager(QObject *parent);
-	void login(const QString&, const QString&);
-};
+	public:
+		LoginManager(QObject *parent);
+		bool login(const QString& username, const QString& password);
+	};
+}

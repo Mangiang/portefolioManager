@@ -2,6 +2,7 @@
 
 #include "NetworkManager.h"
 
+namespace PortefolioManagerUtilities {
 class PORTEFOLIOMANAGERUTILITIES_EXPORT ProjectManager : public NetworkManager
 {
 	Q_OBJECT
@@ -9,4 +10,6 @@ class PORTEFOLIOMANAGERUTILITIES_EXPORT ProjectManager : public NetworkManager
 public:
 	ProjectManager(QObject *parent);
 	~ProjectManager();
+	bool getProject(const QString& projectId) const;
 };
+}

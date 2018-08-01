@@ -23,7 +23,7 @@ void PreviewWebEngineView::init()
 	setUrl(baseUrl);
 }
 
-bool PreviewWebEngineView::setContent(const QString& selector, const QString& newContent) const
+bool PreviewWebEngineView::setHtmlTagContent(const QString& selector, const QString& newContent) const
 {
 	if (!ready) {
 		qCritical() << "Page not ready yet.";
@@ -37,7 +37,7 @@ bool PreviewWebEngineView::setContent(const QString& selector, const QString& ne
 	return true;
 }
 
-bool PreviewWebEngineView::getContent(const QString& selector, const QWebEngineCallback<const QVariant&> callback) const
+bool PreviewWebEngineView::getHtmlTagContent(const QString& selector, const QWebEngineCallback<const QVariant&> callback) const
 {
 	if (!ready) {
 		qCritical() << "Page not ready yet.";
@@ -50,10 +50,15 @@ bool PreviewWebEngineView::getContent(const QString& selector, const QWebEngineC
 	return true;
 }
 
+QString PreviewWebEngineView::getPath() const
+{
+	return url().path();
+}
+
 void PreviewWebEngineView::onReadyTimerTimeout()
 {
 	page()->runJavaScript(
-		"var desc = document.querySelector('#projectDescription'); (desc ? desc.innerHTML : '')",
+		"var desc = document.querySelector('#projectDescription');(desc ? desc.innerHTML : '')",
 		[this](const QVariant &v) {
 		if (!v.toString().isEmpty())
 		{
@@ -71,8 +76,11 @@ void PreviewWebEngineView::onUrlChanged(const QUrl& newUrl)
 	if (newUrl.path().contains("project"))
 	{
 		ready = false;
+		emit isNotReady();
 		readyTimer->start(readyCheckTimeout);
 	}
-	else
+	else {
 		ready = true;
+		emit isNotReady();
+	}
 }

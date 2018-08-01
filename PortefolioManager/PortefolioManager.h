@@ -1,10 +1,13 @@
 #pragma once
 
-#include <QSharedPointer>
-
 #include "ui_PortefolioManager.h"
-#include "LoginDialog.h"
-#include "ProjectSettingsDialog.h"
+
+class LoginDialog;
+class ProjectSettingsDialog;
+
+namespace PortefolioManagerUtilities {
+	class ProjectManager;
+}
 
 /*!	\class PortefolioManager
  * 	\brief The QMainWindow holding the tool together.
@@ -26,10 +29,13 @@ private:
 	Ui::PortefolioManagerClass ui;
 
 	/*! The login Dialog*/
-	QSharedPointer<LoginDialog> loginDialog;
+	LoginDialog* loginDialog;
 
 	/*! The project settings Dialog*/
-	QSharedPointer<ProjectSettingsDialog> projectSettingsDialog;
+	ProjectSettingsDialog* projectSettingsDialog;
+
+	/*! The project network manager */
+	PortefolioManagerUtilities::ProjectManager* projectManager;
 
 	/*! Is the user logged in ?*/
 	bool loggedIn;
@@ -61,6 +67,11 @@ private slots:
 	 *	Used to replace the HTML editor by the content of the web page projectDescription tag.
 	 */
 	void onPageReady() const;
+	
+	/*!	Triggered when the previewWebEngine isNotReady signal has been triggered.
+	 *	Used to replace the HTML editor by the content of the web page projectDescription tag.
+	 */
+	void onPageNotReady() const;
 
 	/*!	Triggered when the action bold has been triggered.
 	 *	\param checked Not used. Checks if the trigger is active.
@@ -81,15 +92,9 @@ private slots:
 	 *	\param checked Not used. Checks if the trigger is active.
 	 */
 	void onNewProjectTriggered(bool checked = false) const;
-
-	/*!	Triggered when creating a new project and the projectSettingsDialog accepted signal has been triggered.  */
-	void onNewProjectSettingsDialogAccepted();
 	
 	/*!	Triggered when the action actionProjectSettings has been triggered.
 	 *	\param checked Not used. Checks if the trigger is active.
 	 */
 	void onProjectSettingsTriggered(bool checked = false) const;
-
-	/*!	Triggered when in project settings and the projectSettingsDialog accepted signal has been triggered.  */
-	void onProjectSettingsDialogAccepted();
 };

@@ -4,7 +4,9 @@
 #include <QSharedPointer>
 #include "ui_LoginDialog.h"
 
-class LoginManager;
+namespace PortefolioManagerUtilities {
+	class LoginManager;
+}
 
 class LoginDialog : public QDialog
 {
@@ -15,7 +17,7 @@ public:
 
 private:
 	Ui::LoginDialog ui;
-	QSharedPointer<LoginManager> loginManager;
+	PortefolioManagerUtilities::LoginManager* loginManager;
 
 private slots:
 	void onCancelClicked(bool checked = false);

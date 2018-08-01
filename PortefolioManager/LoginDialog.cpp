@@ -6,7 +6,7 @@
 
 LoginDialog::LoginDialog(QWidget *parent)
 	: QDialog(parent),
-	loginManager(new LoginManager(this))
+	loginManager(new PortefolioManagerUtilities::LoginManager(this))
 {
 	ui.setupUi(this);
 	ui.errorLabel->setVisible(false);
@@ -14,7 +14,7 @@ LoginDialog::LoginDialog(QWidget *parent)
 
 	connect(ui.cancelPushButton, SIGNAL(clicked(bool)), SLOT(onCancelClicked(bool)));
 	connect(ui.loginPushButton, SIGNAL(clicked(bool)), SLOT(onLoginClicked(bool)));
-	connect(loginManager.data(), SIGNAL(finished()), SLOT(onLoginAnswer()));
+	connect(loginManager, SIGNAL(requestFinished()), SLOT(onLoginAnswer()));
 }
 
 void LoginDialog::onCancelClicked(bool checked /*= false*/)
@@ -35,7 +35,6 @@ void LoginDialog::onLoginClicked(bool checked /*= false*/)
 void LoginDialog::onLoginAnswer()
 {
 	const int statusCode = loginManager->getLastReplyStatusCode();
-	const QString& msg = loginManager->getLastReplayMessage();
 
 	if (statusCode == 200)
 	{
@@ -44,7 +43,8 @@ void LoginDialog::onLoginAnswer()
 	}
 	else
 	{
-		qCritical() << "Wrong username or password";
+		qDebug() << "Wrong username or password";
+		qDebug() << loginManager->getLastReplyMessage();
 		ui.errorLabel->setVisible(true);
 	}
 }

@@ -12,8 +12,9 @@ public:
 	~PreviewWebEngineView();
 
 	void init();
-	bool setContent(const QString&, const QString&) const;
-	bool getContent(const QString&, const QWebEngineCallback<const QVariant&> callback) const;
+	bool setHtmlTagContent(const QString& selector, const QString& newContent) const;
+	bool getHtmlTagContent(const QString& selector, const QWebEngineCallback<const QVariant&> callback) const;
+	QString getPath() const;
 private:
 	Ui::PreviewWebEngineView ui;
 	const QUrl baseUrl;
@@ -30,5 +31,6 @@ private slots:
 	void onUrlChanged(const QUrl&);
 
 signals:
-	void isReady();
+	void isReady() const;
+	void isNotReady() const;
 };
