@@ -12,8 +12,10 @@ namespace PortefolioManagerUtilities {
 		~ProjectManager();
 		bool getProject(const QString& projectId) const;
 		bool updateProject(const QString& token, const QString& projectId, const QHash<QString, QString>& project);
+		bool createProject(const QString& token, const QString& projectId, const QHash<QString, QString>& project);
 	private:
 		const QString updateProjectUrl;
+		const QString createProjectUrl;
 		const QString detailProjectUrl;
 	};
 }

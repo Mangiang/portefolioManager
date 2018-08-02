@@ -50,7 +50,30 @@ namespace PortefolioManagerUtilities {
 		return true;
 	}
 	
-	bool NetworkManager::put(const QString& url, const QHash<QString, QString>& header, const QHash<QString, QString>& body)
+	bool NetworkManager::postUrlEncoded(const QString& url, const QHash<QString, QString>& header, const QHash<QString, QString>& body)
+	{
+		try
+		{
+			QByteArray paramByteArray = encodeParams(body);
+
+			QNetworkRequest request(url);
+
+			QHashIterator<QString, QString> headerIterator(header);
+			while (headerIterator.hasNext()) {
+				headerIterator.next();
+				request.setRawHeader(headerIterator.key().toUtf8(), headerIterator.value().toUtf8());
+			}
+
+			return sendPost(request, paramByteArray);
+		}
+		catch (QException e)
+		{
+			qCritical() << e.what();
+			return false;
+		}
+	}
+
+	bool NetworkManager::putUrlEncoded(const QString& url, const QHash<QString, QString>& header, const QHash<QString, QString>& body)
 	{
 		try
 		{

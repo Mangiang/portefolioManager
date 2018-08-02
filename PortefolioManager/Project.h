@@ -26,6 +26,8 @@ public:
 	void setSmallDescription(const QString& val) { smallDescription = val; }
 	QString getDescription() const { return description; }
 	void setDescription(const QString& val) { description = val; }
+	int getStatus() const { return status; }
+	void setStatus(int val) { status = val; }
 
 	QHash<QString, QString> toHash() const;
 	QHash<QString, QString> toHashSettings() const;
@@ -37,5 +39,6 @@ private:
 	QDate endDate;
 	QString smallDescription;
 	QString description;
+	int status;
 };
 

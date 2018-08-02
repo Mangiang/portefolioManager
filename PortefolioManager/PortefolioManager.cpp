@@ -139,5 +139,5 @@ void PortefolioManager::onProjectSettingsTriggered(bool checked /*= false*/) con
 
 void PortefolioManager::onProjectSettingsAccepted()
 {
-	ui.webEngineView->reload(); // Refresh so the title and dates get refreshed
+	ui.webEngineView->reload();
 }

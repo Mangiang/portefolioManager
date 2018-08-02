@@ -41,6 +41,6 @@ private:
 private slots:
 	void onOkTriggered(bool checked = false);
 	void onCancelTriggered(bool checked = false);
-	void onEndDateCheckStateChanged(int state);
+	void onStatusComboBoxIndexChanged(int index);
 	void onGetProjectFinished();
 };

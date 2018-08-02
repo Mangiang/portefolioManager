@@ -33,11 +33,12 @@ namespace PortefolioManagerUtilities {
 		 *	Returns if no exception was raised
 		 */
 		bool postUrlEncoded(const QString& url, const QHash<QString, QString>& body);
+		bool postUrlEncoded(const QString& url, const QHash<QString, QString>& header, const QHash<QString, QString>& body);
 
 		/*! Implementation of a HTTP PUT with url encoded body
 		 *	Returns if no exception was raised
 		 */
-		bool put(const QString& url, const QHash<QString, QString>& header, const QHash<QString, QString>& body);
+		bool putUrlEncoded(const QString& url, const QHash<QString, QString>& header, const QHash<QString, QString>& body);
 
 		QByteArray encodeParams(const QHash<QString, QString>& body) const;
 		bool sendPost(QNetworkRequest& request, const QByteArray& params);

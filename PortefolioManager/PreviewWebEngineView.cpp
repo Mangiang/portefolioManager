@@ -55,7 +55,7 @@ QString PreviewWebEngineView::getPath() const
 void PreviewWebEngineView::onReadyTimerTimeout()
 {
 	page()->runJavaScript(
-		"var desc = document.querySelector('#projectDescription');(desc ? desc.innerHTML : '')",
+		"var desc = document.querySelector('#projectDescription');(desc ? 'OK' : '')",
 		[this](const QVariant &v) {
 		if (!v.toString().isEmpty())
 		{

@@ -19,7 +19,7 @@ ProjectSettingsDialog::ProjectSettingsDialog(QWidget *parent)
 	ui.beginDateEdit->calendarWidget()->setLocale(QLocale(QLocale::English));
 	ui.endDateEdit->calendarWidget()->setLocale(QLocale(QLocale::English));
 	
-	connect(ui.workInProgressCheckBox, SIGNAL(stateChanged(int)), SLOT(onEndDateCheckStateChanged(int)));
+	connect(ui.statusComboBox, SIGNAL(currentIndexChanged(int)), SLOT(onStatusComboBoxIndexChanged(int)));
 	connect(ui.okPushButton, SIGNAL(clicked(bool)), SLOT(onOkTriggered(bool)));
 	connect(ui.cancelPushButton, SIGNAL(clicked(bool)), SLOT(onCancelTriggered(bool)));
 
@@ -32,9 +32,11 @@ void ProjectSettingsDialog::init() {
 	
 	ui.projectTitleLineEdit->clear();
 	ui.beginDateEdit->clear();
-	ui.workInProgressCheckBox->setChecked(true);
+	ui.beginDateEdit->setDate(QDate::currentDate());
+	ui.statusComboBox->setCurrentIndex(0);
 	ui.endDateEdit->hide();
 	ui.endDateEdit->clear();
+	ui.endDateEdit->setDate(QDate::currentDate());
 	ui.smallDescriptionLineEdit->clear();
 	unlockUnput();
 }
@@ -64,13 +66,14 @@ void ProjectSettingsDialog::onOkTriggered(bool)
 	currentProject->setTitle(ui.projectTitleLineEdit->text());
 	currentProject->setBeginDate(ui.beginDateEdit->date());
 
-	if (ui.workInProgressCheckBox->checkState() == Qt::Unchecked)
+	if (ui.statusComboBox->currentIndex() != ui.statusComboBox->findText("Ongoing"))
 		currentProject->setEndDate(ui.endDateEdit->date());
 	else
 		currentProject->setEndDate("");
 
+	currentProject->setStatus(ui.statusComboBox->currentIndex());
 	currentProject->setSmallDescription(ui.smallDescriptionLineEdit->text());
-
+	
 	if (!isAdmin)
 	{
 		qInfo() << "Permission denied. Please contact an administrator.";
@@ -80,7 +83,7 @@ void ProjectSettingsDialog::onOkTriggered(bool)
 	if (isNewProject)
 	{
 		qDebug() << "New project";
-		qDebug() << currentProject->toJson();
+		projectManager->createProject(token, currentProject->getId(), currentProject->toHashSettings());
 	}
 	else
 	{
@@ -96,15 +99,17 @@ void ProjectSettingsDialog::onCancelTriggered(bool)
 	reject();
 }
 
-void ProjectSettingsDialog::onEndDateCheckStateChanged(int state)
+void ProjectSettingsDialog::onStatusComboBoxIndexChanged(int index)
 {
-	if (state == Qt::Unchecked)
+	if (index != ui.statusComboBox->findText("Ongoing"))
 	{
 		ui.endDateEdit->show();
+		ui.endDateLabel->show();
 	}
 	else
 	{
 		ui.endDateEdit->hide();
+		ui.endDateLabel->hide();
 	}
 }
 
@@ -127,14 +132,18 @@ void ProjectSettingsDialog::setUIFromProject(QSharedPointer<Project> project)
 	ui.projectTitleLineEdit->setText(project->getTitle());
 	ui.beginDateEdit->setDate(project->getBeginDate());
 	
-	if (project->getEndDate().isNull())
+	ui.statusComboBox->setCurrentIndex(project->getStatus());
+	
+	if (ui.statusComboBox->currentIndex() != ui.statusComboBox->findText("Ongoing"))
 	{
-		ui.workInProgressCheckBox->setCheckState(Qt::Checked);
+		ui.endDateEdit->setDate(project->getEndDate());
+		ui.endDateEdit->show();
+		ui.endDateLabel->show();
 	}
 	else
 	{
-		ui.workInProgressCheckBox->setCheckState(Qt::Unchecked);
-		ui.endDateEdit->setDate(project->getEndDate());
+		ui.endDateEdit->hide();
+		ui.endDateLabel->hide();
 	}
 
 	ui.smallDescriptionLineEdit->setText(project->getSmallDescription());
@@ -147,7 +156,7 @@ void ProjectSettingsDialog::lockInput()
 	ui.projectTitleLineEdit->setReadOnly(true);
 	ui.beginDateEdit->setReadOnly(true);
 	ui.endDateEdit->setReadOnly(true);
-	ui.workInProgressCheckBox->setEnabled(false);
+	ui.statusComboBox->setEnabled(false);
 	ui.smallDescriptionLineEdit->setReadOnly(true);
 	ui.okPushButton->setEnabled(false);
 	ui.cancelPushButton->setEnabled(true);
@@ -158,7 +167,7 @@ void ProjectSettingsDialog::unlockUnput()
 	ui.projectTitleLineEdit->setReadOnly(false);
 	ui.beginDateEdit->setReadOnly(false);
 	ui.endDateEdit->setReadOnly(false);
-	ui.workInProgressCheckBox->setEnabled(true);
+	ui.statusComboBox->setEnabled(true);
 	ui.smallDescriptionLineEdit->setReadOnly(false);
 	ui.okPushButton->setEnabled(true);
 	ui.cancelPushButton->setEnabled(true);

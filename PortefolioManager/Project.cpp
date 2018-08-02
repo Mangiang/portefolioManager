@@ -17,6 +17,7 @@ void Project::getValuesFromProject(const Project& otherProject)
 	setEndDate(otherProject.getEndDate());
 	setSmallDescription(otherProject.getSmallDescription());
 	setDescription(otherProject.getDescription());
+	setStatus(otherProject.getStatus());
 }
 
 Project Project::fromJson(const QString& data)
@@ -52,6 +53,7 @@ Project Project::fromJson(const QString& data)
 	project.setEndDate(objectMap["endDate"].toString());
 	project.setSmallDescription(objectMap["smallDescription"].toString());
 	project.setDescription(objectMap["description"].toString());
+	project.setStatus(objectMap["status"].toInt());
 
 	return project;
 }
@@ -61,8 +63,8 @@ QString Project::toJson() const
 	QLocale locale = QLocale(QLocale::English);
 	const QString& beginDateString = getBeginDate().toString(getDateFormat());
 	const QString& endDateString = getEndDate().toString(getDateFormat());
-	return QString("{title:'%1',beginDate:'%2',endDate:'%3', smallDescription:'%4', description:'%5'}")
-		.arg(getTitle()).arg(beginDateString).arg(endDateString).arg(getSmallDescription()).arg(getDescription());
+	return QString("{title:'%1',beginDate:'%2',endDate:'%3', smallDescription:'%4', description:'%5', status: '%6'}")
+		.arg(getTitle()).arg(beginDateString).arg(endDateString).arg(getSmallDescription()).arg(getDescription()).arg(status);
 }
 
 void Project::setBeginDate(const QString& newDate)
@@ -83,6 +85,7 @@ QHash<QString, QString> Project::toHash() const
 	projectHash.insert("endDate", getEndDate().toString(getDateFormat()));
 	projectHash.insert("smallDescription", getSmallDescription());
 	projectHash.insert("description", getDescription());
+	projectHash.insert("status", QString::number(getStatus()));
 
 	return projectHash;
 }
@@ -94,6 +97,7 @@ QHash<QString, QString> Project::toHashSettings() const
 	projectHash.insert("beginDate", getBeginDate().toString(getDateFormat()));
 	projectHash.insert("endDate", getEndDate().toString(getDateFormat()));
 	projectHash.insert("smallDescription", getSmallDescription());
+	projectHash.insert("status", QString::number(getStatus()));
 
 	return projectHash;
 }

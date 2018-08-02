@@ -11,7 +11,7 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QCheckBox>
+#include <QtWidgets/QComboBox>
 #include <QtWidgets/QDateEdit>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QFormLayout>
@@ -34,13 +34,14 @@ public:
     QFormLayout *formLayout;
     QLabel *projectTitleLabel;
     QLineEdit *projectTitleLineEdit;
+    QLabel *statusLabel;
+    QComboBox *statusComboBox;
     QLabel *beginDateLabel;
     QDateEdit *beginDateEdit;
     QLabel *endDateLabel;
-    QCheckBox *workInProgressCheckBox;
     QDateEdit *endDateEdit;
-    QLineEdit *smallDescriptionLineEdit;
     QLabel *smallDescriptionLabel;
+    QLineEdit *smallDescriptionLineEdit;
 
     void setupUi(QDialog *ProjectSettingsDialog)
     {
@@ -81,12 +82,26 @@ public:
         projectTitleLabel = new QLabel(ProjectSettingsDialog);
         projectTitleLabel->setObjectName(QStringLiteral("projectTitleLabel"));
 
-        formLayout->setWidget(1, QFormLayout::LabelRole, projectTitleLabel);
+        formLayout->setWidget(0, QFormLayout::LabelRole, projectTitleLabel);
 
         projectTitleLineEdit = new QLineEdit(ProjectSettingsDialog);
         projectTitleLineEdit->setObjectName(QStringLiteral("projectTitleLineEdit"));
 
-        formLayout->setWidget(1, QFormLayout::FieldRole, projectTitleLineEdit);
+        formLayout->setWidget(0, QFormLayout::FieldRole, projectTitleLineEdit);
+
+        statusLabel = new QLabel(ProjectSettingsDialog);
+        statusLabel->setObjectName(QStringLiteral("statusLabel"));
+
+        formLayout->setWidget(1, QFormLayout::LabelRole, statusLabel);
+
+        statusComboBox = new QComboBox(ProjectSettingsDialog);
+        statusComboBox->addItem(QString());
+        statusComboBox->addItem(QString());
+        statusComboBox->addItem(QString());
+        statusComboBox->addItem(QString());
+        statusComboBox->setObjectName(QStringLiteral("statusComboBox"));
+
+        formLayout->setWidget(1, QFormLayout::FieldRole, statusComboBox);
 
         beginDateLabel = new QLabel(ProjectSettingsDialog);
         beginDateLabel->setObjectName(QStringLiteral("beginDateLabel"));
@@ -105,28 +120,21 @@ public:
 
         formLayout->setWidget(3, QFormLayout::LabelRole, endDateLabel);
 
-        workInProgressCheckBox = new QCheckBox(ProjectSettingsDialog);
-        workInProgressCheckBox->setObjectName(QStringLiteral("workInProgressCheckBox"));
-        workInProgressCheckBox->setChecked(true);
-        workInProgressCheckBox->setTristate(false);
-
-        formLayout->setWidget(3, QFormLayout::FieldRole, workInProgressCheckBox);
-
         endDateEdit = new QDateEdit(ProjectSettingsDialog);
         endDateEdit->setObjectName(QStringLiteral("endDateEdit"));
         endDateEdit->setCalendarPopup(true);
 
-        formLayout->setWidget(4, QFormLayout::FieldRole, endDateEdit);
-
-        smallDescriptionLineEdit = new QLineEdit(ProjectSettingsDialog);
-        smallDescriptionLineEdit->setObjectName(QStringLiteral("smallDescriptionLineEdit"));
-
-        formLayout->setWidget(5, QFormLayout::FieldRole, smallDescriptionLineEdit);
+        formLayout->setWidget(3, QFormLayout::FieldRole, endDateEdit);
 
         smallDescriptionLabel = new QLabel(ProjectSettingsDialog);
         smallDescriptionLabel->setObjectName(QStringLiteral("smallDescriptionLabel"));
 
-        formLayout->setWidget(5, QFormLayout::LabelRole, smallDescriptionLabel);
+        formLayout->setWidget(4, QFormLayout::LabelRole, smallDescriptionLabel);
+
+        smallDescriptionLineEdit = new QLineEdit(ProjectSettingsDialog);
+        smallDescriptionLineEdit->setObjectName(QStringLiteral("smallDescriptionLineEdit"));
+
+        formLayout->setWidget(4, QFormLayout::FieldRole, smallDescriptionLineEdit);
 
 
         gridLayout->addLayout(formLayout, 1, 1, 1, 1);
@@ -144,9 +152,14 @@ public:
         okPushButton->setText(QApplication::translate("ProjectSettingsDialog", "OK", nullptr));
         cancelPushButton->setText(QApplication::translate("ProjectSettingsDialog", "CANCEL", nullptr));
         projectTitleLabel->setText(QApplication::translate("ProjectSettingsDialog", "Project name :", nullptr));
+        statusLabel->setText(QApplication::translate("ProjectSettingsDialog", "Status :", nullptr));
+        statusComboBox->setItemText(0, QApplication::translate("ProjectSettingsDialog", "Completed", nullptr));
+        statusComboBox->setItemText(1, QApplication::translate("ProjectSettingsDialog", "Ongoing", nullptr));
+        statusComboBox->setItemText(2, QApplication::translate("ProjectSettingsDialog", "Aborted", nullptr));
+        statusComboBox->setItemText(3, QApplication::translate("ProjectSettingsDialog", "On Hold", nullptr));
+
         beginDateLabel->setText(QApplication::translate("ProjectSettingsDialog", "Begin Date :", nullptr));
         endDateLabel->setText(QApplication::translate("ProjectSettingsDialog", "End Date :", nullptr));
-        workInProgressCheckBox->setText(QApplication::translate("ProjectSettingsDialog", "Work in progress", nullptr));
         smallDescriptionLabel->setText(QApplication::translate("ProjectSettingsDialog", "Small Description :", nullptr));
     } // retranslateUi
 
