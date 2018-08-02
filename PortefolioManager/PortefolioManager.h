@@ -45,56 +45,73 @@ private:
 	QSharedPointer<User> user;
 
 private slots:
-	/*!	Triggered when the loginDialog accepted signal has been triggered.  */
+	/*!	Triggered when the loginDialog accepted signal has been triggered.  
+	 *	Used to save the new user informations.
+	 */
 	void onLoginDialogAccepted();
 
 	/*!	Triggered when the action actionTogglePreview has been triggered.
+	 *	Display the preview dockable window.
 	 *	\param checked Not used. Checks if the trigger is active.
 	 */
 	void onTogglePreview(bool checked = false) const;
 
 	/*!	Triggered when the action actionToggleLog has been triggered.
+	 *	Display the logger dockable window.
 	 *	\param checked Not used. Checks if the trigger is active.
 	 */
 	void onToggleLog(bool checked = false) const;
 	
 	/*!	Triggered when the action actionRefresh has been triggered.
+	 *	Apply the textEdit value in the project content preview.
 	 *	\param checked Not used. Checks if the trigger is active.
 	 */
 	void onRefreshPreview(bool checked = false) const;
 
 	/*!	Triggered when the previewWebEngine isReady signal has been triggered.
+	 *	Unlocks inputs when not on a project page.
 	 *	Used to replace the HTML editor by the content of the web page projectDescription tag.
 	 */
 	void onPageReady() const;
 	
 	/*!	Triggered when the previewWebEngine isNotReady signal has been triggered.
+	 *	Locks inputs when not on a project page.
 	 *	Used to replace the HTML editor by the content of the web page projectDescription tag.
 	 */
 	void onPageNotReady() const;
 
 	/*!	Triggered when the action bold has been triggered.
+	 *	Surround the selected text with bold <b></b> tags.
 	 *	\param checked Not used. Checks if the trigger is active.
 	 */
 	void onBoldTriggered(bool checked = false) const;
 
 	/*!	Triggered when the action italic has been triggered.
+	 *	Surround the selected text with italic <i></i> tags.
 	 *	\param checked Not used. Checks if the trigger is active.
 	 */
 	void onItalicTriggered(bool checked = false) const;
 
 	/*!	Triggered when the action underline has been triggered.
+	 *	Surround the selected text with underline <u></u> tags.
 	 *	\param checked Not used. Checks if the trigger is active.
 	 */
 	void onUnderlineTriggered(bool checked = false) const;
 	
 	/*!	Triggered when the action actionNewProject has been triggered.
+	 *	Display the ProjectSettingsDialog.
 	 *	\param checked Not used. Checks if the trigger is active.
 	 */
 	void onNewProjectTriggered(bool checked = false) const;
 	
 	/*!	Triggered when the action actionProjectSettings has been triggered.
+	 *	Displays the ProjectSettingsDialog with the current project informations.
 	 *	\param checked Not used. Checks if the trigger is active.
 	 */
 	void onProjectSettingsTriggered(bool checked = false) const;
+	
+	/*!	Triggered when the projectSettings accepted signal has been triggered.  
+	 *	Reloads the preview in case displayed informations have changed.
+	 */
+	void onProjectSettingsAccepted();
 };

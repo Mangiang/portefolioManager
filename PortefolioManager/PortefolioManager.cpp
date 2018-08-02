@@ -44,6 +44,7 @@ PortefolioManager::PortefolioManager(QWidget *parent)
 	connect(ui.webEngineView, SIGNAL(isNotReady()), SLOT(onPageNotReady()));
 	
 	projectSettingsDialog = new ProjectSettingsDialog(this, projectManager);
+	connect(projectSettingsDialog, SIGNAL(accepted()), SLOT(onProjectSettingsAccepted));
 
 	loginDialog = new LoginDialog(this);
 	connect(loginDialog, SIGNAL(accepted()), SLOT(onLoginDialogAccepted()));
@@ -132,4 +133,10 @@ void PortefolioManager::onProjectSettingsTriggered(bool checked /*= false*/) con
 	projectSettingsDialog->setToken(user->getToken());
 	projectSettingsDialog->setIsAdmin(user->getAdmin());
 	projectSettingsDialog->show();
+}
+
+void PortefolioManager::onProjectSettingsAccepted()
+{
+	ui.webEngineView->reload(); // Refresh so the title and dates get refreshed
+	onRefreshPreview(false); // Refresh the editing body
 }
