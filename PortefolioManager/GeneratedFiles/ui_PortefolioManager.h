@@ -101,6 +101,8 @@ public:
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
         contentPlainTextEdit = new QPlainTextEdit(centralWidget);
         contentPlainTextEdit->setObjectName(QStringLiteral("contentPlainTextEdit"));
+        contentPlainTextEdit->setLineWrapMode(QPlainTextEdit::NoWrap);
+        contentPlainTextEdit->setTextInteractionFlags(Qt::LinksAccessibleByKeyboard|Qt::TextEditable|Qt::TextEditorInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse);
 
         gridLayout->addWidget(contentPlainTextEdit, 0, 0, 1, 1);
 

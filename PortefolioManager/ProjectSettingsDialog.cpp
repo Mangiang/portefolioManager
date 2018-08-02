@@ -6,11 +6,11 @@
 #include "ProjectSettingsDialog.h"
 #include "Project.h"
 #include "ProjectManager.h"
+#include "NetworkManager.h"
 
-ProjectSettingsDialog::ProjectSettingsDialog(QWidget *parent, PortefolioManagerUtilities::ProjectManager* projectManager)
+ProjectSettingsDialog::ProjectSettingsDialog(QWidget *parent)
 	: QDialog(parent),
-	isNewProject(true),
-	projectManager(projectManager)
+	isNewProject(true)
 {
 	ui.setupUi(this);
 	setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
@@ -22,15 +22,13 @@ ProjectSettingsDialog::ProjectSettingsDialog(QWidget *parent, PortefolioManagerU
 	connect(ui.workInProgressCheckBox, SIGNAL(stateChanged(int)), SLOT(onEndDateCheckStateChanged(int)));
 	connect(ui.okPushButton, SIGNAL(clicked(bool)), SLOT(onOkTriggered(bool)));
 	connect(ui.cancelPushButton, SIGNAL(clicked(bool)), SLOT(onCancelTriggered(bool)));
-	
-
-	currentProject = QSharedPointer<Project>(new Project());
 
 	init();
 }
 
 void ProjectSettingsDialog::init() {
 	isNewProject = true;
+	currentProject = QSharedPointer<Project>(new Project());
 	
 	ui.projectTitleLineEdit->clear();
 	ui.beginDateEdit->clear();
@@ -44,7 +42,6 @@ void ProjectSettingsDialog::init() {
 bool ProjectSettingsDialog::setProjectId(const QString& projectId)
 {
 	lockInput();
-	connect(projectManager, SIGNAL(requestFinished()), SLOT(onGetProjectFinished()));
 	qDebug() << "Request Project";
 	isNewProject = false;
 	return projectManager->getProject(projectId);
@@ -55,10 +52,15 @@ QSharedPointer<Project> ProjectSettingsDialog::getProject() const
 	return currentProject;
 }
 
+void ProjectSettingsDialog::setProjectManager(PortefolioManagerUtilities::ProjectManager* val)
+{
+	projectManager = val;
+	connect(projectManager, SIGNAL(requestFinished()), SLOT(onGetProjectFinished()), Qt::UniqueConnection);
+}
+
 void ProjectSettingsDialog::onOkTriggered(bool)
 {
 	lockInput();
-	disconnect(projectManager, SIGNAL(requestFinished()), this, 0);
 	currentProject->setTitle(ui.projectTitleLineEdit->text());
 	currentProject->setBeginDate(ui.beginDateEdit->date());
 
@@ -71,9 +73,8 @@ void ProjectSettingsDialog::onOkTriggered(bool)
 
 	if (!isAdmin)
 	{
-		qInfo() << "Operation denied. Please contact an administrator.";
-		accept();
-		return;
+		qInfo() << "Permission denied. Please contact an administrator.";
+		reject();
 	}
 
 	if (isNewProject)
@@ -109,9 +110,16 @@ void ProjectSettingsDialog::onEndDateCheckStateChanged(int state)
 
 void ProjectSettingsDialog::onGetProjectFinished()
 {
-	const QString& projectJson = projectManager->getLastReplyBody();
-	currentProject->getValuesFromProject(Project::fromJson(projectJson));
-	setUIFromProject(currentProject);
+	if (projectManager->getLastReplyOperation() == PortefolioManagerUtilities::ReplyOperation::PUT)
+	{
+		emit projectPosted();
+	}
+	else if (projectManager->getLastReplyOperation() == PortefolioManagerUtilities::ReplyOperation::GET)
+	{
+		const QString& projectJson = projectManager->getLastReplyBody();
+		currentProject->getValuesFromProject(Project::fromJson(projectJson));
+		setUIFromProject(currentProject);
+	}
 }
 
 void ProjectSettingsDialog::setUIFromProject(QSharedPointer<Project> project)
@@ -120,7 +128,9 @@ void ProjectSettingsDialog::setUIFromProject(QSharedPointer<Project> project)
 	ui.beginDateEdit->setDate(project->getBeginDate());
 	
 	if (project->getEndDate().isNull())
+	{
 		ui.workInProgressCheckBox->setCheckState(Qt::Checked);
+	}
 	else
 	{
 		ui.workInProgressCheckBox->setCheckState(Qt::Unchecked);

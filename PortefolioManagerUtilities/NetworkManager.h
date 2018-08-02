@@ -3,12 +3,16 @@
 #include <QObject>
 #include <QSharedPointer>
 #include <QtNetwork/QNetworkRequest>
+#include <QtNetwork/QNetworkAccessManager>
 #include "portefoliomanagerutilities_global.h"
 
-class QNetworkAccessManager;
 class QNetworkReply;
 
 namespace PortefolioManagerUtilities {
+	enum ReplyOperation {
+		GET, POST, PUT
+	};
+
 	class PORTEFOLIOMANAGERUTILITIES_EXPORT NetworkManager : public QObject
 	{
 		Q_OBJECT
@@ -18,6 +22,8 @@ namespace PortefolioManagerUtilities {
 		const int getLastReplyStatusCode() const { return lastRequestStatusCode; };
 		QString getLastReplyMessage() const { return lastRequestMessage; };
 		QString getLastReplyBody() const { return lastRequestBody; };
+		ReplyOperation getLastReplyOperation() const { return lastRequestOperation; };
+		void setLastReplyOperation(const QNetworkAccessManager::Operation& operation);
 	private:
 		QSharedPointer<QNetworkAccessManager> manager;
 	protected:
@@ -45,6 +51,7 @@ namespace PortefolioManagerUtilities {
 		int lastRequestStatusCode;
 		QString lastRequestMessage;
 		QString lastRequestBody;
+		ReplyOperation lastRequestOperation;
 	private slots:
 		void onRequestFinish(QNetworkReply* rep);
 

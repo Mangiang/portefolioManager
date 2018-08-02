@@ -14,7 +14,7 @@ void Project::getValuesFromProject(const Project& otherProject)
 	setId(otherProject.getId());
 	setTitle(otherProject.getTitle());
 	setBeginDate(otherProject.getBeginDate());
-	setBeginDate(otherProject.getEndDate());
+	setEndDate(otherProject.getEndDate());
 	setSmallDescription(otherProject.getSmallDescription());
 	setDescription(otherProject.getDescription());
 }
@@ -80,7 +80,7 @@ QHash<QString, QString> Project::toHash() const
 	QHash<QString, QString> projectHash;
 	projectHash.insert("title", getTitle());
 	projectHash.insert("beginDate", getBeginDate().toString(getDateFormat()));
-	projectHash.insert("endDate", getBeginDate().toString(getDateFormat()));
+	projectHash.insert("endDate", getEndDate().toString(getDateFormat()));
 	projectHash.insert("smallDescription", getSmallDescription());
 	projectHash.insert("description", getDescription());
 
@@ -92,7 +92,7 @@ QHash<QString, QString> Project::toHashSettings() const
 	QHash<QString, QString> projectHash;
 	projectHash.insert("title", getTitle());
 	projectHash.insert("beginDate", getBeginDate().toString(getDateFormat()));
-	projectHash.insert("endDate", getBeginDate().toString(getDateFormat()));
+	projectHash.insert("endDate", getEndDate().toString(getDateFormat()));
 	projectHash.insert("smallDescription", getSmallDescription());
 
 	return projectHash;

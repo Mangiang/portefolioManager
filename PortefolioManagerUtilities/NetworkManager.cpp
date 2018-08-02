@@ -2,7 +2,6 @@
 
 #include <QDebug>
 
-#include <QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 #include <QUrlQuery>
 #include <QHash>
@@ -16,6 +15,21 @@ namespace PortefolioManagerUtilities {
 
 	{
 		connect(manager.data(), SIGNAL(finished(QNetworkReply*)), this, SLOT(onRequestFinish(QNetworkReply*)));
+	}
+
+	void NetworkManager::setLastReplyOperation(const QNetworkAccessManager::Operation& operation)
+	{
+		switch (operation) {
+		case QNetworkAccessManager::GetOperation:
+			lastRequestOperation = ReplyOperation::GET;
+			break;
+		case QNetworkAccessManager::PostOperation:
+			lastRequestOperation = ReplyOperation::POST;
+			break;
+		case QNetworkAccessManager::PutOperation:
+			lastRequestOperation = ReplyOperation::PUT;
+			break;
+		}
 	}
 
 	bool NetworkManager::postUrlEncoded(const QString& url, const QHash<QString, QString>& body)
@@ -133,6 +147,9 @@ namespace PortefolioManagerUtilities {
 		lastRequestMessage = rep->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toString();
 		lastRequestBody = rep->readAll();
 
+		setLastReplyOperation(rep->operation());
+
+		qDebug() << "Operation : " << getLastReplyOperation();
 		qDebug() << "Status " << getLastReplyStatusCode();
 		qDebug() << "Message " << getLastReplyMessage();
 		qDebug() << "Body " << getLastReplyBody();

@@ -24,6 +24,7 @@ public:
         if (LoggerPlainTextEdit->objectName().isEmpty())
             LoggerPlainTextEdit->setObjectName(QStringLiteral("LoggerPlainTextEdit"));
         LoggerPlainTextEdit->resize(400, 300);
+        LoggerPlainTextEdit->setLineWrapMode(QPlainTextEdit::NoWrap);
         LoggerPlainTextEdit->setReadOnly(true);
 
         retranslateUi(LoggerPlainTextEdit);

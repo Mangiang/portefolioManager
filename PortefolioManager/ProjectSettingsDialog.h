@@ -15,7 +15,7 @@ class ProjectSettingsDialog : public QDialog
 	Q_OBJECT
 
 public:
-	ProjectSettingsDialog(QWidget *parent = Q_NULLPTR, PortefolioManagerUtilities::ProjectManager* projectManager = nullptr);
+	ProjectSettingsDialog(QWidget *parent = Q_NULLPTR);
 	void init();
 	bool setProjectId(const QString& projectId);
 	QSharedPointer<Project> getProject() const;
@@ -24,6 +24,9 @@ public:
 	void setIsAdmin(bool val) { isAdmin = val; }
 	QString getToken() const { return token; }
 	void setToken(const QString& val) { token = val; }
+	void setProjectManager(PortefolioManagerUtilities::ProjectManager* val);
+signals:
+	void projectPosted();
 private:
 	Ui::ProjectSettingsDialog ui;
 	QSharedPointer<Project> currentProject;

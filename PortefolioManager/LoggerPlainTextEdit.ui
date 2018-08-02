@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>LoggerPlainTextEdit</string>
   </property>
+  <property name="lineWrapMode">
+   <enum>QPlainTextEdit::NoWrap</enum>
+  </property>
   <property name="readOnly">
    <bool>true</bool>
   </property>
