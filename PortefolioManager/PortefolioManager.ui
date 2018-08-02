@@ -54,6 +54,7 @@
      <string>Preview</string>
     </property>
     <addaction name="actionRefresh"/>
+    <addaction name="actionSendContent"/>
    </widget>
    <widget class="QMenu" name="menuWindows">
     <property name="title">
@@ -89,6 +90,9 @@
    <addaction name="actionBold"/>
    <addaction name="actionItalic"/>
    <addaction name="actionUnderline"/>
+   <addaction name="separator"/>
+   <addaction name="actionRefresh"/>
+   <addaction name="actionSendContent"/>
   </widget>
   <widget class="QDockWidget" name="previewDockWidget">
    <property name="windowTitle">
@@ -140,6 +144,10 @@
    </widget>
   </widget>
   <action name="actionRefresh">
+   <property name="icon">
+    <iconset resource="PortefolioManager.qrc">
+     <normaloff>:/PortefolioManager/Resources/images/circular-arrow.png</normaloff>:/PortefolioManager/Resources/images/circular-arrow.png</iconset>
+   </property>
    <property name="text">
     <string>Refresh</string>
    </property>
@@ -204,6 +212,18 @@
   <action name="actionProjectSettings">
    <property name="text">
     <string>Project settings</string>
+   </property>
+  </action>
+  <action name="actionSendContent">
+   <property name="icon">
+    <iconset resource="PortefolioManager.qrc">
+     <normaloff>:/PortefolioManager/Resources/images/send.png</normaloff>:/PortefolioManager/Resources/images/send.png</iconset>
+   </property>
+   <property name="text">
+    <string>SendContent</string>
+   </property>
+   <property name="shortcut">
+    <string>F8</string>
    </property>
   </action>
  </widget>

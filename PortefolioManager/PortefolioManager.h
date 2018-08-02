@@ -98,6 +98,12 @@ private slots:
 	 */
 	void onUnderlineTriggered(bool checked = false) const;
 	
+	/*!	Triggered when the action sendContent has been triggered.
+	 *	Send the content of the PlainTextEdit to the server
+	 *	\param checked Not used. Checks if the trigger is active.
+	 */
+	void onSendContentTriggered(bool checked = false) const;
+	
 	/*!	Triggered when the action actionNewProject has been triggered.
 	 *	Display the ProjectSettingsDialog.
 	 *	\param checked Not used. Checks if the trigger is active.
@@ -114,4 +120,9 @@ private slots:
 	 *	Reloads the preview in case displayed informations have changed.
 	 */
 	void onProjectSettingsAccepted();
+
+	/*!	Triggered when the projectManager requestFinish signal has been triggered.  
+	 *	Reloads the preview in case displayed informations have changed.
+	 */
+	void onUpdateFinished();
 };

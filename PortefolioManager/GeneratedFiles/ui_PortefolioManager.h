@@ -38,6 +38,7 @@ public:
     QAction *actionToggleLog;
     QAction *actionNewProject;
     QAction *actionProjectSettings;
+    QAction *actionSendContent;
     QWidget *centralWidget;
     QGridLayout *gridLayout;
     QPlainTextEdit *contentPlainTextEdit;
@@ -70,21 +71,24 @@ public:
         PortefolioManagerClass->setDockOptions(QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::GroupedDragging);
         actionRefresh = new QAction(PortefolioManagerClass);
         actionRefresh->setObjectName(QStringLiteral("actionRefresh"));
+        QIcon icon1;
+        icon1.addFile(QStringLiteral(":/PortefolioManager/Resources/images/circular-arrow.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionRefresh->setIcon(icon1);
         actionBold = new QAction(PortefolioManagerClass);
         actionBold->setObjectName(QStringLiteral("actionBold"));
-        QIcon icon1;
-        icon1.addFile(QStringLiteral(":/PortefolioManager/Resources/images/bold.png"), QSize(), QIcon::Normal, QIcon::Off);
-        actionBold->setIcon(icon1);
+        QIcon icon2;
+        icon2.addFile(QStringLiteral(":/PortefolioManager/Resources/images/bold.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionBold->setIcon(icon2);
         actionItalic = new QAction(PortefolioManagerClass);
         actionItalic->setObjectName(QStringLiteral("actionItalic"));
-        QIcon icon2;
-        icon2.addFile(QStringLiteral(":/PortefolioManager/Resources/images/italic.png"), QSize(), QIcon::Normal, QIcon::Off);
-        actionItalic->setIcon(icon2);
+        QIcon icon3;
+        icon3.addFile(QStringLiteral(":/PortefolioManager/Resources/images/italic.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionItalic->setIcon(icon3);
         actionUnderline = new QAction(PortefolioManagerClass);
         actionUnderline->setObjectName(QStringLiteral("actionUnderline"));
-        QIcon icon3;
-        icon3.addFile(QStringLiteral(":/PortefolioManager/Resources/images/underline.png"), QSize(), QIcon::Normal, QIcon::Off);
-        actionUnderline->setIcon(icon3);
+        QIcon icon4;
+        icon4.addFile(QStringLiteral(":/PortefolioManager/Resources/images/underline.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionUnderline->setIcon(icon4);
         actionTogglePreview = new QAction(PortefolioManagerClass);
         actionTogglePreview->setObjectName(QStringLiteral("actionTogglePreview"));
         actionToggleLog = new QAction(PortefolioManagerClass);
@@ -93,6 +97,11 @@ public:
         actionNewProject->setObjectName(QStringLiteral("actionNewProject"));
         actionProjectSettings = new QAction(PortefolioManagerClass);
         actionProjectSettings->setObjectName(QStringLiteral("actionProjectSettings"));
+        actionSendContent = new QAction(PortefolioManagerClass);
+        actionSendContent->setObjectName(QStringLiteral("actionSendContent"));
+        QIcon icon5;
+        icon5.addFile(QStringLiteral(":/PortefolioManager/Resources/images/send.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionSendContent->setIcon(icon5);
         centralWidget = new QWidget(PortefolioManagerClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
@@ -173,6 +182,7 @@ public:
         menuBar->addAction(menuPreview->menuAction());
         menuBar->addAction(menuProject->menuAction());
         menuPreview->addAction(actionRefresh);
+        menuPreview->addAction(actionSendContent);
         menuWindows->addAction(actionTogglePreview);
         menuWindows->addAction(actionToggleLog);
         menuProject->addAction(actionNewProject);
@@ -180,6 +190,9 @@ public:
         mainToolBar->addAction(actionBold);
         mainToolBar->addAction(actionItalic);
         mainToolBar->addAction(actionUnderline);
+        mainToolBar->addSeparator();
+        mainToolBar->addAction(actionRefresh);
+        mainToolBar->addAction(actionSendContent);
 
         retranslateUi(PortefolioManagerClass);
 
@@ -212,6 +225,10 @@ public:
         actionToggleLog->setText(QApplication::translate("PortefolioManagerClass", "Toggle Log", nullptr));
         actionNewProject->setText(QApplication::translate("PortefolioManagerClass", "New Project", nullptr));
         actionProjectSettings->setText(QApplication::translate("PortefolioManagerClass", "Project settings", nullptr));
+        actionSendContent->setText(QApplication::translate("PortefolioManagerClass", "SendContent", nullptr));
+#ifndef QT_NO_SHORTCUT
+        actionSendContent->setShortcut(QApplication::translate("PortefolioManagerClass", "F8", nullptr));
+#endif // QT_NO_SHORTCUT
         menuPreview->setTitle(QApplication::translate("PortefolioManagerClass", "Preview", nullptr));
         menuWindows->setTitle(QApplication::translate("PortefolioManagerClass", "Windows", nullptr));
         menuProject->setTitle(QApplication::translate("PortefolioManagerClass", "Project", nullptr));

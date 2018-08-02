@@ -38,6 +38,7 @@ PortefolioManager::PortefolioManager(QWidget *parent)
 	connect(ui.actionBold, SIGNAL(triggered(bool)), SLOT(onBoldTriggered(bool)));
 	connect(ui.actionItalic, SIGNAL(triggered(bool)), SLOT(onItalicTriggered(bool)));
 	connect(ui.actionUnderline, SIGNAL(triggered(bool)), SLOT(onUnderlineTriggered(bool)));
+	connect(ui.actionSendContent, SIGNAL(triggered(bool)), SLOT(onSendContentTriggered(bool)));
 
 	// Other actions
 	connect(ui.webEngineView, SIGNAL(isReady()), SLOT(onPageReady()));
@@ -116,6 +117,17 @@ void PortefolioManager::onUnderlineTriggered(bool checked /*= false*/) const
 	PortefolioManagerUtilities::wrapText(cursor, "u");
 }
 
+void PortefolioManager::onSendContentTriggered(bool checked /*= false*/) const
+{
+	const QString& path = ui.webEngineView->getPath();
+	const QStringList& pathList = path.split('/');
+	const QString& projectId = pathList.last();
+	QHash<QString, QString> project;
+	project.insert("description", ui.contentPlainTextEdit->toPlainText());
+	connect(projectManager, SIGNAL(requestFinished()), SLOT(onUpdateFinished()), Qt::UniqueConnection);
+	projectManager->updateProject(user->getToken(), projectId, project);
+}
+
 void PortefolioManager::onNewProjectTriggered(bool checked /*= false*/) const
 {
 	projectSettingsDialog->setToken(user->getToken());
@@ -138,6 +150,11 @@ void PortefolioManager::onProjectSettingsTriggered(bool checked /*= false*/) con
 }
 
 void PortefolioManager::onProjectSettingsAccepted()
+{
+	ui.webEngineView->reload();
+}
+
+void PortefolioManager::onUpdateFinished()
 {
 	ui.webEngineView->reload();
 }

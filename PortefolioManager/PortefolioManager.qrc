@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="PortefolioManager">
+    <file>Resources/images/circular-arrow.png</file>
+    <file>Resources/images/send.png</file>
     <file>Resources/images/bold.png</file>
     <file>Resources/images/icon.png</file>
     <file>Resources/images/italic.png</file>
