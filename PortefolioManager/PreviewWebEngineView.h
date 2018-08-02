@@ -9,7 +9,6 @@ class PreviewWebEngineView : public QWebEngineView
 
 public:
 	PreviewWebEngineView(QWidget *parent = Q_NULLPTR);
-	~PreviewWebEngineView();
 
 	void init();
 	bool setHtmlTagContent(const QString& selector, const QString& newContent) const;

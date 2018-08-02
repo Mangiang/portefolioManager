@@ -5,7 +5,7 @@
 TEMPLATE = lib
 TARGET = PortefolioManagerUtilities
 DESTDIR = ../x64/Release
-QT += core gui
+QT += core network networkauth
 CONFIG += release
 DEFINES += _UNICODE WIN64 QT_DLL PORTEFOLIOMANAGERUTILITIES_LIB
 INCLUDEPATH += ./GeneratedFiles \
@@ -17,5 +17,11 @@ OBJECTS_DIR += release
 UI_DIR += ./GeneratedFiles
 RCC_DIR += ./GeneratedFiles
 HEADERS += ./PortefolioManagerUtilities.h \
-    ./portefoliomanagerutilities_global.h
-SOURCES += ./PortefolioManagerUtilities.cpp
+    ./portefoliomanagerutilities_global.h \
+    ./LoginManager.h \
+    ./NetworkManager.h \
+    ./ProjectManager.h
+SOURCES += ./PortefolioManagerUtilities.cpp \
+    ./LoginManager.cpp \
+    ./NetworkManager.cpp \
+    ./ProjectManager.cpp

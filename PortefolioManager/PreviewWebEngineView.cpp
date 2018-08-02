@@ -1,6 +1,7 @@
 #include "PreviewWebEngineView.h"
 
 #include <QTimer>
+#include <iostream>
 
 PreviewWebEngineView::PreviewWebEngineView(QWidget *parent)
 	: QWebEngineView(parent),
@@ -12,10 +13,6 @@ PreviewWebEngineView::PreviewWebEngineView(QWidget *parent)
 	ui.setupUi(this);
 	connect(this, SIGNAL(urlChanged(const QUrl&)), SLOT(onUrlChanged(const QUrl&)));
 	connect(readyTimer.data(), SIGNAL(timeout()), this, SLOT(onReadyTimerTimeout()));
-}
-
-PreviewWebEngineView::~PreviewWebEngineView()
-{
 }
 
 void PreviewWebEngineView::init()

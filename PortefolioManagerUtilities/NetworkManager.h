@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include <QSharedPointer>
+#include <QtNetwork/QNetworkRequest>
 #include "portefoliomanagerutilities_global.h"
 
 class QNetworkAccessManager;
@@ -14,25 +15,36 @@ namespace PortefolioManagerUtilities {
 
 	public:
 		NetworkManager(QObject *parent);
-		const int getLastReplyStatusCode() const;
-		QString getLastReplyMessage() const;
-		QString getLastReplyBody() const;
+		const int getLastReplyStatusCode() const { return lastRequestStatusCode; };
+		QString getLastReplyMessage() const { return lastRequestMessage; };
+		QString getLastReplyBody() const { return lastRequestBody; };
 	private:
 		QSharedPointer<QNetworkAccessManager> manager;
-		QSharedPointer<QNetworkReply> lastReply;
 	protected:
 		const QString baseUrl;
 		
-		/*! Implementation of a HTTP POST
-		 *	Returns true on success, false otherwise
+		/*! Implementation of a HTTP POST with url encoded body
+		 *	Returns if no exception was raised
 		 */
 		bool postUrlEncoded(const QString& url, const QHash<QString, QString>& body);
+
+		/*! Implementation of a HTTP PUT with url encoded body
+		 *	Returns if no exception was raised
+		 */
+		bool put(const QString& url, const QHash<QString, QString>& header, const QHash<QString, QString>& body);
+
+		QByteArray encodeParams(const QHash<QString, QString>& body) const;
+		bool sendPost(QNetworkRequest& request, const QByteArray& params);
+		bool sendPut(QNetworkRequest& request, const QByteArray& params);
 		
 		/*! Implementation of a HTTP GET
 		 *	Returns true on success, false otherwise
 		 */
 		bool get(const QString& url) const;
 
+		int lastRequestStatusCode;
+		QString lastRequestMessage;
+		QString lastRequestBody;
 	private slots:
 		void onRequestFinish(QNetworkReply* rep);
 

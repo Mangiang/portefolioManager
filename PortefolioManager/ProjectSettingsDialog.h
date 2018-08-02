@@ -20,13 +20,21 @@ public:
 	bool setProjectId(const QString& projectId);
 	QSharedPointer<Project> getProject() const;
 
+	bool getIsAdmin() const { return isAdmin; }
+	void setIsAdmin(bool val) { isAdmin = val; }
+	QString getToken() const { return token; }
+	void setToken(const QString& val) { token = val; }
 private:
 	Ui::ProjectSettingsDialog ui;
 	QSharedPointer<Project> currentProject;
 	bool isNewProject;
-	PortefolioManagerUtilities::ProjectManager* projectManager;
+	bool isAdmin;
+	QString token;
 	
-	void setUIFromProject(const Project& project);
+	PortefolioManagerUtilities::ProjectManager* projectManager;
+	void setUIFromProject(QSharedPointer<Project> project);
+	void lockInput();
+	void unlockUnput();
 private slots:
 	void onOkTriggered(bool checked = false);
 	void onCancelTriggered(bool checked = false);

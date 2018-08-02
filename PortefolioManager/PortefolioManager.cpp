@@ -7,12 +7,14 @@
 #include "LoginDialog.h"
 #include "ProjectSettingsDialog.h"
 #include "ProjectManager.h"
+#include "User.h"
 
 PortefolioManager::PortefolioManager(QWidget *parent)
 	: QMainWindow(parent),
 	loginDialog(nullptr),
 	projectManager(new PortefolioManagerUtilities::ProjectManager(this)),
-	loggedIn(false)
+	loggedIn(false),
+	user(QSharedPointer<User>())
 {
 	ui.setupUi(this);
 	
@@ -40,25 +42,20 @@ PortefolioManager::PortefolioManager(QWidget *parent)
 	// Other actions
 	connect(ui.webEngineView, SIGNAL(isReady()), SLOT(onPageReady()));
 	connect(ui.webEngineView, SIGNAL(isNotReady()), SLOT(onPageNotReady()));
+	
+	projectSettingsDialog = new ProjectSettingsDialog(this, projectManager);
 
 	loginDialog = new LoginDialog(this);
 	connect(loginDialog, SIGNAL(accepted()), SLOT(onLoginDialogAccepted()));
-	connect(loginDialog, SIGNAL(rejected()), SLOT(onLoginDialogRejected()));
-	loginDialog->exec();
-	
-	projectSettingsDialog = new ProjectSettingsDialog(this, projectManager);
+	loginDialog->show();
 }
 
 void PortefolioManager::onLoginDialogAccepted()
 {
+	user = loginDialog->getUser();
 	loggedIn = true;
 	ui.webEngineView->init();
-}
-
-void PortefolioManager::onLoginDialogRejected()
-{
-	loggedIn = false;
-	close();
+	show();
 }
 
 void PortefolioManager::onTogglePreview(bool) const
@@ -120,8 +117,10 @@ void PortefolioManager::onUnderlineTriggered(bool checked /*= false*/) const
 
 void PortefolioManager::onNewProjectTriggered(bool checked /*= false*/) const
 {
+	projectSettingsDialog->setToken(user->getToken());
+	projectSettingsDialog->setIsAdmin(user->getAdmin());
 	projectSettingsDialog->init();
-	projectSettingsDialog->exec();
+	projectSettingsDialog->show();
 }
 
 void PortefolioManager::onProjectSettingsTriggered(bool checked /*= false*/) const
@@ -130,5 +129,7 @@ void PortefolioManager::onProjectSettingsTriggered(bool checked /*= false*/) con
 	const QStringList& pathList = path.split('/');
 	const QString& projectId = pathList.last();
 	projectSettingsDialog->setProjectId(projectId);
-	projectSettingsDialog->exec();
+	projectSettingsDialog->setToken(user->getToken());
+	projectSettingsDialog->setIsAdmin(user->getAdmin());
+	projectSettingsDialog->show();
 }

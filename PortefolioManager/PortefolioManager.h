@@ -1,9 +1,11 @@
 #pragma once
 
 #include "ui_PortefolioManager.h"
+#include <QSharedPointer>
 
 class LoginDialog;
 class ProjectSettingsDialog;
+class User;
 
 namespace PortefolioManagerUtilities {
 	class ProjectManager;
@@ -23,7 +25,6 @@ public:
 
 	/*!	The inner HTML of the projectDescription. */
 	QString descriptionHtml;
-
 private:
 	/*!	The UI. */
 	Ui::PortefolioManagerClass ui;
@@ -40,13 +41,12 @@ private:
 	/*! Is the user logged in ?*/
 	bool loggedIn;
 	
+	/*! The user informations ?*/
+	QSharedPointer<User> user;
 
 private slots:
 	/*!	Triggered when the loginDialog accepted signal has been triggered.  */
 	void onLoginDialogAccepted();
-
-	/*!	Triggered when the loginDialog rejected signal has been triggered.  */
-	void onLoginDialogRejected();
 
 	/*!	Triggered when the action actionTogglePreview has been triggered.
 	 *	\param checked Not used. Checks if the trigger is active.

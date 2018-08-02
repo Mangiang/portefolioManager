@@ -4,7 +4,6 @@
 
 #include <QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
-#include <QtNetwork/QNetworkRequest>
 #include <QUrlQuery>
 #include <QHash>
 #include <QException>
@@ -13,7 +12,6 @@ namespace PortefolioManagerUtilities {
 	NetworkManager::NetworkManager(QObject *parent)
 		: QObject(parent),
 		manager(new QNetworkAccessManager(this)),
-		lastReply(nullptr),
 		baseUrl("https://arthur-joly.fr")
 
 	{
@@ -24,22 +22,11 @@ namespace PortefolioManagerUtilities {
 	{
 		try
 		{
-			QUrlQuery params;
-			QHashIterator<QString, QString> bodyIterator(body);
-			while (bodyIterator.hasNext()) {
-				bodyIterator.next();
-				params.addQueryItem(bodyIterator.key(), bodyIterator.value());
-			}
-
-			QString paramString = params.query(QUrl::FullyEncoded);
-			paramString.replace("+", "%2B");
-			const QByteArray& paramByteArray = paramString.toUtf8();
+			QByteArray paramByteArray = encodeParams(body);
 
 			QNetworkRequest request(url);
-			request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-			request.setHeader(QNetworkRequest::ContentLengthHeader, paramByteArray.count());
 
-			manager->post(request, paramByteArray);
+			return sendPost(request, paramByteArray);
 		}
 		catch (QException e)
 		{
@@ -47,6 +34,77 @@ namespace PortefolioManagerUtilities {
 			return false;
 		}
 		return true;
+	}
+	
+	bool NetworkManager::put(const QString& url, const QHash<QString, QString>& header, const QHash<QString, QString>& body)
+	{
+		try
+		{
+			QByteArray paramByteArray = encodeParams(body);
+
+			QNetworkRequest request(url);
+
+			QHashIterator<QString, QString> headerIterator(header);
+			while (headerIterator.hasNext()) {
+				headerIterator.next();
+				request.setRawHeader(headerIterator.key().toUtf8(), headerIterator.value().toUtf8());
+			}
+
+			return sendPut(request, paramByteArray);
+		}
+		catch (QException e)
+		{
+			qCritical() << e.what();
+			return false;
+		}
+	}
+
+	QByteArray NetworkManager::encodeParams(const QHash<QString, QString>& body) const
+	{
+		QUrlQuery params;
+		QHashIterator<QString, QString> bodyIterator(body);
+		while (bodyIterator.hasNext()) {
+			bodyIterator.next();
+			params.addQueryItem(bodyIterator.key(), bodyIterator.value());
+		}
+
+		QString paramString = params.query(QUrl::FullyEncoded);
+		paramString.replace("+", "%2B");
+		return paramString.toUtf8();
+	}
+
+	bool NetworkManager::sendPost(QNetworkRequest& request, const QByteArray& params)
+	{
+		try
+		{
+			request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+			request.setHeader(QNetworkRequest::ContentLengthHeader, params.count());
+				
+			manager->post(request, params);
+			return true;
+		}
+		catch (QException e)
+		{
+			qCritical() << e.what();
+			return false;
+		}
+	}
+	
+	bool NetworkManager::sendPut(QNetworkRequest& request, const QByteArray& params)
+	{
+		try
+		{
+			request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+			request.setHeader(QNetworkRequest::ContentLengthHeader, params.count());
+				
+			manager->put(request, params);
+			return true;
+		}
+		catch (QException e)
+		{
+			qCritical() << e.what();
+			return false;
+		}
 	}
 
 	bool NetworkManager::get(const QString& url) const
@@ -62,31 +120,23 @@ namespace PortefolioManagerUtilities {
 			qCritical() << e.what();
 			return false;
 		}
-		
+
 		return true;
-	}
-
-	const int NetworkManager::getLastReplyStatusCode() const
-	{
-		QVariant status = lastReply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
-		if (!status.isValid())
-			return 500;
-		return status.toInt();
-	}
-
-	QString NetworkManager::getLastReplyMessage() const
-	{
-		return lastReply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toString();
-	}
-	
-	QString NetworkManager::getLastReplyBody() const
-	{
-		return lastReply->readAll();
 	}
 
 	void NetworkManager::onRequestFinish(QNetworkReply* rep)
 	{
-		lastReply = QSharedPointer<QNetworkReply>(rep);
+		QVariant status = rep->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+		if (!status.isValid())
+			lastRequestStatusCode = 500;
+		lastRequestStatusCode =  status.toInt();
+		lastRequestMessage = rep->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toString();
+		lastRequestBody = rep->readAll();
+
+		qDebug() << "Status " << getLastReplyStatusCode();
+		qDebug() << "Message " << getLastReplyMessage();
+		qDebug() << "Body " << getLastReplyBody();
+
 		emit requestFinished();
 	}
 }

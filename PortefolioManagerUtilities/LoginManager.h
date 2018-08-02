@@ -12,5 +12,7 @@ namespace PortefolioManagerUtilities {
 	public:
 		LoginManager(QObject *parent);
 		bool login(const QString& username, const QString& password);
+	private:
+		const QString specificUrl;
 	};
 }

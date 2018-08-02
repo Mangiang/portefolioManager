@@ -23,7 +23,6 @@ ProjectSettingsDialog::ProjectSettingsDialog(QWidget *parent, PortefolioManagerU
 	connect(ui.okPushButton, SIGNAL(clicked(bool)), SLOT(onOkTriggered(bool)));
 	connect(ui.cancelPushButton, SIGNAL(clicked(bool)), SLOT(onCancelTriggered(bool)));
 	
-	connect(projectManager, SIGNAL(requestFinished()), SLOT(onGetProjectFinished()));
 
 	currentProject = QSharedPointer<Project>(new Project());
 
@@ -39,11 +38,15 @@ void ProjectSettingsDialog::init() {
 	ui.endDateEdit->hide();
 	ui.endDateEdit->clear();
 	ui.smallDescriptionLineEdit->clear();
+	unlockUnput();
 }
 
 bool ProjectSettingsDialog::setProjectId(const QString& projectId)
 {
+	lockInput();
+	connect(projectManager, SIGNAL(requestFinished()), SLOT(onGetProjectFinished()));
 	qDebug() << "Request Project";
+	isNewProject = false;
 	return projectManager->getProject(projectId);
 }
 
@@ -54,6 +57,8 @@ QSharedPointer<Project> ProjectSettingsDialog::getProject() const
 
 void ProjectSettingsDialog::onOkTriggered(bool)
 {
+	lockInput();
+	disconnect(projectManager, SIGNAL(requestFinished()), this, 0);
 	currentProject->setTitle(ui.projectTitleLineEdit->text());
 	currentProject->setBeginDate(ui.beginDateEdit->date());
 
@@ -64,6 +69,13 @@ void ProjectSettingsDialog::onOkTriggered(bool)
 
 	currentProject->setSmallDescription(ui.smallDescriptionLineEdit->text());
 
+	if (!isAdmin)
+	{
+		qInfo() << "Operation denied. Please contact an administrator.";
+		accept();
+		return;
+	}
+
 	if (isNewProject)
 	{
 		qDebug() << "New project";
@@ -71,14 +83,15 @@ void ProjectSettingsDialog::onOkTriggered(bool)
 	}
 	else
 	{
-		qDebug() << "Project modified";
-		qDebug() << currentProject->toJson();
+		qDebug() << "Modify project";
+		projectManager->updateProject(token, currentProject->getId(), currentProject->toHashSettings());
 	}
 	accept();
 }
 
 void ProjectSettingsDialog::onCancelTriggered(bool)
 {
+	lockInput();
 	reject();
 }
 
@@ -96,23 +109,47 @@ void ProjectSettingsDialog::onEndDateCheckStateChanged(int state)
 
 void ProjectSettingsDialog::onGetProjectFinished()
 {
-	Project project = Project::fromJson(projectManager->getLastReplyBody());
-	setUIFromProject(project);
+	const QString& projectJson = projectManager->getLastReplyBody();
+	currentProject->getValuesFromProject(Project::fromJson(projectJson));
+	setUIFromProject(currentProject);
 }
 
-void ProjectSettingsDialog::setUIFromProject(const Project& project)
+void ProjectSettingsDialog::setUIFromProject(QSharedPointer<Project> project)
 {
-	ui.projectTitleLineEdit->setText(project.getTitle());
-	ui.beginDateEdit->setDate(project.getBeginDate());
+	ui.projectTitleLineEdit->setText(project->getTitle());
+	ui.beginDateEdit->setDate(project->getBeginDate());
 	
-	if (project.getEndDate().isNull())
+	if (project->getEndDate().isNull())
 		ui.workInProgressCheckBox->setCheckState(Qt::Checked);
 	else
 	{
 		ui.workInProgressCheckBox->setCheckState(Qt::Unchecked);
-		ui.endDateEdit->setDate(project.getEndDate());
+		ui.endDateEdit->setDate(project->getEndDate());
 	}
 
-	ui.smallDescriptionLineEdit->setText(project.getSmallDescription());
+	ui.smallDescriptionLineEdit->setText(project->getSmallDescription());
 	ui.smallDescriptionLineEdit->setCursorPosition(0);
+	unlockUnput();
+}
+
+void ProjectSettingsDialog::lockInput()
+{
+	ui.projectTitleLineEdit->setReadOnly(true);
+	ui.beginDateEdit->setReadOnly(true);
+	ui.endDateEdit->setReadOnly(true);
+	ui.workInProgressCheckBox->setEnabled(false);
+	ui.smallDescriptionLineEdit->setReadOnly(true);
+	ui.okPushButton->setEnabled(false);
+	ui.cancelPushButton->setEnabled(true);
+}
+
+void ProjectSettingsDialog::unlockUnput()
+{
+	ui.projectTitleLineEdit->setReadOnly(false);
+	ui.beginDateEdit->setReadOnly(false);
+	ui.endDateEdit->setReadOnly(false);
+	ui.workInProgressCheckBox->setEnabled(true);
+	ui.smallDescriptionLineEdit->setReadOnly(false);
+	ui.okPushButton->setEnabled(true);
+	ui.cancelPushButton->setEnabled(true);
 }

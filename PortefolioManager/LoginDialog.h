@@ -4,6 +4,8 @@
 #include <QSharedPointer>
 #include "ui_LoginDialog.h"
 
+class User;
+
 namespace PortefolioManagerUtilities {
 	class LoginManager;
 }
@@ -14,11 +16,14 @@ class LoginDialog : public QDialog
 
 public:
 	LoginDialog(QWidget *parent = Q_NULLPTR);
-
+	QSharedPointer<User> getUser() const;
 private:
 	Ui::LoginDialog ui;
 	PortefolioManagerUtilities::LoginManager* loginManager;
+	QSharedPointer<User> user;
 
+	void lockInput();
+	void unlockInput();
 private slots:
 	void onCancelClicked(bool checked = false);
 	void onLoginClicked(bool checked = false);

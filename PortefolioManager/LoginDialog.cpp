@@ -2,7 +2,7 @@
 
 #include "LoginDialog.h"
 #include "LoginManager.h"
-
+#include "User.h"
 
 LoginDialog::LoginDialog(QWidget *parent)
 	: QDialog(parent),
@@ -15,15 +15,40 @@ LoginDialog::LoginDialog(QWidget *parent)
 	connect(ui.cancelPushButton, SIGNAL(clicked(bool)), SLOT(onCancelClicked(bool)));
 	connect(ui.loginPushButton, SIGNAL(clicked(bool)), SLOT(onLoginClicked(bool)));
 	connect(loginManager, SIGNAL(requestFinished()), SLOT(onLoginAnswer()));
+	
+	unlockInput();
+}
+
+QSharedPointer<User> LoginDialog::getUser() const
+{
+	return user;
+}
+
+void LoginDialog::lockInput()
+{
+	ui.usernameLineEdit->setReadOnly(true);
+	ui.passwordLineEdit->setReadOnly(true);
+	ui.loginPushButton->setEnabled(false);
+	ui.cancelPushButton->setEnabled(false);
+}
+
+void LoginDialog::unlockInput()
+{
+	ui.usernameLineEdit->setReadOnly(false);
+	ui.passwordLineEdit->setReadOnly(false);
+	ui.loginPushButton->setEnabled(true);
+	ui.cancelPushButton->setEnabled(true);
 }
 
 void LoginDialog::onCancelClicked(bool checked /*= false*/)
 {
+	lockInput();
 	reject();
 }
 
 void LoginDialog::onLoginClicked(bool checked /*= false*/)
 {
+	lockInput();
 	const QString& username = ui.usernameLineEdit->text();
 	const QString& password = ui.passwordLineEdit->text();
 
@@ -34,11 +59,12 @@ void LoginDialog::onLoginClicked(bool checked /*= false*/)
 
 void LoginDialog::onLoginAnswer()
 {
-	const int statusCode = loginManager->getLastReplyStatusCode();
-
+ 	const int statusCode = loginManager->getLastReplyStatusCode();
+	unlockInput();
 	if (statusCode == 200)
 	{
 		qInfo() << "Successful login";
+		user = QSharedPointer<User>(new User(User::fromJson(loginManager->getLastReplyBody())));
 		accept();
 	}
 	else

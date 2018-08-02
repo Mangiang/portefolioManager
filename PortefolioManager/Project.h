@@ -11,19 +11,26 @@ public:
 	static Project fromJson(const QString&);
 	QString toJson() const;
 
-	void setTitle(const QString&);
+	QString getId() const { return Id; }
+	void setId(const QString& val) { Id = val; }
+	QString getDateFormat() const { return dateFormat; }
+	QString getTitle() const { return title; }
+	void setTitle(const QString& val) { title = val; }
+	QDate getBeginDate() const { return beginDate; }
+	void setBeginDate(const QDate& val) { beginDate = val; }
 	void setBeginDate(const QString&);
-	void setBeginDate(const QDate&);
+	QDate getEndDate() const { return endDate; }
+	void setEndDate(const QDate& val) { endDate = val; }
 	void setEndDate(const QString&);
-	void setEndDate(const QDate&);
-	void setSmallDescription(const QString&);
-	void setDescription(const QString&);
-	QString getTitle() const;
-	QDate getBeginDate() const;
-	QDate getEndDate() const;
-	QString getSmallDescription() const;
-	QString getDescription() const;
+	QString getSmallDescription() const { return smallDescription; }
+	void setSmallDescription(const QString& val) { smallDescription = val; }
+	QString getDescription() const { return description; }
+	void setDescription(const QString& val) { description = val; }
+
+	QHash<QString, QString> toHash() const;
+	QHash<QString, QString> toHashSettings() const;
 private:
+	QString Id;
 	QString dateFormat;
 	QString title;
 	QDate beginDate;

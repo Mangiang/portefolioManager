@@ -11,11 +11,12 @@ Project::Project():
 
 void Project::getValuesFromProject(const Project& otherProject)
 {
-	setTitle(otherProject.title);
-	setBeginDate(otherProject.beginDate);
-	setBeginDate(otherProject.endDate);
-	setSmallDescription(otherProject.smallDescription);
-	setDescription(otherProject.description);
+	setId(otherProject.getId());
+	setTitle(otherProject.getTitle());
+	setBeginDate(otherProject.getBeginDate());
+	setBeginDate(otherProject.getEndDate());
+	setSmallDescription(otherProject.getSmallDescription());
+	setDescription(otherProject.getDescription());
 }
 
 Project Project::fromJson(const QString& data)
@@ -32,18 +33,20 @@ Project Project::fromJson(const QString& data)
 		}
 		else
 		{
-			qDebug() << "Document is not an object" << endl;
+			qDebug() << "Document is not an object";
 			return project;
 		}
 	}
 	else
 	{
-		qDebug() << "Invalid JSON..." << endl;
+		qDebug() << "Invalid JSON...";
+		qDebug() << "Received : " << data;
 		return project;
 	}
 
 	const QVariantMap& objectMap = obj.toVariantMap();
 
+	project.setId(objectMap["id"].toString());
 	project.setTitle(objectMap["title"].toString());
 	project.setBeginDate(objectMap["beginDate"].toString());
 	project.setEndDate(objectMap["endDate"].toString());
@@ -56,71 +59,41 @@ Project Project::fromJson(const QString& data)
 QString Project::toJson() const
 {
 	QLocale locale = QLocale(QLocale::English);
-	const QString& beginDateString = beginDate.toString(dateFormat);
-	const QString& endDateString = endDate.toString(dateFormat);
+	const QString& beginDateString = getBeginDate().toString(getDateFormat());
+	const QString& endDateString = getEndDate().toString(getDateFormat());
 	return QString("{title:'%1',beginDate:'%2',endDate:'%3', smallDescription:'%4', description:'%5'}")
-		.arg(title).arg(beginDateString).arg(endDateString).arg(smallDescription).arg(description);
-}
-
-#pragma region Setters/Getters
-void Project::setTitle(const QString& newName)
-{
-	title = newName;
+		.arg(getTitle()).arg(beginDateString).arg(endDateString).arg(getSmallDescription()).arg(getDescription());
 }
 
 void Project::setBeginDate(const QString& newDate)
 {
-	beginDate = QDate::fromString(newDate, dateFormat);
-}
-
-void Project::setBeginDate(const QDate& newDate)
-{
-	beginDate = newDate;
+	setBeginDate(QDate::fromString(newDate, getDateFormat()));
 }
 
 void Project::setEndDate(const QString& newDate)
 {
-	endDate = QDate::fromString(newDate, dateFormat);
+	setEndDate(QDate::fromString(newDate, getDateFormat()));
 }
 
-void Project::setEndDate(const QDate& newDate)
+QHash<QString, QString> Project::toHash() const
 {
-	endDate = newDate;
+	QHash<QString, QString> projectHash;
+	projectHash.insert("title", getTitle());
+	projectHash.insert("beginDate", getBeginDate().toString(getDateFormat()));
+	projectHash.insert("endDate", getBeginDate().toString(getDateFormat()));
+	projectHash.insert("smallDescription", getSmallDescription());
+	projectHash.insert("description", getDescription());
+
+	return projectHash;
 }
 
-void Project::setSmallDescription(const QString& newDescription)
+QHash<QString, QString> Project::toHashSettings() const
 {
-	smallDescription = newDescription;
-}
+	QHash<QString, QString> projectHash;
+	projectHash.insert("title", getTitle());
+	projectHash.insert("beginDate", getBeginDate().toString(getDateFormat()));
+	projectHash.insert("endDate", getBeginDate().toString(getDateFormat()));
+	projectHash.insert("smallDescription", getSmallDescription());
 
-void Project::setDescription(const QString& newDescription)
-{
-	description = newDescription;
+	return projectHash;
 }
-
-QString Project::getTitle() const
-{
-	return title;
-}
-
-QDate Project::getBeginDate() const
-{
-	return beginDate;
-}
-
-QDate Project::getEndDate() const
-{
-	return endDate;
-}
-
-QString Project::getSmallDescription() const
-{
-	return smallDescription;
-}
-
-QString Project::getDescription() const
-{
-	return description;
-}
-
-#pragma endregion
