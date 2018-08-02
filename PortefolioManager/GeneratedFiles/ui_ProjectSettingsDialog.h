@@ -10,6 +10,7 @@
 #define UI_PROJECTSETTINGSDIALOG_H
 
 #include <QtCore/QVariant>
+#include <QtGui/QIcon>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QDateEdit>
@@ -49,6 +50,9 @@ public:
             ProjectSettingsDialog->setObjectName(QStringLiteral("ProjectSettingsDialog"));
         ProjectSettingsDialog->resize(478, 379);
         ProjectSettingsDialog->setMinimumSize(QSize(478, 379));
+        QIcon icon;
+        icon.addFile(QStringLiteral("Resources/images/repairing-service.svg"), QSize(), QIcon::Normal, QIcon::Off);
+        ProjectSettingsDialog->setWindowIcon(icon);
         gridLayout = new QGridLayout(ProjectSettingsDialog);
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);

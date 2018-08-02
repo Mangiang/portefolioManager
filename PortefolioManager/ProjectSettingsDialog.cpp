@@ -2,6 +2,7 @@
 #include <QDate>
 #include <QDebug>
 #include <QLocale>
+#include <QMessageBox>
 
 #include "ProjectSettingsDialog.h"
 #include "Project.h"
@@ -77,6 +78,10 @@ void ProjectSettingsDialog::onOkTriggered(bool)
 	if (!isAdmin)
 	{
 		qInfo() << "Permission denied. Please contact an administrator.";
+		if (!isAdmin)
+			QMessageBox::warning( this, tr("Permission warning"), tr("This user is not an administrator. "
+				"This operation will not finish but with an administrator account, your changes would have been sent to the server."));
+		
 		reject();
 	}
 

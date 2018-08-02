@@ -10,6 +10,7 @@
 #define UI_LOGINDIALOG_H
 
 #include <QtCore/QVariant>
+#include <QtGui/QIcon>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QGridLayout>
@@ -41,6 +42,9 @@ public:
             LoginDialog->setObjectName(QStringLiteral("LoginDialog"));
         LoginDialog->resize(613, 527);
         LoginDialog->setMinimumSize(QSize(613, 527));
+        QIcon icon;
+        icon.addFile(QStringLiteral("Resources/images/login.svg"), QSize(), QIcon::Normal, QIcon::Off);
+        LoginDialog->setWindowIcon(icon);
         gridLayout_2 = new QGridLayout(LoginDialog);
         gridLayout_2->setSpacing(6);
         gridLayout_2->setContentsMargins(11, 11, 11, 11);

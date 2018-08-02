@@ -19,6 +19,10 @@
   <property name="windowTitle">
    <string>LoginDialog</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>Resources/images/login.svg</normaloff>Resources/images/login.svg</iconset>
+  </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout">

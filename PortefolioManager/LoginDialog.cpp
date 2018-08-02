@@ -1,4 +1,5 @@
 #include <QDebug>
+#include <QMessageBox>
 
 #include "LoginDialog.h"
 #include "LoginManager.h"
@@ -65,6 +66,10 @@ void LoginDialog::onLoginAnswer()
 	{
 		qInfo() << "Successful login";
 		user = QSharedPointer<User>(new User(User::fromJson(loginManager->getLastReplyBody())));
+
+		if (!user->getAdmin())
+			QMessageBox::warning( this, tr("Permission warning"), tr("This user is not an administrator. Feel free to experiment and preview but won't be able to submit any change."));
+
 		accept();
 	}
 	else

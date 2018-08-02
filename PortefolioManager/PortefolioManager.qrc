@@ -1,10 +1,14 @@
 <RCC>
   <qresource prefix="PortefolioManager">
-    <file>Resources/images/circular-arrow.png</file>
-    <file>Resources/images/send.png</file>
-    <file>Resources/images/bold.png</file>
-    <file>Resources/images/icon.png</file>
-    <file>Resources/images/italic.png</file>
-    <file>Resources/images/underline.png</file>
+    <file>Resources/images/log-file-format.svg</file>
+    <file>Resources/images/preview.svg</file>
+    <file>Resources/images/add-new-document.svg</file>
+    <file>Resources/images/bold-text-option.svg</file>
+    <file>Resources/images/circular-arrow.svg</file>
+    <file>Resources/images/italic-text.svg</file>
+    <file>Resources/images/manager.svg</file>
+    <file>Resources/images/repairing-service.svg</file>
+    <file>Resources/images/send.svg</file>
+    <file>Resources/images/underline-text-option.svg</file>
   </qresource>
 </RCC>
