@@ -60,6 +60,12 @@
     <ClCompile Include="User.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
+    <ClCompile Include="Image.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="ManageImagesDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="PortefolioManager.h">
@@ -75,6 +81,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="PreviewWebEngineView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="ManageImagesDialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -94,6 +103,9 @@
     <QtUic Include="PreviewWebEngineView.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="ProjectManageImages.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="PortefolioManager.qrc">
@@ -105,6 +117,9 @@
       <Filter>Header Files\Model</Filter>
     </ClInclude>
     <ClInclude Include="User.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
   </ItemGroup>

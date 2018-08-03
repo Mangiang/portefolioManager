@@ -6,6 +6,7 @@
 class LoginDialog;
 class ProjectSettingsDialog;
 class User;
+class ManageImagesDialog;
 
 namespace PortefolioManagerUtilities {
 	class ProjectManager;
@@ -25,6 +26,9 @@ public:
 
 	/*!	The inner HTML of the projectDescription. */
 	QString descriptionHtml;
+
+	/*! Called when closing the window */
+	void closeEvent(QCloseEvent *event);
 private:
 	/*!	The UI. */
 	Ui::PortefolioManagerClass ui;
@@ -35,8 +39,12 @@ private:
 	/*! The project settings Dialog*/
 	ProjectSettingsDialog* projectSettingsDialog;
 
-	/*! The project network manager */
+	/*! The project network manager 
+	 */
 	PortefolioManagerUtilities::ProjectManager* projectManager;
+	
+	/*! The manage image Dialog */
+	ManageImagesDialog* manageImagesDialog;
 
 	/*! Is the user logged in ?*/
 	bool loggedIn;
@@ -44,6 +52,8 @@ private:
 	/*! The user informations ?*/
 	QSharedPointer<User> user;
 
+	/*! Get the id based on the WebEngineView url*/
+	QString getCurrentProjectID() const;
 private slots:
 	/*!	Triggered when the loginDialog accepted signal has been triggered.  
 	 *	Used to save the new user informations.
@@ -103,6 +113,12 @@ private slots:
 	 *	\param checked Not used. Checks if the trigger is active.
 	 */
 	void onSendContentTriggered(bool checked = false) const;
+	
+	/*!	Triggered when the action AddImages has been triggered.
+	 *	Open the manageImages window
+	 *	\param checked Not used. Checks if the trigger is active.
+	 */
+	void onManageImages(bool checked = false) const;
 	
 	/*!	Triggered when the action actionNewProject has been triggered.
 	 *	Display the ProjectSettingsDialog.

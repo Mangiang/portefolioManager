@@ -1,11 +1,11 @@
 #include "NetworkManager.h"
 
 #include <QDebug>
-
-#include <QtNetwork/QNetworkReply>
-#include <QUrlQuery>
-#include <QHash>
 #include <QException>
+#include <QHash>
+#include <QHttpPart>
+#include <QNetworkReply>
+#include <QUrlQuery>
 
 namespace PortefolioManagerUtilities {
 	NetworkManager::NetworkManager(QObject *parent)
@@ -127,6 +127,20 @@ namespace PortefolioManagerUtilities {
 		}
 	}
 	
+	bool NetworkManager::sendPost(QNetworkRequest& request, QHttpMultiPart* const params)
+	{
+		try
+		{
+			manager->post(request, params);
+			return true;
+		}
+		catch (QException e)
+		{
+			qCritical() << e.what();
+			return false;
+		}
+	}
+	
 	bool NetworkManager::sendPut(QNetworkRequest& request, const QByteArray& params)
 	{
 		try
@@ -142,6 +156,22 @@ namespace PortefolioManagerUtilities {
 			qCritical() << e.what();
 			return false;
 		}
+	}
+
+	bool NetworkManager::postMultipartFormData(const QString& filePath, const QString& url)
+{
+		QHttpMultiPart* const multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+		QHttpPart imagePart;
+		imagePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant(QString("form-data; name='image'; filename='%1'").arg(filePath)));
+
+		multiPart->append(imagePart);
+
+		QNetworkRequest request(url);
+
+		sendPost(request, multiPart);
+
+		//multiPart->setParent(reply);
+		return true;
 	}
 
 	bool NetworkManager::get(const QString& url) const

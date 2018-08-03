@@ -5,9 +5,9 @@
 #include <QDebug>
 
 Project::Project():
+	images(new QList<Image>()),
 	dateFormat("MM/dd/yyyy")
-{
-}
+{ }
 
 void Project::getValuesFromProject(const Project& otherProject)
 {
@@ -18,6 +18,7 @@ void Project::getValuesFromProject(const Project& otherProject)
 	setSmallDescription(otherProject.getSmallDescription());
 	setDescription(otherProject.getDescription());
 	setStatus(otherProject.getStatus());
+	setImages(otherProject.getImages());
 }
 
 Project Project::fromJson(const QString& data)
@@ -54,6 +55,14 @@ Project Project::fromJson(const QString& data)
 	project.setSmallDescription(objectMap["smallDescription"].toString());
 	project.setDescription(objectMap["description"].toString());
 	project.setStatus(objectMap["status"].toInt());
+	
+	
+	const QVariantList& imageList = objectMap["images"].toList();
+	project.images->clear();
+	for (QVariant var : imageList) {
+		const QVariantMap& imageMap = var.toMap();
+		project.images->append(Image(imageMap["id"].toString(), imageMap["url"].toString()));
+	}
 
 	return project;
 }

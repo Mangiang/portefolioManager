@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="PortefolioManager">
+    <file>Resources/images/image.svg</file>
     <file>Resources/images/log-file-format.svg</file>
     <file>Resources/images/preview.svg</file>
     <file>Resources/images/add-new-document.svg</file>

@@ -2,11 +2,13 @@
 
 #include <QTimer>
 #include <QtWidgets/QMainWindow>
+#include <QWebEngineProfile>
 
 #include "PortefolioManagerUtilities.h"
 #include "LoginDialog.h"
 #include "ProjectSettingsDialog.h"
 #include "ProjectManager.h"
+#include "ManageImagesDialog.h"
 #include "User.h"
 
 PortefolioManager::PortefolioManager(QWidget *parent)
@@ -39,17 +41,36 @@ PortefolioManager::PortefolioManager(QWidget *parent)
 	connect(ui.actionItalic, SIGNAL(triggered(bool)), SLOT(onItalicTriggered(bool)));
 	connect(ui.actionUnderline, SIGNAL(triggered(bool)), SLOT(onUnderlineTriggered(bool)));
 	connect(ui.actionSendContent, SIGNAL(triggered(bool)), SLOT(onSendContentTriggered(bool)));
+	connect(ui.actionManageImages, SIGNAL(triggered(bool)), SLOT(onManageImages(bool)));
 
 	// Other actions
+	ui.webEngineView->page()->profile()->clearHttpCache();
 	connect(ui.webEngineView, SIGNAL(isReady()), SLOT(onPageReady()));
 	connect(ui.webEngineView, SIGNAL(isNotReady()), SLOT(onPageNotReady()));
-	
+
 	projectSettingsDialog = new ProjectSettingsDialog(this);
-	projectSettingsDialog->setProjectManager(projectManager);
+
+	manageImagesDialog = new ManageImagesDialog(this);
 
 	loginDialog = new LoginDialog(this);
 	connect(loginDialog, SIGNAL(accepted()), SLOT(onLoginDialogAccepted()));
 	loginDialog->show();
+}
+
+void PortefolioManager::closeEvent(QCloseEvent *event)
+{
+	loginDialog->close();
+	ui.logDockWidget->close();
+	ui.previewDockWidget->close();
+}
+
+QString PortefolioManager::getCurrentProjectID() const
+{
+	const QString& path = ui.webEngineView->getPath();
+	const QStringList& pathList = path.split('/');
+	const QString& projectId = pathList.last();
+
+	return projectId;
 }
 
 void PortefolioManager::onLoginDialogAccepted()
@@ -119,13 +140,18 @@ void PortefolioManager::onUnderlineTriggered(bool checked /*= false*/) const
 
 void PortefolioManager::onSendContentTriggered(bool checked /*= false*/) const
 {
-	const QString& path = ui.webEngineView->getPath();
-	const QStringList& pathList = path.split('/');
-	const QString& projectId = pathList.last();
 	QHash<QString, QString> project;
 	project.insert("description", ui.contentPlainTextEdit->toPlainText());
 	connect(projectManager, SIGNAL(requestFinished()), SLOT(onUpdateFinished()), Qt::UniqueConnection);
-	projectManager->updateProject(user->getToken(), projectId, project);
+	projectManager->updateProject(user->getToken(), getCurrentProjectID(), project);
+}
+
+void PortefolioManager::onManageImages(bool checked /*= false*/) const
+{
+	manageImagesDialog->setToken(user->getToken());
+	manageImagesDialog->setIsAdmin(user->getAdmin());
+	manageImagesDialog->getImages(getCurrentProjectID());
+	manageImagesDialog->exec();
 }
 
 void PortefolioManager::onNewProjectTriggered(bool checked /*= false*/) const
@@ -134,19 +160,16 @@ void PortefolioManager::onNewProjectTriggered(bool checked /*= false*/) const
 	projectSettingsDialog->setIsAdmin(user->getAdmin());
 	projectSettingsDialog->init();
 	connect(projectSettingsDialog, SIGNAL(projectPosted()), SLOT(onProjectSettingsAccepted()), Qt::UniqueConnection);
-	projectSettingsDialog->show();
+	projectSettingsDialog->exec();
 }
 
 void PortefolioManager::onProjectSettingsTriggered(bool checked /*= false*/) const
 {
-	const QString& path = ui.webEngineView->getPath();
-	const QStringList& pathList = path.split('/');
-	const QString& projectId = pathList.last();
-	projectSettingsDialog->setProjectId(projectId);
+	projectSettingsDialog->setProjectId(getCurrentProjectID());
 	projectSettingsDialog->setToken(user->getToken());
 	projectSettingsDialog->setIsAdmin(user->getAdmin());
 	connect(projectSettingsDialog, SIGNAL(projectPosted()), SLOT(onProjectSettingsAccepted()), Qt::UniqueConnection);
-	projectSettingsDialog->show();
+	projectSettingsDialog->exec();
 }
 
 void PortefolioManager::onProjectSettingsAccepted()

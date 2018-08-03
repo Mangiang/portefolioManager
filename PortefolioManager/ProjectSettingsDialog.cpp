@@ -11,6 +11,7 @@
 
 ProjectSettingsDialog::ProjectSettingsDialog(QWidget *parent)
 	: QDialog(parent),
+	projectManager(new PortefolioManagerUtilities::ProjectManager(this)),
 	isNewProject(true)
 {
 	ui.setupUi(this);
@@ -23,6 +24,8 @@ ProjectSettingsDialog::ProjectSettingsDialog(QWidget *parent)
 	connect(ui.statusComboBox, SIGNAL(currentIndexChanged(int)), SLOT(onStatusComboBoxIndexChanged(int)));
 	connect(ui.okPushButton, SIGNAL(clicked(bool)), SLOT(onOkTriggered(bool)));
 	connect(ui.cancelPushButton, SIGNAL(clicked(bool)), SLOT(onCancelTriggered(bool)));
+	connect(projectManager, SIGNAL(requestFinished()), SLOT(onGetProjectFinished()), Qt::UniqueConnection);
+
 
 	init();
 }
@@ -53,12 +56,6 @@ bool ProjectSettingsDialog::setProjectId(const QString& projectId)
 QSharedPointer<Project> ProjectSettingsDialog::getProject() const
 {
 	return currentProject;
-}
-
-void ProjectSettingsDialog::setProjectManager(PortefolioManagerUtilities::ProjectManager* val)
-{
-	projectManager = val;
-	connect(projectManager, SIGNAL(requestFinished()), SLOT(onGetProjectFinished()), Qt::UniqueConnection);
 }
 
 void ProjectSettingsDialog::onOkTriggered(bool)

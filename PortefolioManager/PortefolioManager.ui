@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1334</width>
-    <height>1024</height>
+    <width>1332</width>
+    <height>1017</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -45,7 +45,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1334</width>
+     <width>1332</width>
      <height>18</height>
     </rect>
    </property>
@@ -69,6 +69,7 @@
     </property>
     <addaction name="actionNewProject"/>
     <addaction name="actionProjectSettings"/>
+    <addaction name="actionManageImages"/>
    </widget>
    <addaction name="menuWindows"/>
    <addaction name="menuPreview"/>
@@ -77,8 +78,8 @@
   <widget class="QToolBar" name="mainToolBar">
    <property name="iconSize">
     <size>
-     <width>16</width>
-     <height>16</height>
+     <width>20</width>
+     <height>20</height>
     </size>
    </property>
    <attribute name="toolBarArea">
@@ -96,6 +97,7 @@
    <addaction name="separator"/>
    <addaction name="actionToggleLog"/>
    <addaction name="actionTogglePreview"/>
+   <addaction name="actionManageImages"/>
    <addaction name="separator"/>
    <addaction name="actionRefresh"/>
    <addaction name="actionSendContent"/>
@@ -246,6 +248,15 @@
    </property>
    <property name="shortcut">
     <string>F8</string>
+   </property>
+  </action>
+  <action name="actionManageImages">
+   <property name="icon">
+    <iconset resource="PortefolioManager.qrc">
+     <normaloff>:/PortefolioManager/Resources/images/image.svg</normaloff>:/PortefolioManager/Resources/images/image.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Manage images</string>
    </property>
   </action>
  </widget>

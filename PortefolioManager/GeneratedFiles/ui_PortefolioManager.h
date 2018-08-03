@@ -39,6 +39,7 @@ public:
     QAction *actionNewProject;
     QAction *actionProjectSettings;
     QAction *actionSendContent;
+    QAction *actionManageImages;
     QWidget *centralWidget;
     QGridLayout *gridLayout;
     QPlainTextEdit *contentPlainTextEdit;
@@ -63,7 +64,7 @@ public:
     {
         if (PortefolioManagerClass->objectName().isEmpty())
             PortefolioManagerClass->setObjectName(QStringLiteral("PortefolioManagerClass"));
-        PortefolioManagerClass->resize(1334, 1024);
+        PortefolioManagerClass->resize(1332, 1017);
         QIcon icon;
         icon.addFile(QStringLiteral(":/PortefolioManager/Resources/images/manager.svg"), QSize(), QIcon::Normal, QIcon::Off);
         PortefolioManagerClass->setWindowIcon(icon);
@@ -114,6 +115,11 @@ public:
         QIcon icon9;
         icon9.addFile(QStringLiteral(":/PortefolioManager/Resources/images/send.svg"), QSize(), QIcon::Normal, QIcon::Off);
         actionSendContent->setIcon(icon9);
+        actionManageImages = new QAction(PortefolioManagerClass);
+        actionManageImages->setObjectName(QStringLiteral("actionManageImages"));
+        QIcon icon10;
+        icon10.addFile(QStringLiteral(":/PortefolioManager/Resources/images/image.svg"), QSize(), QIcon::Normal, QIcon::Off);
+        actionManageImages->setIcon(icon10);
         centralWidget = new QWidget(PortefolioManagerClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
@@ -130,7 +136,7 @@ public:
         PortefolioManagerClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(PortefolioManagerClass);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1334, 18));
+        menuBar->setGeometry(QRect(0, 0, 1332, 18));
         menuPreview = new QMenu(menuBar);
         menuPreview->setObjectName(QStringLiteral("menuPreview"));
         menuWindows = new QMenu(menuBar);
@@ -140,7 +146,7 @@ public:
         PortefolioManagerClass->setMenuBar(menuBar);
         mainToolBar = new QToolBar(PortefolioManagerClass);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
-        mainToolBar->setIconSize(QSize(16, 16));
+        mainToolBar->setIconSize(QSize(20, 20));
         PortefolioManagerClass->addToolBar(Qt::TopToolBarArea, mainToolBar);
         previewDockWidget = new QDockWidget(PortefolioManagerClass);
         previewDockWidget->setObjectName(QStringLiteral("previewDockWidget"));
@@ -199,6 +205,7 @@ public:
         menuWindows->addAction(actionToggleLog);
         menuProject->addAction(actionNewProject);
         menuProject->addAction(actionProjectSettings);
+        menuProject->addAction(actionManageImages);
         mainToolBar->addAction(actionBold);
         mainToolBar->addAction(actionItalic);
         mainToolBar->addAction(actionUnderline);
@@ -208,6 +215,7 @@ public:
         mainToolBar->addSeparator();
         mainToolBar->addAction(actionToggleLog);
         mainToolBar->addAction(actionTogglePreview);
+        mainToolBar->addAction(actionManageImages);
         mainToolBar->addSeparator();
         mainToolBar->addAction(actionRefresh);
         mainToolBar->addAction(actionSendContent);
@@ -247,6 +255,7 @@ public:
 #ifndef QT_NO_SHORTCUT
         actionSendContent->setShortcut(QApplication::translate("PortefolioManagerClass", "F8", nullptr));
 #endif // QT_NO_SHORTCUT
+        actionManageImages->setText(QApplication::translate("PortefolioManagerClass", "Manage images", nullptr));
         menuPreview->setTitle(QApplication::translate("PortefolioManagerClass", "Preview", nullptr));
         menuWindows->setTitle(QApplication::translate("PortefolioManagerClass", "Windows", nullptr));
         menuProject->setTitle(QApplication::translate("PortefolioManagerClass", "Project", nullptr));

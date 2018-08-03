@@ -8,7 +8,7 @@ class Project;
 
 namespace PortefolioManagerUtilities {
 	class ProjectManager;
-}
+};
 
 class ProjectSettingsDialog : public QDialog
 {
@@ -24,7 +24,6 @@ public:
 	void setIsAdmin(bool val) { isAdmin = val; }
 	QString getToken() const { return token; }
 	void setToken(const QString& val) { token = val; }
-	void setProjectManager(PortefolioManagerUtilities::ProjectManager* val);
 signals:
 	void projectPosted();
 private:

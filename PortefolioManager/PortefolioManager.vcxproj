@@ -115,12 +115,14 @@
     </QtRcc>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Image.cpp" />
     <ClCompile Include="LoggerPlainTextEdit.cpp" />
     <ClCompile Include="LoginDialog.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PortefolioManager.cpp" />
     <ClCompile Include="PreviewWebEngineView.cpp" />
     <ClCompile Include="Project.cpp" />
+    <ClCompile Include="ManageImagesDialog.cpp" />
     <ClCompile Include="ProjectSettingsDialog.cpp" />
     <ClCompile Include="User.cpp" />
   </ItemGroup>
@@ -134,6 +136,7 @@
       <SubType>Designer</SubType>
     </QtUic>
     <QtUic Include="PreviewWebEngineView.ui" />
+    <QtUic Include="ProjectManageImages.ui" />
     <QtUic Include="ProjectSettingsDialog.ui" />
   </ItemGroup>
   <ItemGroup>
@@ -161,6 +164,13 @@
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="ManageImagesDialog.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName)\.;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWebEngine;$(QTDIR)\include\QtWebEngineCore;$(QTDIR)\include\QtWebEngineWidgets;$(QTDIR)\include\QtWidgets;$(INHERIT)\.;.\..\PortefolioManagerUtilities</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_CORE_LIB;QT_GUI_LIB;QT_WEBENGINE_LIB;QT_WEBENGINECORE_LIB;QT_WEBENGINEWIDGETS_LIB;QT_WIDGETS_LIB</Define>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName)\.;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWebEngine;$(QTDIR)\include\QtWebEngineCore;$(QTDIR)\include\QtWebEngineWidgets;$(QTDIR)\include\QtWidgets;G:\Users\mangi\source\repos\PortefolioManager\PortefolioManagerUtilities;$(INHERIT)\.;.\..\PortefolioManagerUtilities</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Release|x64'">UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QT_GUI_LIB;QT_WEBENGINE_LIB;QT_WEBENGINECORE_LIB;QT_WEBENGINEWIDGETS_LIB;QT_WIDGETS_LIB;QT_NO_DEBUG_OUTPUT</Define>
+    </QtMoc>
+    <ClInclude Include="Image.h" />
     <ClInclude Include="User.h" />
     <QtMoc Include="PreviewWebEngineView.h">
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName)\.;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWebEngine;$(QTDIR)\include\QtWebEngineCore;$(QTDIR)\include\QtWebEngineWidgets;$(QTDIR)\include\QtWidgets;$(INHERIT)\.;.\..\PortefolioManagerUtilities</IncludePath>

@@ -21,7 +21,7 @@ namespace PortefolioManagerUtilities {
 		NetworkManager(QObject *parent);
 		const int getLastReplyStatusCode() const { return lastRequestStatusCode; };
 		QString getLastReplyMessage() const { return lastRequestMessage; };
-		QString getLastReplyBody() const { return lastRequestBody; };
+		QByteArray getLastReplyBody() const { return lastRequestBody; };
 		ReplyOperation getLastReplyOperation() const { return lastRequestOperation; };
 		void setLastReplyOperation(const QNetworkAccessManager::Operation& operation);
 	private:
@@ -42,8 +42,11 @@ namespace PortefolioManagerUtilities {
 
 		QByteArray encodeParams(const QHash<QString, QString>& body) const;
 		bool sendPost(QNetworkRequest& request, const QByteArray& params);
+		bool sendPost(QNetworkRequest& request, QHttpMultiPart* const params);
 		bool sendPut(QNetworkRequest& request, const QByteArray& params);
 		
+		bool postMultipartFormData(const QString& filePath, const QString& url);
+
 		/*! Implementation of a HTTP GET
 		 *	Returns true on success, false otherwise
 		 */
@@ -51,7 +54,7 @@ namespace PortefolioManagerUtilities {
 
 		int lastRequestStatusCode;
 		QString lastRequestMessage;
-		QString lastRequestBody;
+		QByteArray lastRequestBody;
 		ReplyOperation lastRequestOperation;
 	private slots:
 		void onRequestFinish(QNetworkReply* rep);

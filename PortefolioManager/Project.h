@@ -1,10 +1,14 @@
 #pragma once
 
 #include <QString>
+#include <QSharedPointer>
 #include <QDate>
+
+#include "Image.h"
 
 class Project
 {
+
 public:
 	Project();
 	void getValuesFromProject(const Project&);
@@ -28,10 +32,13 @@ public:
 	void setDescription(const QString& val) { description = val; }
 	int getStatus() const { return status; }
 	void setStatus(int val) { status = val; }
+	QSharedPointer<QList<Image>> getImages() const { return images; }
+	void setImages(const QSharedPointer<QList<Image>>& val) { images = val; }
 
 	QHash<QString, QString> toHash() const;
 	QHash<QString, QString> toHashSettings() const;
 private:
+	QSharedPointer<QList<Image>> images;
 	QString Id;
 	QString dateFormat;
 	QString title;
