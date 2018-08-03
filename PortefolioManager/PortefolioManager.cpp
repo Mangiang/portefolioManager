@@ -53,7 +53,7 @@ PortefolioManager::PortefolioManager(QWidget *parent)
 
 	projectSettingsDialog = new ProjectSettingsDialog(this);
 
-	manageImagesDialog = new ManageImagesDialog(this);
+	manageImagesDialog = new ManageImagesDialog(this, projectManager);
 
 	updateProjectReply = new NetworkReplyWrapper(this);
 	

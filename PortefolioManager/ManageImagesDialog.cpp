@@ -12,9 +12,9 @@
 
 using namespace PortefolioManagerUtilities;
 
-ManageImagesDialog::ManageImagesDialog(QWidget *parent)
+ManageImagesDialog::ManageImagesDialog(QWidget *parent, ProjectManager* projectManager)
 	: QDialog(parent),
-	projectManager(new ProjectManager(this)),
+	projectManager(projectManager),
 	isAdmin(false)
 {
 	ui.setupUi(this);
@@ -34,8 +34,9 @@ void ManageImagesDialog::clearImages()
 	qDebug() << "Clear images";
 }
 
-void ManageImagesDialog::AddImage(QPixmap imageMap) const
+void ManageImagesDialog::AddImage(QPixmap imageMap) 
 {
+	unlockInput();
 	ui.imagesListWidget->addItem(new QListWidgetItem(QIcon(imageMap), ""));
 }
 
@@ -83,22 +84,29 @@ void ManageImagesDialog::onReject(bool)
 
 void ManageImagesDialog::onDeletePush(bool checked /*= false*/)
 {
-
+	const QList<QListWidgetItem*>& selectedItems = ui.imagesListWidget->selectedItems();
+	for (QListWidgetItem* listWidgetItem : selectedItems)
+	{
+		ui.imagesListWidget->removeItemWidget(listWidgetItem);
+	}
 }
 
 void ManageImagesDialog::onAddPush(bool checked /*= false*/)
 {
-	auto fileName = QFileDialog::getOpenFileName(this, tr("Choose an Image"), ".", tr("Image Files (*.png *.jpg *.bmp)"));
+	lockInput();
+	const QString& fileName = QFileDialog::getOpenFileName(this, tr("Choose an Image"), ".", tr("Image Files (*.png *.jpg *.bmp)"));
+	const QPixmap& img(fileName);
+	AddImage(img);
 }
 
 void ManageImagesDialog::onProjectRequestFinished(NetworkReplyWrapper* networkReplyWrapper)
 {
+	lockInput();
 	const QString& projectJson = getProjectReply->getBody();
 	const Project& project = Project::fromJson(projectJson);
 	const QList<Image>& imagesList = *project.getImages();
 
 	imageRequestReplies.clear();
-	unlockInput();
 	for (Image img : imagesList) {
 		NetworkReplyWrapper* reply = new NetworkReplyWrapper(this);
 		reply->setNetworkReply(projectManager->getImage(img.getUrl()));

@@ -14,9 +14,9 @@ class ManageImagesDialog : public QDialog
 	Q_OBJECT
 
 public:
-	ManageImagesDialog(QWidget *parent = Q_NULLPTR);
+	ManageImagesDialog(QWidget *parent = Q_NULLPTR, PortefolioManagerUtilities::ProjectManager* projectManager = Q_NULLPTR);
 	void clearImages();
-	void AddImage(QPixmap imageMap) const;
+	void AddImage(QPixmap imageMap);
 	void getImages(const QString& projectId);
 	void setToken(const QString& token);
 	void setIsAdmin(bool isAdmin);
@@ -25,7 +25,7 @@ public:
 	void unlockInput();
 private:
 	Ui::ManageImagesDialog ui;
-	PortefolioManagerUtilities::ProjectManager* projectManager; // This class is nor the owner nor the parent of this pointer
+	PortefolioManagerUtilities::ProjectManager* projectManager; // This class is not the parent of this ProjectManager !
 	bool isAdmin;
 	QString token;
 

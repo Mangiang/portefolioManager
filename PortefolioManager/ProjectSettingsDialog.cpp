@@ -13,9 +13,9 @@
 
 using namespace PortefolioManagerUtilities;
 
-ProjectSettingsDialog::ProjectSettingsDialog(QWidget *parent)
+ProjectSettingsDialog::ProjectSettingsDialog(QWidget *parent, ProjectManager* projectManager)
 	: QDialog(parent),
-	projectManager(new ProjectManager(this)),
+	projectManager(projectManager),
 	isNewProject(true)
 {
 	ui.setupUi(this);
@@ -25,7 +25,6 @@ ProjectSettingsDialog::ProjectSettingsDialog(QWidget *parent)
 	ui.beginDateEdit->calendarWidget()->setLocale(QLocale(QLocale::English));
 	ui.endDateEdit->calendarWidget()->setLocale(QLocale(QLocale::English));
 
-	connect(ui.statusComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onStatusComboBoxIndexChanged(int)));
 	connect(ui.okPushButton, &QPushButton::clicked, this, &ProjectSettingsDialog::onOkTriggered);
 	connect(ui.cancelPushButton, &QPushButton::clicked, this, &ProjectSettingsDialog::onCancelTriggered);
 

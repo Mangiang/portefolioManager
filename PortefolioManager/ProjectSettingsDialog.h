@@ -16,7 +16,7 @@ class ProjectSettingsDialog : public QDialog
 	Q_OBJECT
 
 public:
-	ProjectSettingsDialog(QWidget *parent = Q_NULLPTR);
+	ProjectSettingsDialog(QWidget *parent = Q_NULLPTR, PortefolioManagerUtilities::ProjectManager* projectManager = Q_NULLPTR);
 	void init();
 	void setProjectId(const QString& projectId);
 	QSharedPointer<Project> getProject() const;
@@ -38,7 +38,7 @@ private:
 	PortefolioManagerUtilities::NetworkReplyWrapper* getProjectReply;
 	PortefolioManagerUtilities::NetworkReplyWrapper* updateProjectReply;
 
-	PortefolioManagerUtilities::ProjectManager* projectManager;
+	PortefolioManagerUtilities::ProjectManager* projectManager; // Ths class is not the parent of the ProjectManager ! 
 	void setUIFromProject(QSharedPointer<Project> project);
 	void lockInput();
 	void unlockUnput();
