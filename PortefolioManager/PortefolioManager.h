@@ -137,13 +137,18 @@ private slots:
 	 */
 	void onProjectSettingsTriggered(bool checked = false) const;
 	
-	/*!	Triggered when the projectSettings accepted signal has been triggered.  
+	/*!	Triggered when the ProjectSettings accepted signal has been triggered.  
 	 *	Reloads the preview in case displayed informations have changed.
 	 */
 	void onProjectSettingsAccepted();
 
-	/*!	Triggered when the projectManager requestFinish signal has been triggered.  
+	/*!	Triggered when the NetworkReply requestFinish signal has been triggered.  
 	 *	Reloads the preview in case displayed informations have changed.
 	 */
 	void onUpdateFinished(PortefolioManagerUtilities::NetworkReplyWrapper* networkReplyWrapper);
+
+	/*!	Triggered when the ManageImages accepted signal has been triggered.  
+	 *	Reloads the preview in case displayed informations have changed.
+	 */
+	void onManageImagesAccepted();
 };

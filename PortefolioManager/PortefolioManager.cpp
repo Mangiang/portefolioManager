@@ -159,6 +159,7 @@ void PortefolioManager::onManageImages(bool checked /*= false*/) const
 	manageImagesDialog->setToken(user->getToken());
 	manageImagesDialog->setIsAdmin(user->getAdmin());
 	manageImagesDialog->getImages(getCurrentProjectID());
+	connect(manageImagesDialog, &ProjectSettingsDialog::accepted, this, &PortefolioManager::onProjectSettingsAccepted, Qt::UniqueConnection);
 	manageImagesDialog->exec();
 }
 
@@ -186,6 +187,11 @@ void PortefolioManager::onProjectSettingsAccepted()
 }
 
 void PortefolioManager::onUpdateFinished(NetworkReplyWrapper* networkReplyWrapper)
+{
+	ui.webEngineView->reload();
+}
+
+void PortefolioManager::onManageImagesAccepted()
 {
 	ui.webEngineView->reload();
 }
