@@ -116,13 +116,16 @@ void PortefolioManager::onPageReady() const
 
 		ui.contentPlainTextEdit->setReadOnly(false);
 		ui.actionProjectSettings->setEnabled(true);
+		ui.actionManageImages->setEnabled(true);
 	});
 }
 
 void PortefolioManager::onPageNotReady() const
 {
+	ui.contentPlainTextEdit->clear();
 	ui.contentPlainTextEdit->setReadOnly(true);
 	ui.actionProjectSettings->setEnabled(false);
+	ui.actionManageImages->setEnabled(false);
 }
 
 void PortefolioManager::onBoldTriggered(bool checked /*= false*/) const

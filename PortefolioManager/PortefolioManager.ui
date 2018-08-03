@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1332</width>
-    <height>1017</height>
+    <width>1334</width>
+    <height>1024</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -30,6 +30,12 @@
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
      <widget class="QPlainTextEdit" name="contentPlainTextEdit">
+      <property name="minimumSize">
+       <size>
+        <width>200</width>
+        <height>200</height>
+       </size>
+      </property>
       <property name="lineWrapMode">
        <enum>QPlainTextEdit::NoWrap</enum>
       </property>
@@ -45,7 +51,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1332</width>
+     <width>1334</width>
      <height>18</height>
     </rect>
    </property>
@@ -103,6 +109,18 @@
    <addaction name="actionSendContent"/>
   </widget>
   <widget class="QDockWidget" name="previewDockWidget">
+   <property name="minimumSize">
+    <size>
+     <width>200</width>
+     <height>200</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>16777215</height>
+    </size>
+   </property>
    <property name="windowTitle">
     <string>Preview</string>
    </property>

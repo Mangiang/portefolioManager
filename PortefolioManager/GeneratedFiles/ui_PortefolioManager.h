@@ -65,7 +65,7 @@ public:
     {
         if (PortefolioManagerClass->objectName().isEmpty())
             PortefolioManagerClass->setObjectName(QStringLiteral("PortefolioManagerClass"));
-        PortefolioManagerClass->resize(1332, 1017);
+        PortefolioManagerClass->resize(1334, 1024);
         QIcon icon;
         icon.addFile(QStringLiteral(":/PortefolioManager/Resources/images/manager.svg"), QSize(), QIcon::Normal, QIcon::Off);
         PortefolioManagerClass->setWindowIcon(icon);
@@ -129,6 +129,7 @@ public:
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
         contentPlainTextEdit = new QPlainTextEdit(centralWidget);
         contentPlainTextEdit->setObjectName(QStringLiteral("contentPlainTextEdit"));
+        contentPlainTextEdit->setMinimumSize(QSize(200, 200));
         contentPlainTextEdit->setLineWrapMode(QPlainTextEdit::NoWrap);
         contentPlainTextEdit->setTextInteractionFlags(Qt::LinksAccessibleByKeyboard|Qt::TextEditable|Qt::TextEditorInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse);
 
@@ -137,7 +138,7 @@ public:
         PortefolioManagerClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(PortefolioManagerClass);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1332, 18));
+        menuBar->setGeometry(QRect(0, 0, 1334, 18));
         menuPreview = new QMenu(menuBar);
         menuPreview->setObjectName(QStringLiteral("menuPreview"));
         menuWindows = new QMenu(menuBar);
@@ -151,6 +152,8 @@ public:
         PortefolioManagerClass->addToolBar(Qt::TopToolBarArea, mainToolBar);
         previewDockWidget = new QDockWidget(PortefolioManagerClass);
         previewDockWidget->setObjectName(QStringLiteral("previewDockWidget"));
+        previewDockWidget->setMinimumSize(QSize(200, 200));
+        previewDockWidget->setMaximumSize(QSize(16777215, 16777215));
         previewDockSubWidget = new QWidget();
         previewDockSubWidget->setObjectName(QStringLiteral("previewDockSubWidget"));
         gridLayout_3 = new QGridLayout(previewDockSubWidget);
