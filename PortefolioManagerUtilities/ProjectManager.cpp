@@ -28,9 +28,11 @@ namespace PortefolioManagerUtilities {
 		return NetworkManager::postUrlEncoded(QString("%1/%2").arg(createProjectUrl).arg(projectId), header, project);
 	}
 
-	QNetworkReply* ProjectManager::uploadImage(const QString& imagePath, const QString& projectId)
+	QNetworkReply* ProjectManager::uploadImage(const QString& imagePath, const QString& projectId, const QString& token)
 	{
-		return NetworkManager::postMultipartFormData(imagePath, QString("%1/%2").arg(uploadProjectImageUrl).arg(projectId));
+		QHash<QString, QString> header;
+		header.insert("Authorization", QString("Bearer %1").arg(token));
+		return NetworkManager::postMultipartFormData(imagePath, QString("%1/%2").arg(uploadProjectImageUrl).arg(projectId), header);
 	}
 
 	QNetworkReply* ProjectManager::getImage(const QString& imageUrl) const

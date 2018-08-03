@@ -4,8 +4,14 @@
 namespace PortefolioManagerUtilities {
 	NetworkReplyWrapper::NetworkReplyWrapper(QObject* parent)
 		:QObject(parent),
+		data(new QHash<QString, QString>()),
 		networkReply(nullptr)
 	{ }
+
+	NetworkReplyWrapper::~NetworkReplyWrapper()
+	{
+		delete data;
+	}
 
 	void NetworkReplyWrapper::setOperation()
 	{
@@ -42,6 +48,7 @@ namespace PortefolioManagerUtilities {
 
 	void NetworkReplyWrapper::setNetworkReply(QNetworkReply* const networkReply)
 	{
+		this->data->clear();
 		this->networkReply = networkReply;
 		connect(this->networkReply, &QNetworkReply::finished, this, &NetworkReplyWrapper::onFinish);
 	}

@@ -26,7 +26,7 @@ ManageImagesDialog::ManageImagesDialog(QWidget *parent, ProjectManager* projectM
 	connect(ui.deletePushButton, &QPushButton::clicked, this, &ManageImagesDialog::onDeletePush);
 
 	getProjectReply = new NetworkReplyWrapper(this);
-	connect(getProjectReply, &NetworkReplyWrapper::finishedProcessing,this, &ManageImagesDialog::onProjectRequestFinished);
+	connect(getProjectReply, &NetworkReplyWrapper::finishedProcessing, this, &ManageImagesDialog::onProjectRequestFinished);
 }
 
 void ManageImagesDialog::clearImages()
@@ -34,15 +34,18 @@ void ManageImagesDialog::clearImages()
 	qDebug() << "Clear images";
 }
 
-void ManageImagesDialog::AddImage(QPixmap imageMap) 
+void ManageImagesDialog::AddImage(const QPixmap& imageMap, const QString& path)
 {
 	unlockInput();
-	ui.imagesListWidget->addItem(new QListWidgetItem(QIcon(imageMap), ""));
+	QListWidgetItem* item = new QListWidgetItem(QIcon(imageMap), "");
+	item->setData(Qt::UserRole, path);
+	ui.imagesListWidget->addItem(item);
 }
 
 void ManageImagesDialog::getImages(const QString& projectId)
 {
 	ui.imagesListWidget->clear();
+	this->projectId = projectId;
 	getProjectReply->setNetworkReply(projectManager->getProject(projectId));
 }
 
@@ -73,6 +76,21 @@ void ManageImagesDialog::unlockInput()
 void ManageImagesDialog::onAccept(bool)
 {
 	lockInput();
+	imageUploadRequestReplies.clear();
+
+	const int itemCount = ui.imagesListWidget->count();
+	for (int i = 0; i < itemCount; ++i)
+	{
+		QListWidgetItem* const item = ui.imagesListWidget->item(i);
+		const QString& imagePath = item->data(Qt::UserRole).toString();
+		if (!imagePath.isEmpty())
+		{
+			NetworkReplyWrapper* reply = new NetworkReplyWrapper(this);
+			reply->setNetworkReply(projectManager->uploadImage(imagePath, projectId, token));
+			connect(reply, &NetworkReplyWrapper::finishedProcessing, this, &ManageImagesDialog::onImageUploadRequestFinished, Qt::UniqueConnection);
+			imageUploadRequestReplies.append(QSharedPointer<NetworkReplyWrapper>(reply));
+		}
+	}
 	accept();
 }
 
@@ -96,7 +114,7 @@ void ManageImagesDialog::onAddPush(bool checked /*= false*/)
 	lockInput();
 	const QString& fileName = QFileDialog::getOpenFileName(this, tr("Choose an Image"), ".", tr("Image Files (*.png *.jpg *.bmp)"));
 	const QPixmap& img(fileName);
-	AddImage(img);
+	AddImage(img, fileName);
 }
 
 void ManageImagesDialog::onProjectRequestFinished(NetworkReplyWrapper* networkReplyWrapper)
@@ -120,5 +138,12 @@ void ManageImagesDialog::onImageProjectRequestFinished(NetworkReplyWrapper* netw
 	QByteArray imageBytes = networkReplyWrapper->getBody();
 	QPixmap pixMap;
 	pixMap.loadFromData(imageBytes);
-	AddImage(pixMap);
+	AddImage(pixMap, "");
+}
+
+void ManageImagesDialog::onImageUploadRequestFinished(PortefolioManagerUtilities::NetworkReplyWrapper* networkReplyWrapper)
+{
+	qDebug() << "Status : " << networkReplyWrapper->getStatusCode();
+	qDebug() << networkReplyWrapper->getMessage();
+	qDebug() << networkReplyWrapper->getBody();
 }

@@ -37,7 +37,7 @@ namespace PortefolioManagerUtilities {
 		QNetworkReply* sendPost(QNetworkRequest& request, QHttpMultiPart* const params);
 		QNetworkReply* sendPut(QNetworkRequest& request, const QByteArray& params);
 		
-		QNetworkReply* postMultipartFormData(const QString& filePath, const QString& url);
+		QNetworkReply* postMultipartFormData(const QString& filePath, const QString& url, const QHash<QString, QString>& header);
 
 		/*! Implementation of a HTTP GET
 		 *	Returns true on success, false otherwise

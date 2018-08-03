@@ -16,7 +16,7 @@ class ManageImagesDialog : public QDialog
 public:
 	ManageImagesDialog(QWidget *parent = Q_NULLPTR, PortefolioManagerUtilities::ProjectManager* projectManager = Q_NULLPTR);
 	void clearImages();
-	void AddImage(QPixmap imageMap);
+	void AddImage(const QPixmap& imageMap, const QString& path);
 	void getImages(const QString& projectId);
 	void setToken(const QString& token);
 	void setIsAdmin(bool isAdmin);
@@ -28,9 +28,11 @@ private:
 	PortefolioManagerUtilities::ProjectManager* projectManager; // This class is not the parent of this ProjectManager !
 	bool isAdmin;
 	QString token;
+	QString projectId;
 
 	PortefolioManagerUtilities::NetworkReplyWrapper* getProjectReply;
 	QList<QSharedPointer<PortefolioManagerUtilities::NetworkReplyWrapper>> imageRequestReplies;
+	QList<QSharedPointer<PortefolioManagerUtilities::NetworkReplyWrapper>> imageUploadRequestReplies;
 private slots:
 	void onAccept(bool checked = false);
 	void onReject(bool checked = false);
@@ -38,4 +40,5 @@ private slots:
 	void onAddPush(bool checked = false);
 	void onProjectRequestFinished(PortefolioManagerUtilities::NetworkReplyWrapper* networkReplyWrapper);
 	void onImageProjectRequestFinished(PortefolioManagerUtilities::NetworkReplyWrapper* networkReplyWrapper);
+	void onImageUploadRequestFinished(PortefolioManagerUtilities::NetworkReplyWrapper* networkReplyWrapper);
 };

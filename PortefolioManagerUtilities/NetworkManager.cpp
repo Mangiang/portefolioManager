@@ -30,7 +30,7 @@ namespace PortefolioManagerUtilities {
 			return Q_NULLPTR;
 		}
 	}
-	
+
 	QNetworkReply* NetworkManager::postUrlEncoded(const QString& url, const QHash<QString, QString>& header, const QHash<QString, QString>& body)
 	{
 		try
@@ -97,7 +97,7 @@ namespace PortefolioManagerUtilities {
 		{
 			request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
 			request.setHeader(QNetworkRequest::ContentLengthHeader, params.count());
-				
+
 			QNetworkReply* rep = manager->post(request, params);
 			return rep;
 		}
@@ -107,7 +107,7 @@ namespace PortefolioManagerUtilities {
 			return Q_NULLPTR;
 		}
 	}
-	
+
 	QNetworkReply* NetworkManager::sendPost(QNetworkRequest& request, QHttpMultiPart* const params)
 	{
 		try
@@ -120,14 +120,14 @@ namespace PortefolioManagerUtilities {
 			return Q_NULLPTR;
 		}
 	}
-	
+
 	QNetworkReply* NetworkManager::sendPut(QNetworkRequest& request, const QByteArray& params)
 	{
 		try
 		{
 			request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
 			request.setHeader(QNetworkRequest::ContentLengthHeader, params.count());
-				
+
 			return manager->put(request, params);
 		}
 		catch (QException e)
@@ -137,16 +137,23 @@ namespace PortefolioManagerUtilities {
 		}
 	}
 
-	QNetworkReply* NetworkManager::postMultipartFormData(const QString& filePath, const QString& url)
-{
+	QNetworkReply* NetworkManager::postMultipartFormData(const QString& filePath, const QString& url, const QHash<QString, QString>& header)
+	{
 		QHttpMultiPart* const multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
 		QHttpPart imagePart;
-		imagePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant(QString("form-data; name='image'; filename='%1'").arg(filePath)));
 
+		imagePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant(QString("form-data; name='image'; filename='%1'").arg(filePath)));
 		multiPart->append(imagePart);
 
-		QNetworkRequest request(url);
+		qDebug() << "Sending " << filePath;
+		qDebug() << "To " << url;
 
+		QNetworkRequest request(url);
+		QHashIterator<QString, QString> headerIterator(header);
+		while (headerIterator.hasNext()) {
+			headerIterator.next();
+			request.setRawHeader(headerIterator.key().toUtf8(), headerIterator.value().toUtf8());
+		}
 		QNetworkReply* reply = sendPost(request, multiPart);
 		multiPart->setParent(reply);
 

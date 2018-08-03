@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QHash>
 
 #include "portefoliomanagerutilities_global.h"
 
@@ -17,6 +18,7 @@ namespace PortefolioManagerUtilities {
 		Q_OBJECT
 	public:
 		NetworkReplyWrapper(QObject* parent);
+		~NetworkReplyWrapper();
 
 		void setNetworkReply(QNetworkReply* const networkReply);
 
@@ -28,9 +30,12 @@ namespace PortefolioManagerUtilities {
 		void setBody(const QByteArray& val) { body = val; }
 		QString getOperation() const { return operation; }
 		void setOperation();
+		QString getData(const QString& key) const { return (*data)[key]; }
+		void addData(const QString& key, const QString& value) { data->insert(key, value); }
 	signals:
 		void finishedProcessing(NetworkReplyWrapper* const networkReplyWrapper);
 	private:
+		QHash<QString, QString>* data;
 		QNetworkReply * networkReply;
 		int statusCode;
 		QString message;
