@@ -151,7 +151,7 @@ void PortefolioManager::onSendContentTriggered(bool checked /*= false*/) const
 	QHash<QString, QString> project;
 	project.insert("description", ui.contentPlainTextEdit->toPlainText());
 	updateProjectReply->setNetworkReply(projectManager->updateProject(user->getToken(), getCurrentProjectID(), project));
-	connect(projectManager, SIGNAL(finished(NetworkReplyWrapper*)), SLOT(onUpdateFinished(NetworkReplyWrapper*)), Qt::UniqueConnection);
+	connect(updateProjectReply, &NetworkReplyWrapper::finishedProcessing,this, &PortefolioManager::onUpdateFinished, Qt::UniqueConnection);
 }
 
 void PortefolioManager::onManageImages(bool checked /*= false*/) const
