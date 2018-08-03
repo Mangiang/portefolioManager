@@ -8,6 +8,7 @@ class Project;
 
 namespace PortefolioManagerUtilities {
 	class ProjectManager;
+	class NetworkReplyWrapper;
 };
 
 class ProjectSettingsDialog : public QDialog
@@ -17,29 +18,35 @@ class ProjectSettingsDialog : public QDialog
 public:
 	ProjectSettingsDialog(QWidget *parent = Q_NULLPTR);
 	void init();
-	bool setProjectId(const QString& projectId);
+	void setProjectId(const QString& projectId);
 	QSharedPointer<Project> getProject() const;
 
 	bool getIsAdmin() const { return isAdmin; }
 	void setIsAdmin(bool val) { isAdmin = val; }
 	QString getToken() const { return token; }
 	void setToken(const QString& val) { token = val; }
+
 signals:
 	void projectPosted();
+
 private:
 	Ui::ProjectSettingsDialog ui;
 	QSharedPointer<Project> currentProject;
 	bool isNewProject;
 	bool isAdmin;
 	QString token;
-	
+	PortefolioManagerUtilities::NetworkReplyWrapper* getProjectReply;
+	PortefolioManagerUtilities::NetworkReplyWrapper* updateProjectReply;
+
 	PortefolioManagerUtilities::ProjectManager* projectManager;
 	void setUIFromProject(QSharedPointer<Project> project);
 	void lockInput();
 	void unlockUnput();
+
 private slots:
 	void onOkTriggered(bool checked = false);
 	void onCancelTriggered(bool checked = false);
 	void onStatusComboBoxIndexChanged(int index);
-	void onGetProjectFinished();
+	void onGetProjectFinished(PortefolioManagerUtilities::NetworkReplyWrapper* networkReplyWrapper);
+	void onUpdateProjectFinished(PortefolioManagerUtilities::NetworkReplyWrapper* networkReplyWrapper);
 };

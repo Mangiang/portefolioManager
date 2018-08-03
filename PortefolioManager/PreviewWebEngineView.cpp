@@ -11,8 +11,8 @@ PreviewWebEngineView::PreviewWebEngineView(QWidget *parent)
 	ready(false)
 {
 	ui.setupUi(this);
-	connect(this, SIGNAL(urlChanged(const QUrl&)), SLOT(onUrlChanged(const QUrl&)));
-	connect(readyTimer.data(), SIGNAL(timeout()), this, SLOT(onReadyTimerTimeout()));
+	connect(this, &QWebEngineView::urlChanged,this, &PreviewWebEngineView::onUrlChanged);
+	connect(readyTimer.data(), &QTimer::timeout, this, &PreviewWebEngineView::onReadyTimerTimeout);
 }
 
 void PreviewWebEngineView::init()

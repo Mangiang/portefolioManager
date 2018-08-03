@@ -1,6 +1,7 @@
 #include <QCalendarWidget>
 #include <QDate>
 #include <QDebug>
+#include <qglobal.h>
 #include <QLocale>
 #include <QMessageBox>
 
@@ -8,10 +9,13 @@
 #include "Project.h"
 #include "ProjectManager.h"
 #include "NetworkManager.h"
+#include "NetworkReplyWrapper.h"
+
+using namespace PortefolioManagerUtilities;
 
 ProjectSettingsDialog::ProjectSettingsDialog(QWidget *parent)
 	: QDialog(parent),
-	projectManager(new PortefolioManagerUtilities::ProjectManager(this)),
+	projectManager(new ProjectManager(this)),
 	isNewProject(true)
 {
 	ui.setupUi(this);
@@ -20,12 +24,16 @@ ProjectSettingsDialog::ProjectSettingsDialog(QWidget *parent)
 	ui.endDateEdit->setDisplayFormat("MM/dd/yyyy");
 	ui.beginDateEdit->calendarWidget()->setLocale(QLocale(QLocale::English));
 	ui.endDateEdit->calendarWidget()->setLocale(QLocale(QLocale::English));
-	
-	connect(ui.statusComboBox, SIGNAL(currentIndexChanged(int)), SLOT(onStatusComboBoxIndexChanged(int)));
-	connect(ui.okPushButton, SIGNAL(clicked(bool)), SLOT(onOkTriggered(bool)));
-	connect(ui.cancelPushButton, SIGNAL(clicked(bool)), SLOT(onCancelTriggered(bool)));
-	connect(projectManager, SIGNAL(requestFinished()), SLOT(onGetProjectFinished()), Qt::UniqueConnection);
 
+	connect(ui.statusComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onStatusComboBoxIndexChanged(int)));
+	connect(ui.okPushButton, &QPushButton::clicked, this, &ProjectSettingsDialog::onOkTriggered);
+	connect(ui.cancelPushButton, &QPushButton::clicked, this, &ProjectSettingsDialog::onCancelTriggered);
+
+	getProjectReply = new NetworkReplyWrapper(this);
+	connect(getProjectReply, &NetworkReplyWrapper::finishedProcessing, this, &ProjectSettingsDialog::onGetProjectFinished);
+
+	updateProjectReply = new NetworkReplyWrapper(this);
+	connect(updateProjectReply, &NetworkReplyWrapper::finishedProcessing, this, &ProjectSettingsDialog::onUpdateProjectFinished);
 
 	init();
 }
@@ -33,7 +41,7 @@ ProjectSettingsDialog::ProjectSettingsDialog(QWidget *parent)
 void ProjectSettingsDialog::init() {
 	isNewProject = true;
 	currentProject = QSharedPointer<Project>(new Project());
-	
+
 	ui.projectTitleLineEdit->clear();
 	ui.beginDateEdit->clear();
 	ui.beginDateEdit->setDate(QDate::currentDate());
@@ -45,12 +53,12 @@ void ProjectSettingsDialog::init() {
 	unlockUnput();
 }
 
-bool ProjectSettingsDialog::setProjectId(const QString& projectId)
+void ProjectSettingsDialog::setProjectId(const QString& projectId)
 {
 	lockInput();
 	qDebug() << "Request Project";
 	isNewProject = false;
-	return projectManager->getProject(projectId);
+	getProjectReply->setNetworkReply(projectManager->getProject(projectId));
 }
 
 QSharedPointer<Project> ProjectSettingsDialog::getProject() const
@@ -71,14 +79,14 @@ void ProjectSettingsDialog::onOkTriggered(bool)
 
 	currentProject->setStatus(ui.statusComboBox->currentIndex());
 	currentProject->setSmallDescription(ui.smallDescriptionLineEdit->text());
-	
+
 	if (!isAdmin)
 	{
 		qInfo() << "Permission denied. Please contact an administrator.";
 		if (!isAdmin)
-			QMessageBox::warning( this, tr("Permission warning"), tr("This user is not an administrator. "
+			QMessageBox::warning(this, tr("Permission warning"), tr("This user is not an administrator. "
 				"This operation will not finish but with an administrator account, your changes would have been sent to the server."));
-		
+
 		reject();
 	}
 
@@ -115,27 +123,25 @@ void ProjectSettingsDialog::onStatusComboBoxIndexChanged(int index)
 	}
 }
 
-void ProjectSettingsDialog::onGetProjectFinished()
+void ProjectSettingsDialog::onGetProjectFinished(NetworkReplyWrapper* networkReplyWrapper)
 {
-	if (projectManager->getLastReplyOperation() == PortefolioManagerUtilities::ReplyOperation::PUT)
-	{
-		emit projectPosted();
-	}
-	else if (projectManager->getLastReplyOperation() == PortefolioManagerUtilities::ReplyOperation::GET)
-	{
-		const QString& projectJson = projectManager->getLastReplyBody();
-		currentProject->getValuesFromProject(Project::fromJson(projectJson));
-		setUIFromProject(currentProject);
-	}
+	const QString& projectJson = getProjectReply->getBody();
+	currentProject->getValuesFromProject(Project::fromJson(projectJson));
+	setUIFromProject(currentProject);
+}
+
+void ProjectSettingsDialog::onUpdateProjectFinished(PortefolioManagerUtilities::NetworkReplyWrapper* networkReplyWrapper)
+{
+	emit projectPosted();
 }
 
 void ProjectSettingsDialog::setUIFromProject(QSharedPointer<Project> project)
 {
 	ui.projectTitleLineEdit->setText(project->getTitle());
 	ui.beginDateEdit->setDate(project->getBeginDate());
-	
+
 	ui.statusComboBox->setCurrentIndex(project->getStatus());
-	
+
 	if (ui.statusComboBox->currentIndex() != ui.statusComboBox->findText("Ongoing"))
 	{
 		ui.endDateEdit->setDate(project->getEndDate());

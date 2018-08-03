@@ -8,7 +8,7 @@ namespace PortefolioManagerUtilities {
 		specificUrl(QString("%1/api/user").arg(baseUrl))
 	{ }
 
-	bool LoginManager::login(const QString& username, const QString& password)
+	QNetworkReply* const LoginManager::login(const QString& username, const QString& password)
 	{
 		QHash<QString, QString> body;
 		body.insert("login", username);

@@ -4,18 +4,23 @@
 #include "LoginDialog.h"
 #include "LoginManager.h"
 #include "User.h"
+#include "NetworkReplyWrapper.h"
+
+using namespace PortefolioManagerUtilities;
 
 LoginDialog::LoginDialog(QWidget *parent)
 	: QDialog(parent),
-	loginManager(new PortefolioManagerUtilities::LoginManager(this))
+	loginManager(new LoginManager(this))
 {
 	ui.setupUi(this);
 	ui.errorLabel->setVisible(false);
 	setWindowFlags(Qt::Window | Qt::WindowTitleHint);
 
-	connect(ui.cancelPushButton, SIGNAL(clicked(bool)), SLOT(onCancelClicked(bool)));
-	connect(ui.loginPushButton, SIGNAL(clicked(bool)), SLOT(onLoginClicked(bool)));
-	connect(loginManager, SIGNAL(requestFinished()), SLOT(onLoginAnswer()));
+	connect(ui.cancelPushButton, &QPushButton::clicked, this, &LoginDialog::onCancelClicked);
+	connect(ui.loginPushButton, &QPushButton::clicked, this, &LoginDialog::onLoginClicked);
+
+	getUserReply = new NetworkReplyWrapper(this);
+	connect(getUserReply, &NetworkReplyWrapper::finishedProcessing, this, &LoginDialog::onLoginAnswer);
 	
 	unlockInput();
 }
@@ -55,17 +60,17 @@ void LoginDialog::onLoginClicked(bool checked /*= false*/)
 
 	ui.errorLabel->setVisible(false);
 	
-	loginManager->login(username, password);
+	getUserReply->setNetworkReply(loginManager->login(username, password));
 }
 
-void LoginDialog::onLoginAnswer()
+void LoginDialog::onLoginAnswer(NetworkReplyWrapper* networkReplyWrapper)
 {
- 	const int statusCode = loginManager->getLastReplyStatusCode();
+	const int statusCode = getUserReply->getStatusCode();
 	unlockInput();
 	if (statusCode == 200)
 	{
 		qInfo() << "Successful login";
-		user = QSharedPointer<User>(new User(User::fromJson(loginManager->getLastReplyBody())));
+		user = QSharedPointer<User>(new User(User::fromJson(getUserReply->getBody())));
 
 		if (!user->getAdmin())
 			QMessageBox::warning( this, tr("Permission warning"), tr("This user is not an administrator. Feel free to experiment and preview but won't be able to submit any change."));
@@ -75,7 +80,7 @@ void LoginDialog::onLoginAnswer()
 	else
 	{
 		qDebug() << "Wrong username or password";
-		qDebug() << loginManager->getLastReplyMessage();
+		qDebug() << getUserReply->getBody();
 		ui.errorLabel->setVisible(true);
 	}
 }

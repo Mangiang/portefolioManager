@@ -263,15 +263,19 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
+   <class>QWebEngineView</class>
+   <extends>QWidget</extends>
+   <header location="global">QtWebEngineWidgets/QWebEngineView</header>
+  </customwidget>
+  <customwidget>
    <class>LoggerPlainTextEdit</class>
    <extends>QPlainTextEdit</extends>
    <header>LoggerPlainTextEdit.h</header>
   </customwidget>
   <customwidget>
    <class>PreviewWebEngineView</class>
-   <extends>QWidget</extends>
+   <extends>QWebEngineView</extends>
    <header>PreviewWebEngineView.h</header>
-   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

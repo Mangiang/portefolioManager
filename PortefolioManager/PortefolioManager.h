@@ -10,6 +10,7 @@ class ManageImagesDialog;
 
 namespace PortefolioManagerUtilities {
 	class ProjectManager;
+	class NetworkReplyWrapper;
 }
 
 /*!	\class PortefolioManager
@@ -54,6 +55,10 @@ private:
 
 	/*! Get the id based on the WebEngineView url*/
 	QString getCurrentProjectID() const;
+
+	/*! Pointer to the update project network request reply*/
+	PortefolioManagerUtilities::NetworkReplyWrapper* updateProjectReply;
+
 private slots:
 	/*!	Triggered when the loginDialog accepted signal has been triggered.  
 	 *	Used to save the new user informations.
@@ -140,5 +145,5 @@ private slots:
 	/*!	Triggered when the projectManager requestFinish signal has been triggered.  
 	 *	Reloads the preview in case displayed informations have changed.
 	 */
-	void onUpdateFinished();
+	void onUpdateFinished(PortefolioManagerUtilities::NetworkReplyWrapper* networkReplyWrapper);
 };

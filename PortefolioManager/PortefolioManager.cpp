@@ -10,11 +10,14 @@
 #include "ProjectManager.h"
 #include "ManageImagesDialog.h"
 #include "User.h"
+#include "NetworkReplyWrapper.h"
+
+using namespace PortefolioManagerUtilities;
 
 PortefolioManager::PortefolioManager(QWidget *parent)
 	: QMainWindow(parent),
 	loginDialog(nullptr),
-	projectManager(new PortefolioManagerUtilities::ProjectManager(this)),
+	projectManager(new ProjectManager(this)),
 	loggedIn(false),
 	user(QSharedPointer<User>())
 {
@@ -30,30 +33,32 @@ PortefolioManager::PortefolioManager(QWidget *parent)
 	ui.logDockWidget->setVisible(false);
 
 	// MenuBar actions
-	connect(ui.actionRefresh, SIGNAL(triggered(bool)), SLOT(onRefreshPreview(bool)));
-	connect(ui.actionTogglePreview, SIGNAL(triggered(bool)), SLOT(onTogglePreview(bool)));
-	connect(ui.actionToggleLog, SIGNAL(triggered(bool)), SLOT(onToggleLog(bool)));
-	connect(ui.actionNewProject, SIGNAL(triggered(bool)), SLOT(onNewProjectTriggered(bool)));
-	connect(ui.actionProjectSettings, SIGNAL(triggered(bool)), SLOT(onProjectSettingsTriggered(bool)));
+	connect(ui.actionRefresh, &QAction::triggered, this, &PortefolioManager::onRefreshPreview);
+	connect(ui.actionTogglePreview, &QAction::triggered, this, &PortefolioManager::onTogglePreview);
+	connect(ui.actionToggleLog, &QAction::triggered, this, &PortefolioManager::onToggleLog);
+	connect(ui.actionNewProject, &QAction::triggered, this, &PortefolioManager::onNewProjectTriggered);
+	connect(ui.actionProjectSettings, &QAction::triggered, this, &PortefolioManager::onProjectSettingsTriggered);
 
 	// ToolBar actions
-	connect(ui.actionBold, SIGNAL(triggered(bool)), SLOT(onBoldTriggered(bool)));
-	connect(ui.actionItalic, SIGNAL(triggered(bool)), SLOT(onItalicTriggered(bool)));
-	connect(ui.actionUnderline, SIGNAL(triggered(bool)), SLOT(onUnderlineTriggered(bool)));
-	connect(ui.actionSendContent, SIGNAL(triggered(bool)), SLOT(onSendContentTriggered(bool)));
-	connect(ui.actionManageImages, SIGNAL(triggered(bool)), SLOT(onManageImages(bool)));
+	connect(ui.actionBold, &QAction::triggered, this, &PortefolioManager::onBoldTriggered);
+	connect(ui.actionItalic, &QAction::triggered, this, &PortefolioManager::onItalicTriggered);
+	connect(ui.actionUnderline, &QAction::triggered, this, &PortefolioManager::onUnderlineTriggered);
+	connect(ui.actionSendContent, &QAction::triggered, this, &PortefolioManager::onSendContentTriggered);
+	connect(ui.actionManageImages, &QAction::triggered, this, &PortefolioManager::onManageImages);
 
 	// Other actions
 	ui.webEngineView->page()->profile()->clearHttpCache();
-	connect(ui.webEngineView, SIGNAL(isReady()), SLOT(onPageReady()));
-	connect(ui.webEngineView, SIGNAL(isNotReady()), SLOT(onPageNotReady()));
+	connect(ui.webEngineView, &PreviewWebEngineView::isReady, this, &PortefolioManager::onPageReady);
+	connect(ui.webEngineView, &PreviewWebEngineView::isNotReady,this, &PortefolioManager::onPageNotReady);
 
 	projectSettingsDialog = new ProjectSettingsDialog(this);
 
 	manageImagesDialog = new ManageImagesDialog(this);
 
+	updateProjectReply = new NetworkReplyWrapper(this);
+	
 	loginDialog = new LoginDialog(this);
-	connect(loginDialog, SIGNAL(accepted()), SLOT(onLoginDialogAccepted()));
+	connect(loginDialog, &LoginDialog::accepted, this, &PortefolioManager::onLoginDialogAccepted);
 	loginDialog->show();
 }
 
@@ -97,7 +102,7 @@ void PortefolioManager::onToggleLog(bool) const
 void PortefolioManager::onRefreshPreview(bool) const
 {
 	QString& text = ui.contentPlainTextEdit->toPlainText();
-	PortefolioManagerUtilities::formatHtml(text);
+	formatHtml(text);
 
 	ui.webEngineView->setHtmlTagContent("#projectDescription", text);
 }
@@ -123,27 +128,27 @@ void PortefolioManager::onPageNotReady() const
 void PortefolioManager::onBoldTriggered(bool checked /*= false*/) const
 {
 	QTextCursor* cursor = &ui.contentPlainTextEdit->textCursor();
-	PortefolioManagerUtilities::wrapText(cursor, "b");
+	wrapText(cursor, "b");
 }
 
 void PortefolioManager::onItalicTriggered(bool checked /*= false*/) const
 {
 	QTextCursor* cursor = &ui.contentPlainTextEdit->textCursor();
-	PortefolioManagerUtilities::wrapText(cursor, "i");
+	wrapText(cursor, "i");
 }
 
 void PortefolioManager::onUnderlineTriggered(bool checked /*= false*/) const
 {
 	QTextCursor* cursor = &ui.contentPlainTextEdit->textCursor();
-	PortefolioManagerUtilities::wrapText(cursor, "u");
+	wrapText(cursor, "u");
 }
 
 void PortefolioManager::onSendContentTriggered(bool checked /*= false*/) const
 {
 	QHash<QString, QString> project;
 	project.insert("description", ui.contentPlainTextEdit->toPlainText());
-	connect(projectManager, SIGNAL(requestFinished()), SLOT(onUpdateFinished()), Qt::UniqueConnection);
-	projectManager->updateProject(user->getToken(), getCurrentProjectID(), project);
+	updateProjectReply->setNetworkReply(projectManager->updateProject(user->getToken(), getCurrentProjectID(), project));
+	connect(projectManager, SIGNAL(finished(NetworkReplyWrapper*)), SLOT(onUpdateFinished(NetworkReplyWrapper*)), Qt::UniqueConnection);
 }
 
 void PortefolioManager::onManageImages(bool checked /*= false*/) const
@@ -159,7 +164,7 @@ void PortefolioManager::onNewProjectTriggered(bool checked /*= false*/) const
 	projectSettingsDialog->setToken(user->getToken());
 	projectSettingsDialog->setIsAdmin(user->getAdmin());
 	projectSettingsDialog->init();
-	connect(projectSettingsDialog, SIGNAL(projectPosted()), SLOT(onProjectSettingsAccepted()), Qt::UniqueConnection);
+	connect(projectSettingsDialog, &ProjectSettingsDialog::projectPosted, this, &PortefolioManager::onProjectSettingsAccepted, Qt::UniqueConnection);
 	projectSettingsDialog->exec();
 }
 
@@ -168,7 +173,7 @@ void PortefolioManager::onProjectSettingsTriggered(bool checked /*= false*/) con
 	projectSettingsDialog->setProjectId(getCurrentProjectID());
 	projectSettingsDialog->setToken(user->getToken());
 	projectSettingsDialog->setIsAdmin(user->getAdmin());
-	connect(projectSettingsDialog, SIGNAL(projectPosted()), SLOT(onProjectSettingsAccepted()), Qt::UniqueConnection);
+	connect(projectSettingsDialog, &ProjectSettingsDialog::projectPosted, this, &PortefolioManager::onProjectSettingsAccepted, Qt::UniqueConnection);
 	projectSettingsDialog->exec();
 }
 
@@ -177,7 +182,7 @@ void PortefolioManager::onProjectSettingsAccepted()
 	ui.webEngineView->reload();
 }
 
-void PortefolioManager::onUpdateFinished()
+void PortefolioManager::onUpdateFinished(NetworkReplyWrapper* networkReplyWrapper)
 {
 	ui.webEngineView->reload();
 }

@@ -8,25 +8,30 @@
 #include "ProjectManager.h"
 #include "Project.h"
 #include "Image.h"
+#include "NetworkReplyWrapper.h"
+
+using namespace PortefolioManagerUtilities;
 
 ManageImagesDialog::ManageImagesDialog(QWidget *parent)
 	: QDialog(parent),
-	projectManager(new PortefolioManagerUtilities::ProjectManager(this)),
+	projectManager(new ProjectManager(this)),
 	isAdmin(false)
 {
 	ui.setupUi(this);
 	setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
 
-	connect(ui.okPushButton, SIGNAL(clicked(bool)), SLOT(onAccept(bool)));
-	connect(ui.cancelPushButton, SIGNAL(clicked(bool)), SLOT(onReject(bool)));
-	connect(ui.addPushButton, SIGNAL(clicked(bool)), SLOT(onAddPush(bool)));
-	connect(ui.deletePushButton, SIGNAL(clicked(bool)), SLOT(onDeletePush(bool)));
+	connect(ui.okPushButton, &QPushButton::clicked, this, &ManageImagesDialog::onAccept);
+	connect(ui.cancelPushButton, &QPushButton::clicked, this, &ManageImagesDialog::onReject);
+	connect(ui.addPushButton, &QPushButton::clicked, this, &ManageImagesDialog::onAddPush);
+	connect(ui.deletePushButton, &QPushButton::clicked, this, &ManageImagesDialog::onDeletePush);
 
+	getProjectReply = new NetworkReplyWrapper(this);
+	connect(getProjectReply, &NetworkReplyWrapper::finishedProcessing,this, &ManageImagesDialog::onProjectRequestFinished);
 }
 
 void ManageImagesDialog::clearImages()
 {
-
+	qDebug() << "Clear images";
 }
 
 void ManageImagesDialog::AddImage(QPixmap imageMap) const
@@ -37,8 +42,7 @@ void ManageImagesDialog::AddImage(QPixmap imageMap) const
 void ManageImagesDialog::getImages(const QString& projectId)
 {
 	ui.imagesListWidget->clear();
-	connect(projectManager, SIGNAL(requestFinished()), SLOT(onProjectRequestFinished()));
-	projectManager->getProject(projectId);
+	getProjectReply->setNetworkReply(projectManager->getProject(projectId));
 }
 
 void ManageImagesDialog::setToken(const QString& token)
@@ -85,26 +89,27 @@ void ManageImagesDialog::onDeletePush(bool checked /*= false*/)
 void ManageImagesDialog::onAddPush(bool checked /*= false*/)
 {
 	auto fileName = QFileDialog::getOpenFileName(this, tr("Choose an Image"), ".", tr("Image Files (*.png *.jpg *.bmp)"));
-	qDebug() << fileName;
 }
 
-void ManageImagesDialog::onProjectRequestFinished() 
+void ManageImagesDialog::onProjectRequestFinished(NetworkReplyWrapper* networkReplyWrapper)
 {
-	disconnect(projectManager, SIGNAL(requestFinished()), this, SLOT(onProjectRequestFinished()));
-	const QString& projectJson = projectManager->getLastReplyBody();
+	const QString& projectJson = getProjectReply->getBody();
 	const Project& project = Project::fromJson(projectJson);
 	const QList<Image>& imagesList = *project.getImages();
 
-	connect(projectManager, SIGNAL(requestFinished()), SLOT(onImageProjectRequestFinished()), Qt::UniqueConnection);
+	imageRequestReplies.clear();
 	unlockInput();
 	for (Image img : imagesList) {
-		projectManager->getImage(img.getUrl());
+		NetworkReplyWrapper* reply = new NetworkReplyWrapper(this);
+		reply->setNetworkReply(projectManager->getImage(img.getUrl()));
+		connect(reply, &NetworkReplyWrapper::finishedProcessing, this, &ManageImagesDialog::onImageProjectRequestFinished, Qt::UniqueConnection);
+		imageRequestReplies.append(QSharedPointer<NetworkReplyWrapper>(reply));
 	}
 }
 
-void ManageImagesDialog::onImageProjectRequestFinished()
+void ManageImagesDialog::onImageProjectRequestFinished(NetworkReplyWrapper* networkReplyWrapper)
 {
-	QByteArray imageBytes = projectManager->getLastReplyBody();
+	QByteArray imageBytes = networkReplyWrapper->getBody();
 	QPixmap pixMap;
 	pixMap.loadFromData(imageBytes);
 	AddImage(pixMap);

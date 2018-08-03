@@ -8,6 +8,7 @@ class User;
 
 namespace PortefolioManagerUtilities {
 	class LoginManager;
+	class NetworkReplyWrapper;
 }
 
 class LoginDialog : public QDialog
@@ -21,11 +22,12 @@ private:
 	Ui::LoginDialog ui;
 	PortefolioManagerUtilities::LoginManager* loginManager;
 	QSharedPointer<User> user;
+	PortefolioManagerUtilities::NetworkReplyWrapper* getUserReply;
 
 	void lockInput();
 	void unlockInput();
 private slots:
 	void onCancelClicked(bool checked = false);
 	void onLoginClicked(bool checked = false);
-	void onLoginAnswer();
+	void onLoginAnswer(PortefolioManagerUtilities::NetworkReplyWrapper* networkReplyWrapper);
 };

@@ -6,6 +6,7 @@
 
 namespace PortefolioManagerUtilities {
 	class ProjectManager;
+	class NetworkReplyWrapper;
 };
 
 class ManageImagesDialog : public QDialog
@@ -27,11 +28,14 @@ private:
 	PortefolioManagerUtilities::ProjectManager* projectManager; // This class is nor the owner nor the parent of this pointer
 	bool isAdmin;
 	QString token;
+
+	PortefolioManagerUtilities::NetworkReplyWrapper* getProjectReply;
+	QList<QSharedPointer<PortefolioManagerUtilities::NetworkReplyWrapper>> imageRequestReplies;
 private slots:
 	void onAccept(bool checked = false);
 	void onReject(bool checked = false);
 	void onDeletePush(bool checked = false);
 	void onAddPush(bool checked = false);
-	void onProjectRequestFinished();
-	void onImageProjectRequestFinished();
+	void onProjectRequestFinished(PortefolioManagerUtilities::NetworkReplyWrapper* networkReplyWrapper);
+	void onImageProjectRequestFinished(PortefolioManagerUtilities::NetworkReplyWrapper* networkReplyWrapper);
 };

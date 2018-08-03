@@ -4,26 +4,18 @@
 #include <QSharedPointer>
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkAccessManager>
+
 #include "portefoliomanagerutilities_global.h"
 
 class QNetworkReply;
 
 namespace PortefolioManagerUtilities {
-	enum ReplyOperation {
-		GET, POST, PUT
-	};
-
 	class PORTEFOLIOMANAGERUTILITIES_EXPORT NetworkManager : public QObject
 	{
 		Q_OBJECT
 
 	public:
 		NetworkManager(QObject *parent);
-		const int getLastReplyStatusCode() const { return lastRequestStatusCode; };
-		QString getLastReplyMessage() const { return lastRequestMessage; };
-		QByteArray getLastReplyBody() const { return lastRequestBody; };
-		ReplyOperation getLastReplyOperation() const { return lastRequestOperation; };
-		void setLastReplyOperation(const QNetworkAccessManager::Operation& operation);
 	private:
 		QSharedPointer<QNetworkAccessManager> manager;
 	protected:
@@ -32,34 +24,24 @@ namespace PortefolioManagerUtilities {
 		/*! Implementation of a HTTP POST with url encoded body
 		 *	Returns if no exception was raised
 		 */
-		bool postUrlEncoded(const QString& url, const QHash<QString, QString>& body);
-		bool postUrlEncoded(const QString& url, const QHash<QString, QString>& header, const QHash<QString, QString>& body);
+		QNetworkReply* const postUrlEncoded(const QString& url, const QHash<QString, QString>& body);
+		QNetworkReply* postUrlEncoded(const QString& url, const QHash<QString, QString>& header, const QHash<QString, QString>& body);
 
 		/*! Implementation of a HTTP PUT with url encoded body
 		 *	Returns if no exception was raised
 		 */
-		bool putUrlEncoded(const QString& url, const QHash<QString, QString>& header, const QHash<QString, QString>& body);
+		QNetworkReply* putUrlEncoded(const QString& url, const QHash<QString, QString>& header, const QHash<QString, QString>& body);
 
 		QByteArray encodeParams(const QHash<QString, QString>& body) const;
-		bool sendPost(QNetworkRequest& request, const QByteArray& params);
-		bool sendPost(QNetworkRequest& request, QHttpMultiPart* const params);
-		bool sendPut(QNetworkRequest& request, const QByteArray& params);
+		QNetworkReply* const sendPost(QNetworkRequest& request, const QByteArray& params);
+		QNetworkReply* sendPost(QNetworkRequest& request, QHttpMultiPart* const params);
+		QNetworkReply* sendPut(QNetworkRequest& request, const QByteArray& params);
 		
-		bool postMultipartFormData(const QString& filePath, const QString& url);
+		QNetworkReply* postMultipartFormData(const QString& filePath, const QString& url);
 
 		/*! Implementation of a HTTP GET
 		 *	Returns true on success, false otherwise
 		 */
-		bool get(const QString& url) const;
-
-		int lastRequestStatusCode;
-		QString lastRequestMessage;
-		QByteArray lastRequestBody;
-		ReplyOperation lastRequestOperation;
-	private slots:
-		void onRequestFinish(QNetworkReply* rep);
-
-	signals:
-		void requestFinished();
+		QNetworkReply* get(const QString& url) const;
 	};
 }

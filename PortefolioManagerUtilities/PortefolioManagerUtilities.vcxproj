@@ -99,6 +99,7 @@
   <ItemGroup>
     <ClCompile Include="LoginManager.cpp" />
     <ClCompile Include="NetworkManager.cpp" />
+    <ClCompile Include="NetworkReplyWrapper.cpp" />
     <ClCompile Include="PortefolioManagerUtilities.cpp" />
     <ClCompile Include="ProjectManager.cpp" />
   </ItemGroup>
@@ -115,6 +116,12 @@
       <Define Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_CORE_LIB;PORTEFOLIOMANAGERUTILITIES_LIB;QT_GUI_LIB;QT_NETWORK_LIB;_WINDLL</Define>
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName)\.;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork</IncludePath>
       <Define Condition="'$(Configuration)|$(Platform)'=='Release|x64'">UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;PORTEFOLIOMANAGERUTILITIES_LIB;QT_GUI_LIB;QT_NETWORK_LIB;_WINDLL</Define>
+    </QtMoc>
+    <QtMoc Include="NetworkReplyWrapper.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName)\.;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_CORE_LIB;PORTEFOLIOMANAGERUTILITIES_LIB;QT_GUI_LIB;QT_NETWORK_LIB;_WINDLL</Define>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName)\.;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtNetworkAuth</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Release|x64'">UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;PORTEFOLIOMANAGERUTILITIES_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_NO_DEBUG_OUTPUT;_WINDLL</Define>
     </QtMoc>
     <ClInclude Include="PortefolioManagerUtilities.h" />
     <ClInclude Include="portefoliomanagerutilities_global.h" />

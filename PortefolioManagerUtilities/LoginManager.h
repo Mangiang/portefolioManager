@@ -11,7 +11,7 @@ namespace PortefolioManagerUtilities {
 
 	public:
 		LoginManager(QObject *parent);
-		bool login(const QString& username, const QString& password);
+		QNetworkReply* const login(const QString& username, const QString& password);
 	private:
 		const QString specificUrl;
 	};

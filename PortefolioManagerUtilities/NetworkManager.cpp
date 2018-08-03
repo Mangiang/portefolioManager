@@ -4,7 +4,7 @@
 #include <QException>
 #include <QHash>
 #include <QHttpPart>
-#include <QNetworkReply>
+#include <QtNetwork/QNetworkReply>
 #include <QUrlQuery>
 
 namespace PortefolioManagerUtilities {
@@ -13,44 +13,25 @@ namespace PortefolioManagerUtilities {
 		manager(new QNetworkAccessManager(this)),
 		baseUrl("https://arthur-joly.fr")
 
-	{
-		connect(manager.data(), SIGNAL(finished(QNetworkReply*)), this, SLOT(onRequestFinish(QNetworkReply*)));
-	}
+	{ }
 
-	void NetworkManager::setLastReplyOperation(const QNetworkAccessManager::Operation& operation)
-	{
-		switch (operation) {
-		case QNetworkAccessManager::GetOperation:
-			lastRequestOperation = ReplyOperation::GET;
-			break;
-		case QNetworkAccessManager::PostOperation:
-			lastRequestOperation = ReplyOperation::POST;
-			break;
-		case QNetworkAccessManager::PutOperation:
-			lastRequestOperation = ReplyOperation::PUT;
-			break;
-		}
-	}
-
-	bool NetworkManager::postUrlEncoded(const QString& url, const QHash<QString, QString>& body)
+	QNetworkReply* const NetworkManager::postUrlEncoded(const QString& url, const QHash<QString, QString>& body)
 	{
 		try
 		{
 			QByteArray paramByteArray = encodeParams(body);
 
 			QNetworkRequest request(url);
-
 			return sendPost(request, paramByteArray);
 		}
 		catch (QException e)
 		{
 			qCritical() << e.what();
-			return false;
+			return Q_NULLPTR;
 		}
-		return true;
 	}
 	
-	bool NetworkManager::postUrlEncoded(const QString& url, const QHash<QString, QString>& header, const QHash<QString, QString>& body)
+	QNetworkReply* NetworkManager::postUrlEncoded(const QString& url, const QHash<QString, QString>& header, const QHash<QString, QString>& body)
 	{
 		try
 		{
@@ -69,11 +50,11 @@ namespace PortefolioManagerUtilities {
 		catch (QException e)
 		{
 			qCritical() << e.what();
-			return false;
+			return Q_NULLPTR;
 		}
 	}
 
-	bool NetworkManager::putUrlEncoded(const QString& url, const QHash<QString, QString>& header, const QHash<QString, QString>& body)
+	QNetworkReply* NetworkManager::putUrlEncoded(const QString& url, const QHash<QString, QString>& header, const QHash<QString, QString>& body)
 	{
 		try
 		{
@@ -92,7 +73,7 @@ namespace PortefolioManagerUtilities {
 		catch (QException e)
 		{
 			qCritical() << e.what();
-			return false;
+			return Q_NULLPTR;
 		}
 	}
 
@@ -110,55 +91,53 @@ namespace PortefolioManagerUtilities {
 		return paramString.toUtf8();
 	}
 
-	bool NetworkManager::sendPost(QNetworkRequest& request, const QByteArray& params)
+	QNetworkReply* const NetworkManager::sendPost(QNetworkRequest& request, const QByteArray& params)
 	{
 		try
 		{
 			request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
 			request.setHeader(QNetworkRequest::ContentLengthHeader, params.count());
 				
-			manager->post(request, params);
-			return true;
+			QNetworkReply* rep = manager->post(request, params);
+			return rep;
 		}
 		catch (QException e)
 		{
 			qCritical() << e.what();
-			return false;
+			return Q_NULLPTR;
 		}
 	}
 	
-	bool NetworkManager::sendPost(QNetworkRequest& request, QHttpMultiPart* const params)
+	QNetworkReply* NetworkManager::sendPost(QNetworkRequest& request, QHttpMultiPart* const params)
 	{
 		try
 		{
-			manager->post(request, params);
-			return true;
+			return manager->post(request, params);
 		}
 		catch (QException e)
 		{
 			qCritical() << e.what();
-			return false;
+			return Q_NULLPTR;
 		}
 	}
 	
-	bool NetworkManager::sendPut(QNetworkRequest& request, const QByteArray& params)
+	QNetworkReply* NetworkManager::sendPut(QNetworkRequest& request, const QByteArray& params)
 	{
 		try
 		{
 			request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
 			request.setHeader(QNetworkRequest::ContentLengthHeader, params.count());
 				
-			manager->put(request, params);
-			return true;
+			return manager->put(request, params);
 		}
 		catch (QException e)
 		{
 			qCritical() << e.what();
-			return false;
+			return Q_NULLPTR;
 		}
 	}
 
-	bool NetworkManager::postMultipartFormData(const QString& filePath, const QString& url)
+	QNetworkReply* NetworkManager::postMultipartFormData(const QString& filePath, const QString& url)
 {
 		QHttpMultiPart* const multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
 		QHttpPart imagePart;
@@ -168,45 +147,24 @@ namespace PortefolioManagerUtilities {
 
 		QNetworkRequest request(url);
 
-		sendPost(request, multiPart);
+		QNetworkReply* reply = sendPost(request, multiPart);
+		multiPart->setParent(reply);
 
-		//multiPart->setParent(reply);
-		return true;
+		return reply;
 	}
 
-	bool NetworkManager::get(const QString& url) const
+	QNetworkReply* NetworkManager::get(const QString& url) const
 	{
 		try
 		{
 			QNetworkRequest request(url);
 			request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-			manager->get(request);
+			return manager->get(request);
 		}
 		catch (QException e)
 		{
 			qCritical() << e.what();
-			return false;
+			return Q_NULLPTR;
 		}
-
-		return true;
-	}
-
-	void NetworkManager::onRequestFinish(QNetworkReply* rep)
-	{
-		QVariant status = rep->attribute(QNetworkRequest::HttpStatusCodeAttribute);
-		if (!status.isValid())
-			lastRequestStatusCode = 500;
-		lastRequestStatusCode =  status.toInt();
-		lastRequestMessage = rep->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toString();
-		lastRequestBody = rep->readAll();
-
-		setLastReplyOperation(rep->operation());
-
-		qDebug() << "Operation : " << getLastReplyOperation();
-		qDebug() << "Status " << getLastReplyStatusCode();
-		qDebug() << "Message " << getLastReplyMessage();
-		qDebug() << "Body " << getLastReplyBody();
-
-		emit requestFinished();
 	}
 }
