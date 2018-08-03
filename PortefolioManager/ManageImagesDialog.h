@@ -30,6 +30,7 @@ private:
 	QString token;
 	QString projectId;
 
+	QList<QSharedPointer<QListWidgetItem>> removeItemList;
 	PortefolioManagerUtilities::NetworkReplyWrapper* getProjectReply;
 	QList<QSharedPointer<PortefolioManagerUtilities::NetworkReplyWrapper>> imageRequestReplies;
 	QList<QSharedPointer<PortefolioManagerUtilities::NetworkReplyWrapper>> imageUploadRequestReplies;
@@ -41,4 +42,5 @@ private slots:
 	void onProjectRequestFinished(PortefolioManagerUtilities::NetworkReplyWrapper* networkReplyWrapper);
 	void onImageProjectRequestFinished(PortefolioManagerUtilities::NetworkReplyWrapper* networkReplyWrapper);
 	void onImageUploadRequestFinished(PortefolioManagerUtilities::NetworkReplyWrapper* networkReplyWrapper);
+	void onImageDeleteRequestFinished(PortefolioManagerUtilities::NetworkReplyWrapper* networkReplyWrapper);
 };

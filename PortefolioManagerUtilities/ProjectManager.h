@@ -15,12 +15,14 @@ namespace PortefolioManagerUtilities {
 		QNetworkReply* updateProject(const QString& token, const QString& projectId, const QHash<QString, QString>& project);
 		QNetworkReply* createProject(const QString& token, const QString& projectId, const QHash<QString, QString>& project);
 		
-		QNetworkReply* uploadImage(const QString& imagePath, const QString& projectId, const QString& token);
 		QNetworkReply* getImage(const QString& imageUrl) const;
+		QNetworkReply* uploadImage(const QString& imagePath, const QString& projectId, const QString& token);
+		QNetworkReply* deleteImage(const QString& imageId, const QString& projectId, const QString& token);
 	private:
 		const QString updateProjectUrl;
 		const QString createProjectUrl;
 		const QString detailProjectUrl;
 		const QString uploadProjectImageUrl;
+		const QString deleteProjectImageUrl;
 	};
 }

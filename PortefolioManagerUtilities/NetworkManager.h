@@ -22,20 +22,26 @@ namespace PortefolioManagerUtilities {
 		const QString baseUrl;
 		
 		/*! Implementation of a HTTP POST with url encoded body
-		 *	Returns if no exception was raised
 		 */
 		QNetworkReply* const postUrlEncoded(const QString& url, const QHash<QString, QString>& body);
 		QNetworkReply* postUrlEncoded(const QString& url, const QHash<QString, QString>& header, const QHash<QString, QString>& body);
 
 		/*! Implementation of a HTTP PUT with url encoded body
-		 *	Returns if no exception was raised
 		 */
 		QNetworkReply* putUrlEncoded(const QString& url, const QHash<QString, QString>& header, const QHash<QString, QString>& body);
 
 		QByteArray encodeParams(const QHash<QString, QString>& body) const;
 		QNetworkReply* const sendPost(QNetworkRequest& request, const QByteArray& params);
 		QNetworkReply* sendPost(QNetworkRequest& request, QHttpMultiPart* const params);
+
+		/*! Implementation of a HTTP PUT with byteArray
+		 */
 		QNetworkReply* sendPut(QNetworkRequest& request, const QByteArray& params);
+
+		/*! Implementation of a HTTP DELETE 
+		 */
+		QNetworkReply * deleteUrlEncoded(const QString& url, const QHash<QString, QString>& header);
+		QNetworkReply* sendDelete(QNetworkRequest& request);
 		
 		QNetworkReply* postMultipartFormData(const QString& filePath, const QString& url, const QHash<QString, QString>& header);
 

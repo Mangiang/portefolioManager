@@ -141,6 +141,19 @@ namespace PortefolioManagerUtilities {
 		}
 	}
 
+	QNetworkReply* NetworkManager::sendDelete(QNetworkRequest& request)
+	{
+		try
+		{
+			return manager->deleteResource(request);
+		}
+		catch (QException e)
+		{
+			qCritical() << e.what();
+			return Q_NULLPTR;
+		}
+	}
+
 	QNetworkReply* NetworkManager::postMultipartFormData(const QString& filePath, const QString& url, const QHash<QString, QString>& header)
 	{
 		QHttpMultiPart* const multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
@@ -185,6 +198,27 @@ namespace PortefolioManagerUtilities {
 			QNetworkRequest request(url);
 			request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 			return manager->get(request);
+		}
+		catch (QException e)
+		{
+			qCritical() << e.what();
+			return Q_NULLPTR;
+		}
+	}
+
+	QNetworkReply * NetworkManager::deleteUrlEncoded(const QString& url, const QHash<QString, QString>& header)
+	{
+		try
+		{
+			QNetworkRequest request(url);
+
+			QHashIterator<QString, QString> headerIterator(header);
+			while (headerIterator.hasNext()) {
+				headerIterator.next();
+				request.setRawHeader(headerIterator.key().toUtf8(), headerIterator.value().toUtf8());
+			}
+
+			return sendDelete(request);
 		}
 		catch (QException e)
 		{

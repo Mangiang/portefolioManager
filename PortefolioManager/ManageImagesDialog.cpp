@@ -4,6 +4,7 @@
 #include <QFileDialog>
 #include <QIcon>
 #include <QListWidget>
+#include <QMessageBox>
 
 #include "ProjectManager.h"
 #include "Project.h"
@@ -17,6 +18,7 @@ ManageImagesDialog::ManageImagesDialog(QWidget *parent, ProjectManager* projectM
 	projectManager(projectManager),
 	isAdmin(false)
 {
+
 	ui.setupUi(this);
 	setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
 
@@ -78,6 +80,17 @@ void ManageImagesDialog::onAccept(bool)
 	lockInput();
 	imageUploadRequestReplies.clear();
 
+	if (!isAdmin)
+	{
+		qInfo() << "Permission denied. Please contact an administrator.";
+		if (!isAdmin)
+			QMessageBox::warning(this, tr("Permission warning"), tr("This user is not an administrator. "
+				"This operation will not finish but with an administrator account, your changes would have been sent to the server."));
+
+		reject();
+		return;
+	}
+
 	const int itemCount = ui.imagesListWidget->count();
 	for (int i = 0; i < itemCount; ++i)
 	{
@@ -91,6 +104,19 @@ void ManageImagesDialog::onAccept(bool)
 			imageUploadRequestReplies.append(QSharedPointer<NetworkReplyWrapper>(reply));
 		}
 	}
+
+	for (QSharedPointer<QListWidgetItem> removeItem : removeItemList)
+	{
+		const QString& id = removeItem->data(Qt::UserRole).toString();
+		if (!id.isEmpty())
+		{
+			NetworkReplyWrapper* reply = new NetworkReplyWrapper(this);
+			reply->setNetworkReply(projectManager->deleteImage(id, projectId, token));
+			connect(reply, &NetworkReplyWrapper::finishedProcessing, this, &ManageImagesDialog::onImageDeleteRequestFinished, Qt::UniqueConnection);
+			imageUploadRequestReplies.append(QSharedPointer<NetworkReplyWrapper>(reply));
+		}
+	}
+	removeItemList.clear();
 	accept();
 }
 
@@ -105,7 +131,7 @@ void ManageImagesDialog::onDeletePush(bool checked /*= false*/)
 	const QList<QListWidgetItem*>& selectedItems = ui.imagesListWidget->selectedItems();
 	for (QListWidgetItem* listWidgetItem : selectedItems)
 	{
-		ui.imagesListWidget->removeItemWidget(listWidgetItem);
+		removeItemList.append(QSharedPointer<QListWidgetItem>(ui.imagesListWidget->takeItem(ui.imagesListWidget->row(listWidgetItem))));
 	}
 }
 
@@ -128,6 +154,7 @@ void ManageImagesDialog::onProjectRequestFinished(NetworkReplyWrapper* networkRe
 	for (Image img : imagesList) {
 		NetworkReplyWrapper* reply = new NetworkReplyWrapper(this);
 		reply->setNetworkReply(projectManager->getImage(img.getUrl()));
+		reply->addData("id", img.getId());
 		connect(reply, &NetworkReplyWrapper::finishedProcessing, this, &ManageImagesDialog::onImageProjectRequestFinished, Qt::UniqueConnection);
 		imageRequestReplies.append(QSharedPointer<NetworkReplyWrapper>(reply));
 	}
@@ -138,10 +165,17 @@ void ManageImagesDialog::onImageProjectRequestFinished(NetworkReplyWrapper* netw
 	QByteArray imageBytes = networkReplyWrapper->getBody();
 	QPixmap pixMap;
 	pixMap.loadFromData(imageBytes);
-	AddImage(pixMap, "");
+	AddImage(pixMap, networkReplyWrapper->getData("id"));
 }
 
 void ManageImagesDialog::onImageUploadRequestFinished(PortefolioManagerUtilities::NetworkReplyWrapper* networkReplyWrapper)
+{
+	qDebug() << "Status : " << networkReplyWrapper->getStatusCode();
+	qDebug() << networkReplyWrapper->getMessage();
+	qDebug() << networkReplyWrapper->getBody();
+}
+
+void ManageImagesDialog::onImageDeleteRequestFinished(PortefolioManagerUtilities::NetworkReplyWrapper* networkReplyWrapper)
 {
 	qDebug() << "Status : " << networkReplyWrapper->getStatusCode();
 	qDebug() << networkReplyWrapper->getMessage();
