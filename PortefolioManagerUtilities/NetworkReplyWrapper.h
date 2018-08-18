@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QString>
 #include <QHash>
+#include <QVariantMap>
 
 #include "portefoliomanagerutilities_global.h"
 
@@ -27,11 +28,12 @@ namespace PortefolioManagerUtilities {
 		QString getMessage() const { return message; }
 		void setMessage(const QString& val) { message = val; }
 		QByteArray getBody() const { return body; }
-		void setBody(const QByteArray& val) { body = val; }
+		void setBody(const QByteArray& val);
 		QString getOperation() const { return operation; }
 		void setOperation();
 		QString getData(const QString& key) const { return (*data)[key]; }
 		void addData(const QString& key, const QString& value) { data->insert(key, value); }
+		QVariantMap getJson() { return json; }
 	signals:
 		void finishedProcessing(NetworkReplyWrapper* const networkReplyWrapper);
 	private:
@@ -41,6 +43,7 @@ namespace PortefolioManagerUtilities {
 		QString message;
 		QByteArray body;
 		QString operation;
+		QVariantMap json;
 	private slots:
 		void onFinish();
 	};

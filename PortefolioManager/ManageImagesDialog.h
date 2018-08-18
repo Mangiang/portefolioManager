@@ -23,6 +23,8 @@ public:
 
 	void lockInput();
 	void unlockInput();
+signals:
+	void insertImages(QString imagesUrls);
 private:
 	Ui::ManageImagesDialog ui;
 	PortefolioManagerUtilities::ProjectManager* projectManager; // This class is not the parent of this ProjectManager !
@@ -30,7 +32,6 @@ private:
 	QString token;
 	QString projectId;
 
-	QList<QSharedPointer<QListWidgetItem>> removeItemList;
 	PortefolioManagerUtilities::NetworkReplyWrapper* getProjectReply;
 	QList<QSharedPointer<PortefolioManagerUtilities::NetworkReplyWrapper>> imageRequestReplies;
 	QList<QSharedPointer<PortefolioManagerUtilities::NetworkReplyWrapper>> imageUploadRequestReplies;
@@ -39,6 +40,7 @@ private slots:
 	void onReject(bool checked = false);
 	void onDeletePush(bool checked = false);
 	void onAddPush(bool checked = false);
+	void onInsertPush(bool checked = false);
 	void onProjectRequestFinished(PortefolioManagerUtilities::NetworkReplyWrapper* networkReplyWrapper);
 	void onImageProjectRequestFinished(PortefolioManagerUtilities::NetworkReplyWrapper* networkReplyWrapper);
 	void onImageUploadRequestFinished(PortefolioManagerUtilities::NetworkReplyWrapper* networkReplyWrapper);

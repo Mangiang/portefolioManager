@@ -27,12 +27,13 @@ public:
     QGridLayout *gridLayout_2;
     QLabel *imageManagementLabel;
     QGridLayout *gridLayout;
-    QSpacerItem *verticalSpacer;
     QPushButton *cancelPushButton;
-    QListWidget *imagesListWidget;
-    QPushButton *okPushButton;
+    QSpacerItem *verticalSpacer;
     QPushButton *addPushButton;
     QPushButton *deletePushButton;
+    QListWidget *imagesListWidget;
+    QPushButton *okPushButton;
+    QPushButton *insertPushButton;
 
     void setupUi(QDialog *ManageImagesDialog)
     {
@@ -52,40 +53,45 @@ public:
 
         gridLayout = new QGridLayout();
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
-        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-        gridLayout->addItem(verticalSpacer, 2, 0, 1, 2);
-
         cancelPushButton = new QPushButton(ManageImagesDialog);
         cancelPushButton->setObjectName(QStringLiteral("cancelPushButton"));
 
-        gridLayout->addWidget(cancelPushButton, 3, 1, 1, 1);
+        gridLayout->addWidget(cancelPushButton, 5, 3, 1, 1);
+
+        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        gridLayout->addItem(verticalSpacer, 2, 1, 1, 3);
+
+        addPushButton = new QPushButton(ManageImagesDialog);
+        addPushButton->setObjectName(QStringLiteral("addPushButton"));
+
+        gridLayout->addWidget(addPushButton, 1, 0, 1, 2);
+
+        deletePushButton = new QPushButton(ManageImagesDialog);
+        deletePushButton->setObjectName(QStringLiteral("deletePushButton"));
+
+        gridLayout->addWidget(deletePushButton, 1, 2, 1, 2);
 
         imagesListWidget = new QListWidget(ManageImagesDialog);
         imagesListWidget->setObjectName(QStringLiteral("imagesListWidget"));
         imagesListWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-        imagesListWidget->setDragDropMode(QAbstractItemView::DragOnly);
+        imagesListWidget->setDragDropMode(QAbstractItemView::DragDrop);
         imagesListWidget->setSelectionMode(QAbstractItemView::SingleSelection);
         imagesListWidget->setIconSize(QSize(200, 200));
         imagesListWidget->setMovement(QListView::Snap);
         imagesListWidget->setViewMode(QListView::IconMode);
 
-        gridLayout->addWidget(imagesListWidget, 0, 0, 1, 2);
+        gridLayout->addWidget(imagesListWidget, 0, 0, 1, 4);
 
         okPushButton = new QPushButton(ManageImagesDialog);
         okPushButton->setObjectName(QStringLiteral("okPushButton"));
 
-        gridLayout->addWidget(okPushButton, 3, 0, 1, 1);
+        gridLayout->addWidget(okPushButton, 5, 0, 1, 1);
 
-        addPushButton = new QPushButton(ManageImagesDialog);
-        addPushButton->setObjectName(QStringLiteral("addPushButton"));
+        insertPushButton = new QPushButton(ManageImagesDialog);
+        insertPushButton->setObjectName(QStringLiteral("insertPushButton"));
 
-        gridLayout->addWidget(addPushButton, 1, 0, 1, 1);
-
-        deletePushButton = new QPushButton(ManageImagesDialog);
-        deletePushButton->setObjectName(QStringLiteral("deletePushButton"));
-
-        gridLayout->addWidget(deletePushButton, 1, 1, 1, 1);
+        gridLayout->addWidget(insertPushButton, 5, 1, 1, 1);
 
 
         gridLayout_2->addLayout(gridLayout, 1, 0, 1, 1);
@@ -101,9 +107,10 @@ public:
         ManageImagesDialog->setWindowTitle(QApplication::translate("ManageImagesDialog", "Dialog", nullptr));
         imageManagementLabel->setText(QApplication::translate("ManageImagesDialog", "ImageManagement", nullptr));
         cancelPushButton->setText(QApplication::translate("ManageImagesDialog", "Cancel", nullptr));
-        okPushButton->setText(QApplication::translate("ManageImagesDialog", "OK", nullptr));
-        addPushButton->setText(QApplication::translate("ManageImagesDialog", "Add image", nullptr));
+        addPushButton->setText(QApplication::translate("ManageImagesDialog", "Add image to server", nullptr));
         deletePushButton->setText(QApplication::translate("ManageImagesDialog", "Delete selected images", nullptr));
+        okPushButton->setText(QApplication::translate("ManageImagesDialog", "OK", nullptr));
+        insertPushButton->setText(QApplication::translate("ManageImagesDialog", "Insert in content", nullptr));
     } // retranslateUi
 
 };
