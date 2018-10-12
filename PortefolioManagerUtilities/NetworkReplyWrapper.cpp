@@ -1,5 +1,7 @@
 #include "NetworkReplyWrapper.h"
 #include <QtNetwork/QNetworkReply>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 namespace PortefolioManagerUtilities {
 	NetworkReplyWrapper::NetworkReplyWrapper(QObject* parent)
@@ -11,6 +13,32 @@ namespace PortefolioManagerUtilities {
 	NetworkReplyWrapper::~NetworkReplyWrapper()
 	{
 		delete data;
+	}
+
+	void NetworkReplyWrapper::setBody(const QByteArray& val)
+	{
+		body = val; 
+
+		QJsonDocument bodyDoc = QJsonDocument::fromJson(val);
+		QJsonObject bodyObj;
+
+		// check validity of the document
+		if (!bodyDoc.isNull())
+		{
+			if (bodyDoc.isObject())
+			{
+				bodyObj = bodyDoc.object();
+				json = bodyObj.toVariantMap();
+			}
+			else
+			{
+				qDebug() << "Document is not an object" << endl;
+			}
+		}
+		else
+		{
+			qDebug() << "Invalid JSON...\n" << endl;
+		}
 	}
 
 	void NetworkReplyWrapper::setOperation()

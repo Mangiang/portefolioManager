@@ -30,7 +30,14 @@
    </item>
    <item row="1" column="0">
     <layout class="QGridLayout" name="gridLayout">
-     <item row="2" column="0" colspan="2">
+     <item row="5" column="3">
+      <widget class="QPushButton" name="cancelPushButton">
+       <property name="text">
+        <string>Cancel</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1" colspan="3">
       <spacer name="verticalSpacer">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -43,20 +50,27 @@
        </property>
       </spacer>
      </item>
-     <item row="3" column="1">
-      <widget class="QPushButton" name="cancelPushButton">
+     <item row="1" column="0" colspan="2">
+      <widget class="QPushButton" name="addPushButton">
        <property name="text">
-        <string>Cancel</string>
+        <string>Add image to server</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="0" colspan="2">
+     <item row="1" column="2" colspan="2">
+      <widget class="QPushButton" name="deletePushButton">
+       <property name="text">
+        <string>Delete selected images</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0" colspan="4">
       <widget class="QListWidget" name="imagesListWidget">
        <property name="editTriggers">
         <set>QAbstractItemView::NoEditTriggers</set>
        </property>
        <property name="dragDropMode">
-        <enum>QAbstractItemView::DragOnly</enum>
+        <enum>QAbstractItemView::DragDrop</enum>
        </property>
        <property name="selectionMode">
         <enum>QAbstractItemView::SingleSelection</enum>
@@ -75,24 +89,17 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="0">
+     <item row="5" column="0">
       <widget class="QPushButton" name="okPushButton">
        <property name="text">
         <string>OK</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QPushButton" name="addPushButton">
+     <item row="5" column="1">
+      <widget class="QPushButton" name="insertPushButton">
        <property name="text">
-        <string>Add image</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QPushButton" name="deletePushButton">
-       <property name="text">
-        <string>Delete selected images</string>
+        <string>Insert in content</string>
        </property>
       </widget>
      </item>
