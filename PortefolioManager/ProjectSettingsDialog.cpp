@@ -34,6 +34,8 @@ ProjectSettingsDialog::ProjectSettingsDialog(QWidget *parent, ProjectManager* pr
 	updateProjectReply = new NetworkReplyWrapper(this);
 	connect(updateProjectReply, &NetworkReplyWrapper::finishedProcessing, this, &ProjectSettingsDialog::onUpdateProjectFinished);
 
+	connect(ui.statusComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onStatusComboBoxIndexChanged(int)));
+
 	init();
 }
 
@@ -45,7 +47,6 @@ void ProjectSettingsDialog::init() {
 	ui.beginDateEdit->clear();
 	ui.beginDateEdit->setDate(QDate::currentDate());
 	ui.statusComboBox->setCurrentIndex(0);
-	ui.endDateEdit->hide();
 	ui.endDateEdit->clear();
 	ui.endDateEdit->setDate(QDate::currentDate());
 	ui.smallDescriptionLineEdit->clear();
@@ -92,7 +93,7 @@ void ProjectSettingsDialog::onOkTriggered(bool)
 	if (isNewProject)
 	{
 		qDebug() << "New project";
-		projectManager->createProject(token, currentProject->getId(), currentProject->toHashSettings());
+		projectManager->createProject(token, currentProject->toHashSettings());
 	}
 	else
 	{

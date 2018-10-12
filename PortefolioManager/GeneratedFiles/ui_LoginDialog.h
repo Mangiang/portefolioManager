@@ -40,7 +40,7 @@ public:
     {
         if (LoginDialog->objectName().isEmpty())
             LoginDialog->setObjectName(QStringLiteral("LoginDialog"));
-        LoginDialog->resize(613, 527);
+        LoginDialog->resize(615, 527);
         LoginDialog->setMinimumSize(QSize(613, 527));
         QIcon icon;
         icon.addFile(QStringLiteral("Resources/images/login.svg"), QSize(), QIcon::Normal, QIcon::Off);

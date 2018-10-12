@@ -51,7 +51,7 @@ PortefolioManager::PortefolioManager(QWidget *parent)
 	connect(ui.webEngineView, &PreviewWebEngineView::isReady, this, &PortefolioManager::onPageReady);
 	connect(ui.webEngineView, &PreviewWebEngineView::isNotReady,this, &PortefolioManager::onPageNotReady);
 
-	projectSettingsDialog = new ProjectSettingsDialog(this);
+	projectSettingsDialog = new ProjectSettingsDialog(this, projectManager);
 
 	manageImagesDialog = new ManageImagesDialog(this, projectManager);
 
